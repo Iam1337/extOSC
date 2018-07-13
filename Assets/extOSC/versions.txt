@@ -1,0 +1,169 @@
+extOSC - Open Sound Control Protocol by V. Sigalkin v1.10
+
+----
+v1.0
+----
+
+- First Release
+
+----
+v1.1
+----
+
+- Now you can change OSCReceiver and OSCReceiverComponent data on run.
+- Some changes in OSC Debug.
+- Some changes in OSCReceiverEditor.
+- Added class OSCTransmitterPing.
+- Added class OSCReceiverGyro.
+- Added class OSCEventRect.
+- Added class OSCTransmitterInformerRect.
+- Added class OSCReceiverEventRect.
+- Fixed some bugs in OSCTransmitter.
+
+----
+v1.2
+----
+
+- Added Windows Store Support (Beta).
+- Added interface IOSCReceiverComponent.
+- Added interface IOSCTransmitterComponent.
+- Added classes OSCPingClient and OSCPingServer.
+- Added class OSCComponent. (Contains functionality of both classes: OSCReceiverComponent and OSCTransmitterComponent)
+- OSCTransmitterComponent.Address changed to OSCTransmitterComponent.TransmitterAddress.
+- OSCReceiverComponent.Address changed to OSCReceiverComponent.ReceiverAddress.
+- Fixed some small things.
+
+------
+v1.2.1
+------
+
+- Fixed OSCReflectionMember.GetMemberType method.
+
+----
+v1.3
+----
+
+- Added context menu in OSCConsole.
+- Added "Generate Sharp Code" buttons in OSCDebug.
+- Fixed Editor UI in OSCPanelMapping class.
+- Fixed LocalPort setter in OSCReceiver class;
+- Fixed some small things.
+
+------
+v1.3.1
+------
+
+- Added simple MIDI support.
+- Added OSCMidi structure.
+- Added MIDI support in editor (OSC Debug and OSC Console).
+- Added StructToByte and ByteToStruct methods in OSCUtilities.
+- Fixed OSCPanelPacketEditor class.
+
+----
+v1.4
+----
+
+- Added Array support.
+- Added Array support in editor (OSC Debug and OSC Console).
+- Added OSCReceiverEventMidi class.
+- Added OSCReceiverEventArray class.
+- Added OSCTransmitterInformerMidi class.
+- Added OSCTransmitterInformerArray class.
+- Added OSCEventMidi class.
+- Added OSCEventArray class.
+- Added OSCMidi type packer in Serialization.
+- Added OSCValue.GetType(OSCValueType) method (Get Type by OSCValueType).
+- Added OSCValue.GetValueType(Type) method (Get OSCValueType by Type).
+- Added OSCValue.AddValue(OSCPacket) method.
+- Added Example 11 (Array).
+- Updated Example 2 (Value Types). Added Midi.
+- Removed OSCReceiver.FakeReceive(OSCPacket) method.
+- Renamed OSCPacketArray to OSCPackerArray.
+
+----
+v1.5
+----
+
+- Added OSCReceiverReflection class and other (This classes has more functionality then OSCReceiverEvent classes).
+- Added OSCReflection.GetMembers method.
+- Added OSCReflection.GetMembersByType method.
+- Updated saving format for OSC Debug.
+- Updated OSCReflection system.
+- Renamed OSCConsoleMessage to OSCConsolePacket.
+- Renamed ConsoleMessageType to OSCConsolePacketType.
+- Removed OSCTransmitterInformer.SetProperty (is obsolete).
+- Removed OSCReflection.GetMethodsInfo.
+- Removed OSCReflectionMember.Flags.
+- Removed OSCReflectionMember.GetMethod.
+- Removed OSCDebugPacket.
+
+----
+v1.6
+----
+
+- Added OSCReceiverEvent.ReceiverType property.
+- Fixed UWP support in OSCUtilities.
+- Fixed OSCConsole production code.
+- Updated OSCReceiverReflection editor.
+
+----
+v1.7
+----
+
+- Added new mapping types (Int, FloatToBool, IntToBool, BoolToFloat, BoolToInt).
+- Added two new examples (Marshalling and Match Pattern).
+- Fixed some bugs in OSCReflection.GetMembersByType method.
+- Updated OSCReceiverBackend and OSCTransmitterBackend instance creation.
+- Updated OSCWindow and OSCPanel work.
+
+----
+v1.8
+----
+
+# If you have a problem with compilation - remove OSCEventChar_1.cs file.
+
+- Added Close On Pause parameter in OSCTransmitter and OSCReceiver.
+- Fixed some Examples.
+- Renamed OSCEventChar_1.cs to OSCEventBool.cs.
+
+------
+v1.8.1
+------
+
+- Fixed OSCReceiver.LocalPort, OSCTransmitter.RemoteHost and OSCTransmitter.RemotePort setter bug.
+
+------
+v1.8.2
+------
+
+- Replaced OSCUtilities.StructToByte(object) to StructToByte<T>(T).
+- Replaced OSCUtilities.ByteToStruct(Type, byte[]) to ByteToStruct<T>(byte[]).
+- Fixed UWP support in OSCUtilities. Again.
+
+----
+v1.9
+----
+
+- Added port info in received messages for in OSC Console.
+- Added local port support in OSCTransmitter.
+- Added LocalPortMode property in OSCTransmitter (Random (Default), Custom, FromReceiver).
+- Added LocalReceiver property in OSCTransmitter.
+- Added LocalPort property in OSCTransmitter.
+
+-----
+v1.10
+-----
+
+- Added MapBundle to OSCReceiverComponents.
+- Added MapBundle to OSCTransmitterComponents.
+- Added OSCReceiverReflection.GetMembers() method.
+- Fixed OSCReflectionProperty.PropertyType property.
+- Removed OSCReceiverReflection.AddMember(Component, string) (is obsolete).
+- Removed OSCReceiverReflection.RemoveMember(Component, string) (is obsolete).
+
+-----
+v1.11
+-----
+
+- Added OSCBundle.Create method.
+- Added OSCBundle(OSCPacket[]) constructor.

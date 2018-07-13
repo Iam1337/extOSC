@@ -1,0 +1,61 @@
+# extOSC .gitignore file 2018
+
+# -------
+# FOLDERS
+# -------
+
+# Unity
+
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/Assets/AssetStoreTools*
+AssetBundles/
+/extOSC
+
+# Visual Studio
+
+ExportedObj/
+
+# -----
+# FILES
+# -----
+
+# Unity
+
+Assembly-CSharp-Editor-vs.csproj
+Assembly-CSharp-Editor.csproj
+Assembly-CSharp-firstpass-vs.csproj
+Assembly-CSharp-firstpass.csproj
+Assembly-CSharp-vs.csproj
+Assembly-CSharp.csproj
+
+# Visual Studio / MonoDevelop
+
+*.sln
+*.svd
+*.userprefs
+*.pidb
+*.suo
+*.user
+*.unityproj
+*.booproj
+*.csproj
+.vscode/
+.vs/
+.idea/
+
+# OS generated
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+Thumbs.db.meta
+
