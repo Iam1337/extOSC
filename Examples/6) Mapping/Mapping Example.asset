@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11c91d8cf45934d2094e4445cfb8833b, type: 3}
+  m_Name: Mapping Example
+  m_EditorClassIdentifier: 
+  messages:
+  - address: /example/6/rotate
+    values:
+    - Type: 0
+      InputMin: 0
+      InputMax: 1
+      OutputMin: 0
+      OutputMax: 0
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+    - Type: 0
+      InputMin: 0
+      InputMax: 1
+      OutputMin: 0
+      OutputMax: 0
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+    - Type: 0
+      InputMin: 0
+      InputMax: 1
+      OutputMin: 0
+      OutputMax: 180
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+  - address: /example/6/scale
+    values:
+    - Type: 0
+      InputMin: 0
+      InputMax: 1
+      OutputMin: 1
+      OutputMax: 5
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+    - Type: 0
+      InputMin: 0
+      InputMax: 1
+      OutputMin: 1
+      OutputMax: 5
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+    - Type: 0
+      InputMin: 0
+      InputMax: 1
+      OutputMin: 1
+      OutputMax: 5
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+  - address: /example/6/position
+    values:
+    - Type: 0
+      InputMin: -1
+      InputMax: 1
+      OutputMin: -200
+      OutputMax: 200
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+    - Type: 0
+      InputMin: -1
+      InputMax: 1
+      OutputMin: -200
+      OutputMax: 200
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
+    - Type: 0
+      InputMin: 0
+      InputMax: 0
+      OutputMin: 0
+      OutputMax: 0
+      Clamp: 1
+      Value: 1
+      FalseValue: 0
+      TrueValue: 1
+      Logic: 0
