@@ -1,4 +1,6 @@
-**extOSC** is a tool dedicated to simplify creation of applications with OSC protocol usage.
+**extOSC** is a tool dedicated to simplify creation of applications with OSC protocol usage in Unity (Unity3d).
+
+**Support Unity versions**: Unity 2017.1.4. or higher
 
 **Release Notes**
 
