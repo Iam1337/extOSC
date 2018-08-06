@@ -29,7 +29,7 @@ extOSC will bundle your packages for optimisation purposes
 
 **And also:**
 
-- Every data type support *(except Array and MIDI)*
+- Every data type support *(include **Array** and **MIDI**)*
 - Compatible with OS X, Windows, iOS & Android, Windows Store
 - Tested with TouchOSC, VVOpenSource, OpenFrameworks and others
 - Examples
