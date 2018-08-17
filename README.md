@@ -109,4 +109,4 @@ Just copy the [Assets/extOSC](Assets/extOSC) folder into your Assets directory w
 \> [ext@iron-wall.org](mailto:ext@iron-wall.org)
 
 ## License
-This library is under the MIT License.
+This project is under the MIT License.
