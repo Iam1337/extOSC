@@ -102,7 +102,7 @@ Or you can use any *extOSC/Receiver* components.<br>
 **Other examples you can find in [Examples](Assets/extOSC/Examples) folder.**
 
 ## Installation:
-Just copy the contents of [Assets/extOSC](Assets/extOSC) folder into your Assets directory within your Unity project.
+Just copy the [Assets/extOSC](Assets/extOSC) folder into your Assets directory within your Unity project.
 
 ### Author Contacts:
 \> [telegram.me/iam1337](http://telegram.me/iam1337) <br>
