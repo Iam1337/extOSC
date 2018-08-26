@@ -130,7 +130,7 @@ namespace extOSC
 		#region Protected Vars
 
 		[SerializeField]
-		protected OSCLocalPortMode localPortMode = OSCLocalPortMode.FromRemotePort;
+		protected OSCLocalPortMode localPortMode = OSCLocalPortMode.Random;
 
 		[SerializeField]
 		protected OSCReceiver localReceiver;
