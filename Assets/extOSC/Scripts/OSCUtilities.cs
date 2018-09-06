@@ -17,13 +17,13 @@ namespace extOSC
 {
     public static class OSCUtilities
     {
-        #region Private Static Vars
+        #region Static Private Vars
 
         private static readonly Dictionary<string, List<string>> _cachedAddress = new Dictionary<string, List<string>>();
 
         #endregion
 
-        #region Public Static Methods
+        #region Static Public Methods
 
         public static int ClampPort(int port)
         {

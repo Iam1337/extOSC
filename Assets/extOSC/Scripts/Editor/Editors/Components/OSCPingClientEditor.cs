@@ -42,8 +42,6 @@ namespace extOSC.Editor.Components
 
         private SerializedProperty _autoStartProperty;
 
-        private Color _defaultColor;
-
         private bool _drawedState;
 
         #endregion
@@ -76,8 +74,6 @@ namespace extOSC.Editor.Components
 
         protected override void DrawSettings()
         {
-            _defaultColor = GUI.color;
-
             // PING SETTINGS
             EditorGUILayout.LabelField(_pingSettingsContent, EditorStyles.boldLabel);
             GUILayout.BeginVertical("box");
@@ -95,7 +91,7 @@ namespace extOSC.Editor.Components
             {
                 _autoStartProperty.boolValue = !_autoStartProperty.boolValue;
             }
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             GUILayout.EndVertical();
 
@@ -115,7 +111,7 @@ namespace extOSC.Editor.Components
                     _ping.StartPing();
                 }
 
-                GUI.color = _defaultColor;
+                GUI.color = Color.white;
             }
             else
             {
@@ -137,7 +133,7 @@ namespace extOSC.Editor.Components
                     _ping.StopPing();
                 }
 
-                GUI.color = _defaultColor;
+                GUI.color = Color.white;
 
                 GUILayout.EndHorizontal();
             }
@@ -155,7 +151,7 @@ namespace extOSC.Editor.Components
             GUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.LabelField(_drawedState ? "Avaible" : "Not Avaible", OSCEditorStyles.CenterLabel);
             GUILayout.EndVertical();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             GUILayout.EndVertical();
         }

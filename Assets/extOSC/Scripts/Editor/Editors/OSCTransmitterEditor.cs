@@ -54,8 +54,6 @@ namespace extOSC.Editor
 
 		private SerializedProperty _localPort;
 
-        private Color _defaultColor;
-
         private OSCTransmitter _transmitter;
 
         #endregion
@@ -97,8 +95,6 @@ namespace extOSC.Editor
 
         public override void OnInspectorGUI()
         {
-            _defaultColor = GUI.color;
-
             serializedObject.Update();
 
             // LOGO
@@ -119,12 +115,12 @@ namespace extOSC.Editor
 
             IPAddress tempAddress;
 
-            var remoteFieldColor = IPAddress.TryParse(_remoteHostProperty.stringValue, out tempAddress) ? _defaultColor : Color.red;
+            var remoteFieldColor = IPAddress.TryParse(_remoteHostProperty.stringValue, out tempAddress) ? Color.white : Color.red;
 
             // REMOTE HOST
             GUI.color = remoteFieldColor;
             EditorGUILayout.PropertyField(_remoteHostProperty, _hostContent);
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             // REMOTE PORT
             EditorGUILayout.PropertyField(_remotePortProperty, _portContent);
@@ -138,7 +134,7 @@ namespace extOSC.Editor
             {
                 _useBundleProperty.boolValue = !_useBundleProperty.boolValue;
             }
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             // SETTINGS BOX END
             EditorGUILayout.EndVertical();
@@ -151,14 +147,14 @@ namespace extOSC.Editor
             {
                 _autoConnectProperty.boolValue = !_autoConnectProperty.boolValue;
             }
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             GUI.color = _closeOnPauseProperty.boolValue? Color.green : Color.red;
             if (GUILayout.Button("Close On Pause"))
             {
                 _closeOnPauseProperty.boolValue = !_closeOnPauseProperty.boolValue;
             }
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             // PARAMETERS BLOCK END
             EditorGUILayout.EndHorizontal();
@@ -172,7 +168,7 @@ namespace extOSC.Editor
 	        {
 		        GUI.color = Color.yellow;
 				EditorGUILayout.HelpBox("Currently \"Advanced settings\" are not available for UWP (WSA).", MessageType.Info);
-		        GUI.color = _defaultColor;
+		        GUI.color = Color.white;
 	        }
 
 	        // LOCAL PORT MODE

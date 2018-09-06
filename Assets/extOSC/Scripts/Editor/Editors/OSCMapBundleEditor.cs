@@ -25,8 +25,6 @@ namespace extOSC.Editor
 
         private OSCMapBundle _bundle;
 
-        private Color _defaultColor;
-
         #endregion
 
         #region Unity Methods
@@ -38,8 +36,6 @@ namespace extOSC.Editor
 
         public override void OnInspectorGUI()
         {
-            _defaultColor = GUI.color;
-
             GUILayout.Space(10);
             OSCEditorLayout.DrawLogo();
             GUILayout.Space(10);
@@ -99,7 +95,7 @@ namespace extOSC.Editor
             EditorGUILayout.BeginHorizontal("box");
             GUILayout.Label(_typeContents, GUILayout.Width(50));
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box");
             GUILayout.Label(value.Type.ToString());
