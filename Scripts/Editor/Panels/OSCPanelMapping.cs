@@ -74,8 +74,6 @@ namespace extOSC.Editor.Panels
 
         #region Private Vars
 
-        private Color _defaultColor;
-
         private Vector2 _scrollPosition;
 
         private OSCMapMessage _deleteMessage;
@@ -124,8 +122,6 @@ namespace extOSC.Editor.Panels
 
         protected override void DrawContent(Rect contentRect)
         {
-            _defaultColor = GUI.color;
-
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
             var createMapButton = GUILayout.Button(_createContent, EditorStyles.toolbarButton);
@@ -179,7 +175,7 @@ namespace extOSC.Editor.Panels
                 EditorGUILayout.BeginHorizontal("box");
                 GUI.color = Color.green;
                 var createMessageButton = GUILayout.Button(_addAddressContent);
-                GUI.color = _defaultColor;
+                GUI.color = Color.white;
                 EditorGUILayout.EndHorizontal();
 
                 if (createMessageButton)
@@ -217,7 +213,7 @@ namespace extOSC.Editor.Panels
             GUI.color = Color.red;
             var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
             if (deleteButton) _deleteMessage = mapMessage;
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal("box");
@@ -255,7 +251,7 @@ namespace extOSC.Editor.Panels
             GUI.color = Color.green;
             var addButton = GUILayout.Button(_addMapValueContent, GUILayout.Height(EditorGUIUtility.singleLineHeight));
             if (addButton) CreateMapValue(mapMessage, _mapTypeTemp[mapMessage]);
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndVertical();
@@ -299,7 +295,7 @@ namespace extOSC.Editor.Panels
             GUI.color = Color.red;
             var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
             if (deleteButton) _deleteValue = mapValue;
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.EndHorizontal();
@@ -311,7 +307,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_inputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -331,7 +327,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_outputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -351,7 +347,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_clampContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box");
             mapValue.Clamp = EditorGUILayout.Toggle(mapValue.Clamp, GUILayout.Width(15));
@@ -364,7 +360,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_inputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -384,7 +380,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_outputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -404,7 +400,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_clampContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box");
             mapValue.Clamp = EditorGUILayout.Toggle(mapValue.Clamp, GUILayout.Width(15));
@@ -417,7 +413,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_toBoolContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box",GUILayout.Width(120));
             mapValue.Logic = (OSCMapLogic)EditorGUILayout.EnumPopup(mapValue.Logic);
@@ -435,7 +431,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_toBoolContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(120));
             mapValue.Logic = (OSCMapLogic)EditorGUILayout.EnumPopup(mapValue.Logic);
@@ -459,7 +455,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_trueContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box");
             GUILayout.Label(_valueContent);
@@ -476,7 +472,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_falseContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box");
             GUILayout.Label(_valueContent);
@@ -502,7 +498,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_trueContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box");
             GUILayout.Label(_valueContent);
@@ -519,7 +515,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal("box", GUILayout.Width(50));
             GUILayout.Label(_falseContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             EditorGUILayout.BeginHorizontal("box");
             GUILayout.Label(_valueContent);

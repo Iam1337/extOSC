@@ -40,8 +40,6 @@ namespace extOSC.Editor
 
         private OSCReceiver _receiver;
 
-		private Color _defaultColor;
-
         private string _localHost;
 
         #endregion
@@ -82,8 +80,6 @@ namespace extOSC.Editor
 
         public override void OnInspectorGUI()
         {
-            _defaultColor = GUI.color;
-
             serializedObject.Update();
 
             // LOGO
@@ -126,14 +122,14 @@ namespace extOSC.Editor
             {
                 _autoConnectProperty.boolValue = !_autoConnectProperty.boolValue;
             }
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             GUI.color = _closeOnPauseProperty.boolValue? Color.green : Color.red;
             if (GUILayout.Button("Close On Pause"))
             {
                 _closeOnPauseProperty.boolValue = !_closeOnPauseProperty.boolValue;
             }
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             // SETTINGS BLOCK END
             EditorGUILayout.EndHorizontal();

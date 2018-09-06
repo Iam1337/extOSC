@@ -182,12 +182,14 @@ namespace extOSC.Editor.Panels
 
         private Rect _contentRect;
 
+        // TOOLBAR
         private bool _showReceived;
 
         private bool _showTransmitted;
 
         protected bool _trackLast;
 
+        // UI
         private Rect _lastContentRect;
 
         private Vector2 _scrollPosition;
@@ -271,28 +273,9 @@ namespace extOSC.Editor.Panels
 
         protected override void DrawContent(Rect contentRect)
         {
-            GUILayout.BeginArea(new Rect(0, 0, contentRect.width, 18));
+            // TOOLBAR
+            DrawToolbar(contentRect);
 
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
-
-            var clearButton = GUILayout.Button(_clearContent, EditorStyles.toolbarButton, GUILayout.Height(45f));
-
-            GUILayout.Space(5f);
-
-            _showReceived = GUILayout.Toggle(_showReceived, _recevedContent, EditorStyles.toolbarButton);
-            _showTransmitted = GUILayout.Toggle(_showTransmitted, _transmittedContent, EditorStyles.toolbarButton);
-
-            GUILayout.Space(5f);
-
-            _trackLast = GUILayout.Toggle(_trackLast, _trackLastContent, EditorStyles.toolbarButton);
-
-            GUILayout.FlexibleSpace();
-
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndVertical();
-
-            GUILayout.EndArea();
 
             contentRect.y += 18;
             contentRect.height -= 18;
@@ -372,12 +355,6 @@ namespace extOSC.Editor.Panels
 
             GUI.EndScrollView(true);
 
-            if (clearButton)
-            {
-                OSCWindowConsole.Clear();
-
-                _selectedMessage = null;
-            }
         }
 
         protected override void PostDrawContent()
@@ -411,6 +388,40 @@ namespace extOSC.Editor.Panels
         #endregion
 
         #region Private Methods
+
+        private void DrawToolbar(Rect contentRect)
+        {
+            GUILayout.BeginArea(new Rect(0, 0, contentRect.width, 18));
+
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+
+            var clearButton = GUILayout.Button(_clearContent, EditorStyles.toolbarButton, GUILayout.Height(45f));
+
+            GUILayout.Space(5f);
+
+            _showReceived = GUILayout.Toggle(_showReceived, _recevedContent, EditorStyles.toolbarButton);
+            _showTransmitted = GUILayout.Toggle(_showTransmitted, _transmittedContent, EditorStyles.toolbarButton);
+
+            EditorGUILayout.Space();
+
+            _trackLast = GUILayout.Toggle(_trackLast, _trackLastContent, EditorStyles.toolbarButton);
+
+            GUILayout.FlexibleSpace();
+
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+
+            GUILayout.EndArea();
+
+
+            if (clearButton)
+            {
+                OSCWindowConsole.Clear();
+
+                _selectedMessage = null;
+            }
+        }
 
         private int GetItemIndex(OSCConsolePacket consoleMessage)
         {
