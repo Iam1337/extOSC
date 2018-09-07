@@ -151,13 +151,6 @@ namespace extOSC.Editor.Panels
             set { _showReceived = value; }
         }
 
-
-        [System.Obsolete("Collapse function was removed.")]
-        public bool CollapseConsole
-        {
-            get; set;
-        }
-
         public bool TrackLast
         {
             get { return _trackLast; }

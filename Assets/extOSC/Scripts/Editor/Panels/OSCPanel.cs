@@ -86,27 +86,6 @@ namespace extOSC.Editor.Panels
             get { return _panelId; }
             set { _panelId = value; }
         }
-
-        [Obsolete("\"Parent\" is deprecated, please use \"ParentWindow\" instead.")]
-        public OSCWindow Parent
-        {
-            get { return ParentWindow; }
-            set { Debug.LogWarning("\"Parent\" is deprecated."); }
-        }
-
-        [Obsolete("\"UniqueName\" is deprecated, please use \"PanelId\" instead.")]
-        public string UniqueName
-        {
-            get { return PanelId; }
-            set { Debug.LogWarning("\"UniqueName\" is deprecated."); }
-        }
-
-        [Obsolete("\"ContentRect\" is deprecated, please use \"Rect\" instead.")]
-        public Rect ContentRect
-        {
-            get { return Rect; }
-        }
-
         #endregion
 
         #region Protected Vars
