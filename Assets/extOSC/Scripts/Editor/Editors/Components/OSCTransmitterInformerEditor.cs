@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 using extOSC.Components.Informers;
+using extOSC.Editor.Drawers;
 
 namespace extOSC.Editor.Components
 {
@@ -32,7 +33,7 @@ namespace extOSC.Editor.Components
 
         private OSCTransmitterInformer _informer;
 
-        private Color _defaultColor;
+        private OSCReflectionMemberDrawer _reflectionDrawer;
 
         #endregion
 
@@ -49,6 +50,10 @@ namespace extOSC.Editor.Components
             _reflectionMemberProperty = serializedObject.FindProperty("reflectionMember");
             _informOnChangedProperty = serializedObject.FindProperty("informOnChanged");
             _informIntervalProperty = serializedObject.FindProperty("informInterval");
+
+            // Create reflection member editor.
+            _reflectionDrawer = new OSCReflectionMemberDrawer(_reflectionMemberProperty, _informer.InformerType);
+            _reflectionDrawer.ReflectionAccess = OSCReflectionAccess.Read;
         }
 
         #endregion
@@ -61,13 +66,11 @@ namespace extOSC.Editor.Components
 
         protected override void DrawSettings()
         {
-            _defaultColor = GUI.color;
-
             // TARGET
             EditorGUILayout.LabelField(_targetTitleContent, EditorStyles.boldLabel);
             GUILayout.BeginVertical("box");
 
-            OSCEditorLayout.ReflectionMember(_reflectionMemberProperty, _informer.InformerType, OSCReflectionAccess.Read);
+            _reflectionDrawer.DrawLayout();
 
             GUILayout.EndVertical();
 
@@ -80,7 +83,7 @@ namespace extOSC.Editor.Components
             {
                 _informOnChangedProperty.boolValue = !_informOnChangedProperty.boolValue;
             }
-            GUI.color = _defaultColor;
+            GUI.color = Color.white;
 
             if (!_informOnChangedProperty.boolValue)
             {

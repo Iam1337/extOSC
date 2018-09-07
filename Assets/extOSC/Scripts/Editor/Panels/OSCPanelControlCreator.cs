@@ -111,8 +111,6 @@ namespace extOSC.Editor.Panels
                 return;
             }
 
-            var defaultColor = GUI.color;
-
             contentRect.x += 2;
             contentRect.y += 2;
             contentRect.width -= 4;
@@ -136,7 +134,7 @@ namespace extOSC.Editor.Panels
             {
                 _addInformer = !_addInformer;
             }
-            GUI.color = defaultColor;
+            GUI.color = Color.white;
 
             if (_addInformer)
             {
@@ -151,7 +149,7 @@ namespace extOSC.Editor.Panels
                 {
                     _informOnChanged = !_informOnChanged;
                 }
-                GUI.color = defaultColor;
+                GUI.color = Color.white;
 
                 if (!_informOnChanged)
                 {
@@ -178,7 +176,7 @@ namespace extOSC.Editor.Panels
 
                 OSCWindowControlCreator.Invoke(data);
             }
-            GUI.color = defaultColor;
+            GUI.color = Color.white;
 
             GUILayout.EndArea();
         }

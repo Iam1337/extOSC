@@ -119,7 +119,6 @@ namespace extOSC.Editor.Panels
 
         private void DrawElement(string name, OSCBase osc)
         {
-            var defaultColor = GUI.color;
             var elementColor = osc.IsAvaible ? Color.green : Color.red;
 
             GUI.color = elementColor;
@@ -139,7 +138,7 @@ namespace extOSC.Editor.Panels
 
             GUILayout.EndVertical();
 
-            GUI.color = defaultColor;
+            GUI.color = Color.white;
         }
 
         private void DrawActions(OSCBase osc, Color elementColor)

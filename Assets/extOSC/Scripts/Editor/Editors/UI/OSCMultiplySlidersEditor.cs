@@ -12,10 +12,6 @@ namespace extOSC.Editor.Components.UI
     [CustomEditor(typeof(OSCMultiplySliders), true)]
     public class OSCMultiplySlidersEditor : SelectableEditor
     {
-        #region Static Private Vars 
-
-        #endregion
-
         #region Private Vars
 
         private SerializedProperty _minValueProperty;
@@ -85,13 +81,11 @@ namespace extOSC.Editor.Components.UI
                 OSCEditorLayout.TransmittersPopup(_transmitterProperty, new GUIContent("Transmitter"));
                 GUILayout.EndVertical();
 
-                var defaultColor = GUI.color;
-
                 GUILayout.BeginHorizontal("box");
                 GUILayout.BeginVertical("box");
                 GUI.color = Color.red;
                 var removeButton = GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20));
-                GUI.color = defaultColor;
+                GUI.color = Color.white;
                 GUILayout.EndVertical();
                 GUILayout.BeginVertical("box");
                 EditorGUILayout.LabelField(_slidersProperty.arraySize.ToString(), OSCEditorStyles.CenterLabel, GUILayout.Height(20));
@@ -99,7 +93,7 @@ namespace extOSC.Editor.Components.UI
                 GUILayout.BeginVertical("box");
                 GUI.color = Color.green;
                 var createButton = GUILayout.Button("+", GUILayout.Width(20), GUILayout.Height(20));
-                GUI.color = defaultColor;
+                GUI.color = Color.white;
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
 
