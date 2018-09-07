@@ -46,32 +46,6 @@ namespace extOSC.Editor
 
         #region Static Private Methods
 
-        private static string PropertiesPopup(object target, string memberName, Type propertyType, GUIContent content,
-            OSCReflectionAccess access)
-        {
-            var members = OSCReflection.GetMembersByType(target, propertyType, access, OSCReflectionType.All);
-            var clearName = new List<GUIContent>();
-
-            var currentIndex = 0;
-
-            // GET INDEX
-            foreach (var member in members)
-            {
-                if (member.Name == memberName)
-                    currentIndex = clearName.Count;
-
-                clearName.Add(new GUIContent(OSCEditorUtils.MemberName(member)));
-            }
-
-            if (clearName.Count == 0)
-                clearName.Add(new GUIContent("- None -"));
-
-            currentIndex = EditorGUILayout.Popup(content, currentIndex, clearName.ToArray());
-            currentIndex = Mathf.Clamp(currentIndex, 0, clearName.Count - 1);
-
-            return members.Length > 0 ? members[currentIndex].Name : "- None -";
-        }
-
         private static T OSCPopup<T>(Dictionary<string, T> dictionary, T osc, GUIContent content) where T : OSCBase
         {
             T[] objects = null;

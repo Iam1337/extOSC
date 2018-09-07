@@ -144,33 +144,6 @@ namespace extOSC.Editor
 			if (drawBox) EditorGUILayout.EndVertical();
         }
 
-        public static void ReflectionMember(SerializedProperty reflectionMemberProperty, Type reflectionType, OSCReflectionAccess access)
-        {
-            var targetProperty = reflectionMemberProperty.FindPropertyRelative("Target");
-            var memberNameProperty = reflectionMemberProperty.FindPropertyRelative("MemberName");
-
-            EditorGUILayout.PropertyField(targetProperty, _targetContent);
-
-            if (targetProperty.objectReferenceValue != null)
-            {
-				GUI.enabled = memberNameProperty.stringValue != "- None -";
-
-                memberNameProperty.stringValue = PropertiesPopup(targetProperty.objectReferenceValue,
-																 memberNameProperty.stringValue,
-                                                                 reflectionType,
-                                                                 _propertyContent,
-                                                                 access);
-            }
-            else
-            {
-                GUI.enabled = false;
-
-                EditorGUILayout.Popup(_propertyContent, 0, _propertyPopupOptions);
-            }
-
-            GUI.enabled = true;
-        }
-
         #endregion
 
         #region Static Private Methods

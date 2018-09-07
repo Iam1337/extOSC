@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 using extOSC.Components.Informers;
+using extOSC.Editor.Properties;
 
 namespace extOSC.Editor.Components
 {
@@ -32,6 +33,8 @@ namespace extOSC.Editor.Components
 
         private OSCTransmitterInformer _informer;
 
+        private OSCReflectionMemberDrawer _reflectionDrawer;
+
         #endregion
 
         #region Unity Methods
@@ -47,6 +50,10 @@ namespace extOSC.Editor.Components
             _reflectionMemberProperty = serializedObject.FindProperty("reflectionMember");
             _informOnChangedProperty = serializedObject.FindProperty("informOnChanged");
             _informIntervalProperty = serializedObject.FindProperty("informInterval");
+
+            // Create reflection member editor.
+            _reflectionDrawer = new OSCReflectionMemberDrawer(_reflectionMemberProperty, _informer.InformerType);
+            _reflectionDrawer.ReflectionAccess = OSCReflectionAccess.Read;
         }
 
         #endregion
@@ -63,7 +70,7 @@ namespace extOSC.Editor.Components
             EditorGUILayout.LabelField(_targetTitleContent, EditorStyles.boldLabel);
             GUILayout.BeginVertical("box");
 
-            OSCEditorLayout.ReflectionMember(_reflectionMemberProperty, _informer.InformerType, OSCReflectionAccess.Read);
+            _reflectionDrawer.DrawLayout();
 
             GUILayout.EndVertical();
 

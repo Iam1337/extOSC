@@ -12,10 +12,6 @@ namespace extOSC.Editor.Components.UI
     [CustomEditor(typeof(OSCMultiplySliders), true)]
     public class OSCMultiplySlidersEditor : SelectableEditor
     {
-        #region Static Private Vars 
-
-        #endregion
-
         #region Private Vars
 
         private SerializedProperty _minValueProperty;
