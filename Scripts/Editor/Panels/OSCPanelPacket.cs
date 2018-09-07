@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 using extOSC.Core.Console;
+using extOSC.Editor.Drawers;
 using extOSC.Editor.Windows;
 
 namespace extOSC.Editor.Panels
@@ -34,12 +35,16 @@ namespace extOSC.Editor.Panels
 
         private Vector2 _scrollPosition;
 
+        private OSCPacketDrawer _packetDrawer;
+
         #endregion
 
         #region Public Methods
 
-        public OSCPanelPacket(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId) 
-        { }
+        public OSCPanelPacket(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
+        {
+            _packetDrawer = new OSCPacketDrawer();
+        }
 
         #endregion
 
@@ -73,8 +78,7 @@ namespace extOSC.Editor.Panels
                 GUILayout.EndHorizontal();
 
                 _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-
-                OSCEditorLayout.Packet(_selectedMessage.Packet);
+                _packetDrawer.DrawLayout(_selectedMessage.Packet);
 
                 EditorGUILayout.EndScrollView();
             }

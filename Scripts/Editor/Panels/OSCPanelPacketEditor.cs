@@ -6,6 +6,7 @@ using UnityEditor;
 using System.IO;
 
 using extOSC.Core;
+using extOSC.Editor.Drawers;
 using extOSC.Editor.Windows;
 
 namespace extOSC.Editor.Panels
@@ -23,6 +24,11 @@ namespace extOSC.Editor.Panels
         private static readonly GUIContent _generateCodeContent = new GUIContent("Generate Sharp Code");
 
         private static readonly GUIContent _infoContent = new GUIContent("Create or load debug packet!");
+
+        private static readonly GUIContent[] _createPoputItems = new GUIContent[] {
+            new GUIContent("Message"),
+            new GUIContent("Bundle")
+        };
 
         #endregion
 
@@ -55,12 +61,9 @@ namespace extOSC.Editor.Panels
 
         #region Private Vars
 
-        private GUIContent[] _createPoputItems = new GUIContent[] {
-            new GUIContent("Message"),
-            new GUIContent("Bundle")
-        };
-
         private Vector2 _scrollPosition;
+
+        private OSCPacketEditableDrawer _packetDrawer;
 
         private OSCPacket _currentPacket;
 
@@ -105,8 +108,7 @@ namespace extOSC.Editor.Panels
             if (_currentPacket != null && _currentPacket != null)
             {
                 _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-
-                OSCEditorLayout.EditablePacket(_currentPacket);
+                _packetDrawer.DrawLayout(_currentPacket);
 
                 EditorGUILayout.EndScrollView();
             }
@@ -127,7 +129,9 @@ namespace extOSC.Editor.Panels
         #region Public Methods
 
         public OSCPanelPacketEditor(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
-        { }
+        {
+            _packetDrawer = new OSCPacketEditableDrawer();
+        }
 
         #endregion
 

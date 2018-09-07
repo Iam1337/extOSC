@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 using extOSC.Components.Informers;
-using extOSC.Editor.Properties;
+using extOSC.Editor.Drawers;
 
 namespace extOSC.Editor.Components
 {

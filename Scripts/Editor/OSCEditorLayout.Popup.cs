@@ -3,12 +3,9 @@
 using UnityEngine;
 using UnityEditor;
 
-using System;
-using System.Linq;
 using System.Collections.Generic;
 
 using extOSC.Core;
-using extOSC.Core.Reflection;
 
 namespace extOSC.Editor
 {
@@ -84,7 +81,9 @@ namespace extOSC.Editor
             return objects[currentIndex];
         }
 
-        private static void FillOSCArrays<T>(Dictionary<string, T> dictionary, out string[] names, out T[] objects)
+        private static void FillOSCArrays<T>(Dictionary<string, T> dictionary, 
+            out string[] names,
+            out T[] objects)
             where T : OSCBase
         {
             var namesList = new List<string>();

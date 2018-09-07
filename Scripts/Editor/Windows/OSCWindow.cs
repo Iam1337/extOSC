@@ -42,10 +42,6 @@ namespace extOSC.Editor.Windows
 
         #region Public Methods
 
-        [Obsolete("\"SetContentRect(Rect)\" is deprecated, please use generic types.")]
-        public void SetRoot(OSCPanel panel)
-        { }
-
 		public void AddItemsToMenu(GenericMenu menu)
 		{
 			
