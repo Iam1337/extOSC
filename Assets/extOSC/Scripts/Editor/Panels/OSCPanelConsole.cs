@@ -19,6 +19,8 @@ namespace extOSC.Editor.Panels
 
         private static readonly GUIContent _recevedContent = new GUIContent("Received");
 
+        private static readonly GUIContent _filterContent = new GUIContent("Packets Filter");
+
         private static readonly GUIContent _trackLastContent = new GUIContent("Track Last");
 
         private static readonly GUIContent _openInDebugContent = new GUIContent("Open in debug");
@@ -268,8 +270,7 @@ namespace extOSC.Editor.Panels
         {
             // TOOLBAR
             DrawToolbar(contentRect);
-
-
+            
             contentRect.y += 18;
             contentRect.height -= 18;
 
@@ -396,23 +397,32 @@ namespace extOSC.Editor.Panels
             _showReceived = GUILayout.Toggle(_showReceived, _recevedContent, EditorStyles.toolbarButton);
             _showTransmitted = GUILayout.Toggle(_showTransmitted, _transmittedContent, EditorStyles.toolbarButton);
 
-            EditorGUILayout.Space();
+            GUILayout.Space(5f);
+
+            var filterButton = GUILayout.Button(_filterContent, EditorStyles.toolbarButton);
+
+            GUILayout.Space(5f);
+            GUILayout.FlexibleSpace();
 
             _trackLast = GUILayout.Toggle(_trackLast, _trackLastContent, EditorStyles.toolbarButton);
 
-            GUILayout.FlexibleSpace();
+            GUILayout.Space(5f);
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
 
             GUILayout.EndArea();
-
-
+            
             if (clearButton)
             {
                 OSCWindowConsole.Clear();
 
                 _selectedMessage = null;
+            }
+
+            if (filterButton)
+            {
+                //TODO: Show filter window.
             }
         }
 
