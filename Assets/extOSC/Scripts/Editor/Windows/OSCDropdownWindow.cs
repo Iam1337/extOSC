@@ -1,13 +1,22 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+
+using extOSC.Editor.Panels;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace extOSC.Editor.Windows
 {
-    public class OSCDropdownWindow : EditorWindow
+    public interface IOSCDropdownWindow
+    {
+        #region Methods
+
+        #endregion
+    }
+
+    public abstract class OSCDropdownWindow<TWindow, TPanel> : OSCWindow<TWindow, TPanel>, IOSCDropdownWindow
+        where TWindow : OSCDropdownWindow<TWindow, TPanel>, IOSCDropdownWindow
+        where TPanel : OSCPanel
     {
         #region Public Vars
 
@@ -15,20 +24,69 @@ namespace extOSC.Editor.Windows
 
         #region Private Vars
 
-
-
         #endregion
 
         #region Unity Methods
 
-        
+        [DidReloadScripts]
+        private static void OnScriptReload()
+        {
+            CloseAllOpenWindows<IOSCDropdownWindow>();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+
+        public void Init(Rect buttonRect)
+        {
+            // Has to be done before calling Show / ShowWithMode
+            //buttonRect = GUIUtility.GUIToScreenRect(buttonRect);
+
+
+            ShowAsDropDown(buttonRect, new Vector2(buttonRect.width, 100f));
+
+            Focus();
+
+            // Add after unfreezing display because AuxWindowManager.cpp assumes that aux windows are added after we got/lost- focus calls.
+            //m_Parent.AddToAuxWindowList();
+
+            wantsMouseMove = true;
+        }
+
+        protected override void OnGUI()
+        {
+            GUI.Label(new Rect(0, 0, position.width, position.height), GUIContent.none, "grey_border");
+
+            base.OnGUI();
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        protected static void CloseAllOpenWindows<TWindow>()
+        {
+            foreach (var @object in Resources.FindObjectsOfTypeAll(typeof(TWindow)))
+            {
+                try
+                {
+                    ((EditorWindow)@object).Close();
+                }
+                catch
+                {
+                    DestroyImmediate(@object);
+                }
+            }
+        }
 
         #endregion
 
         /*
         private static class Styles
         {
-            public static GUIStyle background = "grey_border";
+            public static GUIStyle background =;
             public static GUIStyle previewHeader = new GUIStyle(EditorStyles.label);
             public static GUIStyle previewText = new GUIStyle(EditorStyles.wordWrappedLabel);
 

@@ -118,8 +118,7 @@ namespace extOSC.Editor.Windows
         {
             var panel = (T)Activator.CreateInstance(typeof(T), panelId, this);
             if (panel == null) return null;
-
-
+            
             return panel;
         }
 

@@ -1,11 +1,10 @@
 ﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
 
-using UnityEngine;
-using UnityEditor;
-
 using extOSC.Core;
 using extOSC.Core.Console;
 using extOSC.Editor.Windows;
+using UnityEditor;
+using UnityEngine;
 
 namespace extOSC.Editor.Panels
 {
@@ -198,6 +197,8 @@ namespace extOSC.Editor.Panels
         private OSCConsolePacket[] _consoleBuffer;
 
         private GenericMenu _messageGenericMenu;
+
+        private static OSCDropdownConsoleFilters _dropdownFilters;
 
         #endregion
 
@@ -399,7 +400,8 @@ namespace extOSC.Editor.Panels
 
             GUILayout.Space(5f);
 
-            var filterButton = GUILayout.Button(_filterContent, EditorStyles.toolbarButton);
+            var filterButton = EditorGUILayout.DropdownButton(_filterContent, FocusType.Passive, EditorStyles.toolbarButton);
+            var filterRect = OSCEditorUtils.ToScreenPosition(GUILayoutUtility.GetLastRect());
 
             GUILayout.Space(5f);
             GUILayout.FlexibleSpace();
@@ -422,7 +424,14 @@ namespace extOSC.Editor.Panels
 
             if (filterButton)
             {
-                //TODO: Show filter window.
+                    if (_dropdownFilters == null)
+                    {
+                        _dropdownFilters = OSCDropdownConsoleFilters.Show(filterRect);
+                    }
+                else
+                {
+                    _dropdownFilters.Close();
+                }
             }
         }
 
