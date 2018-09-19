@@ -26,6 +26,8 @@ namespace extOSC.Editor.Panels
 
         private static readonly GUIContent _generateCodeContent = new GUIContent("Generate Sharp Code");
 
+        private static readonly GUIContent _filterContent = new GUIContent("Filter:");
+
         #endregion
 
         #region Static Private Methods
@@ -405,6 +407,7 @@ namespace extOSC.Editor.Panels
             GUILayout.FlexibleSpace();
             GUILayout.Space(5f);
 
+            //GUILayout.Label(_filterContent);
             _filterDrawer.Draw();
 
             GUILayout.Space(5f);

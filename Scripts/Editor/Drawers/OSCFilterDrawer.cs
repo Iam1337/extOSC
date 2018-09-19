@@ -1,5 +1,7 @@
 ﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
 
+using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace extOSC.Editor.Drawers
@@ -20,30 +22,40 @@ namespace extOSC.Editor.Drawers
 
         private string _filterValue = "";
 
+        private string _controlName = "";
+
         #endregion
 
         #region Public Methods
 
+        public OSCFilterDrawer()
+        {
+            _controlName = "oscfilter_" + Guid.NewGuid();
+        }
+
         public void Draw()
         {
-            _filterValue = GUILayout.TextField(_filterValue, OSCEditorStyles.SearchField, GUILayout.MaxWidth(350));
+            GUI.SetNextControlName(_controlName);
 
-            //TODO: WTF?
-            var fieldPosition = GUILayoutUtility.GetLastRect();
-            
-            var buttonPosition = fieldPosition;
-            buttonPosition.x += fieldPosition.width - 10;
-            buttonPosition.width = 10;
+            var fieldPosition = GUILayoutUtility.GetRect(0, 350, 0, 100);
+            fieldPosition.y = 2;
 
-            var hasValue = !string.IsNullOrEmpty(_filterValue);
-            var buttonStyle = hasValue
-                ? OSCEditorStyles.SearchFieldCleanButton
-                : OSCEditorStyles.SearchFieldCleanButtonNone;
+            _filterValue = GUI.TextField(fieldPosition, _filterValue, OSCEditorStyles.SearchField);
 
-            if (GUI.Button(buttonPosition, GUIContent.none, buttonStyle))
+            if (Event.current.type != EventType.Layout)
             {
-                _filterValue = string.Empty;
+                var controlName = GUI.GetNameOfFocusedControl();
+                if (controlName != _controlName && string.IsNullOrEmpty(_filterValue))
+                {
+                    GUI.Label(fieldPosition, "Packet Filter", OSCEditorStyles.SearchFieldPlaceholder);
+                }
+                else
+                {
+                    GUIUtility.keyboardControl = 0;
+                }
             }
+
+            
         }
 
         #endregion
