@@ -3,12 +3,7 @@
 using UnityEngine;
 using UnityEditor;
 
-using System;
 using System.Linq;
-using System.Collections.Generic;
-
-using extOSC.Core;
-using extOSC.Core.Reflection;
 
 namespace extOSC.Editor
 {

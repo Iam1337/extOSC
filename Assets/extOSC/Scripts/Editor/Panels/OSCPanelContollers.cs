@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using extOSC.Core;
 using extOSC.Editor.Windows;
 using System.Reflection;
+using extOSC.Editor.Drawers;
 
 namespace extOSC.Editor.Panels
 {
