@@ -29,9 +29,7 @@ namespace extOSC.Editor
 
         private static GUIStyle _searchField;
 
-        private static GUIStyle _searchFieldCleanButton;
-
-        private static GUIStyle _searchFieldCleanButtonNone;
+        private static GUIStyle _searchFieldPlaceholder;
 
         #endregion
 
@@ -163,36 +161,25 @@ namespace extOSC.Editor
             {
                 if (_searchField == null)
                 {
-                    _searchField = new GUIStyle("ToolbarSeachTextField");
+                    _searchField = new GUIStyle("toolbarTextField");
                 }
 
                 return _searchField;
             }
         }
 
-        public static GUIStyle SearchFieldCleanButton
+        public static GUIStyle SearchFieldPlaceholder
         {
             get
             {
-                if (_searchFieldCleanButton == null)
+                if (_searchFieldPlaceholder == null)
                 {
-                    _searchFieldCleanButton = new GUIStyle("ToolbarSeachCancelButton");
+                    _searchFieldPlaceholder = new GUIStyle("toolbarTextField");
+                    _searchFieldPlaceholder.active.textColor = Color.gray;
+                    _searchFieldPlaceholder.normal.textColor = Color.gray;
                 }
 
-                return _searchFieldCleanButton;
-            }
-        }
-
-        public static GUIStyle SearchFieldCleanButtonNone
-        {
-            get
-            {
-                if (_searchFieldCleanButtonNone == null)
-                {
-                    _searchFieldCleanButtonNone = new GUIStyle("ToolbarSeachCancelButtonEmpty");
-                }
-
-                return _searchFieldCleanButtonNone;
+                return _searchFieldPlaceholder;
             }
         }
 
