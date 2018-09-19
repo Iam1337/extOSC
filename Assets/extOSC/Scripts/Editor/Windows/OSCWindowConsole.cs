@@ -132,6 +132,8 @@ namespace extOSC.Editor.Windows
 
         private readonly string _trackLastSettings = OSCEditorSettings.Console + "tracklast";
 
+        private readonly string _filterSettings = OSCEditorSettings.Console + "filter";
+
         #endregion
 
         #region Unity Methods
@@ -193,6 +195,7 @@ namespace extOSC.Editor.Windows
             logPanel.ShowReceived = OSCEditorSettings.GetBool(_showReceivedSettings, true);
             logPanel.ShowTransmitted = OSCEditorSettings.GetBool(_showTransmittedSettings, true);
             logPanel.TrackLast = OSCEditorSettings.GetBool(_trackLastSettings, false);
+            logPanel.Filter = OSCEditorSettings.GetString(_filterSettings, string.Empty);
         }
 
         protected override void SaveWindowSettings()
@@ -204,6 +207,7 @@ namespace extOSC.Editor.Windows
             OSCEditorSettings.SetBool(_showReceivedSettings, logPanel.ShowReceived);
             OSCEditorSettings.SetBool(_showTransmittedSettings, logPanel.ShowTransmitted);
             OSCEditorSettings.SetBool(_trackLastSettings, logPanel.TrackLast);
+            OSCEditorSettings.SetString(_filterSettings, logPanel.Filter);
         }
 
         #endregion

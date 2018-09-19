@@ -172,6 +172,12 @@ namespace extOSC.Editor.Panels
             set { if (_consoleBuffer != null && _consoleBuffer.Length > 0) _selectedMessage = _consoleBuffer[Mathf.Clamp(value, 0, _consoleBuffer.Length - 1)]; }
         }
 
+        public string Filter
+        {
+            get { return _filterDrawer.FilterValue; }
+            set { _filterDrawer.FilterValue = value; }
+        }
+
         #endregion
 
         #region Private Vars
@@ -326,6 +332,8 @@ namespace extOSC.Editor.Panels
 
                     if (Event.current.type == EventType.MouseDown && itemRect.Contains(Event.current.mousePosition))
                     {
+                        GUIUtility.keyboardControl = 0;
+
                         if (Event.current.button == 0)
                         {
                             _trackLast = false;
