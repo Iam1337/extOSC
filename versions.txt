@@ -167,3 +167,9 @@ v1.11
 
 - Added OSCBundle.Create method.
 - Added OSCBundle(OSCPacket[]) constructor.
+
+-----
+v1.12
+-----
+
+- Added Filter field in OSC Console.
