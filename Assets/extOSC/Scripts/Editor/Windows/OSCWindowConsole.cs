@@ -34,8 +34,6 @@ namespace extOSC.Editor.Windows
 
         private static OSCConsolePacket[] _emptyBuffer = new OSCConsolePacket[0];
 
-
-
         #endregion
 
         #region Public Static Methods
@@ -90,9 +88,12 @@ namespace extOSC.Editor.Windows
                 {
                     if (!string.IsNullOrEmpty(filter))
                     {
-                        if (inverse && OSCUtilities.CompareAddresses(filter, consoleMessage.Packet.Address))
+                        var address = consoleMessage.Packet.Address;
+                        var compare = OSCUtilities.CompareAddresses(filter, address);
+
+                        if ((inverse && compare) ||
+                            (!inverse && !compare))
                             continue;
-                        if (!OSCUtilities.CompareAddresses(filter, consoleMessage.Packet.Address)) continue;
                     }
 
                     consoleList.Add(consoleMessage);
