@@ -27,6 +27,10 @@ namespace extOSC.Editor
 
         private static GUIStyle _centerBoldLabel;
 
+        private static GUIStyle _searchField;
+
+        private static GUIStyle _searchFieldPlaceholder;
+
         #endregion
 
         #region Static Public Vars
@@ -148,6 +152,34 @@ namespace extOSC.Editor
                 }
 
                 return _consoleBoldLabel;
+            }
+        }
+
+        public static GUIStyle SearchField
+        {
+            get
+            {
+                if (_searchField == null)
+                {
+                    _searchField = new GUIStyle("toolbarTextField");
+                }
+
+                return _searchField;
+            }
+        }
+
+        public static GUIStyle SearchFieldPlaceholder
+        {
+            get
+            {
+                if (_searchFieldPlaceholder == null)
+                {
+                    _searchFieldPlaceholder = new GUIStyle("toolbarTextField");
+                    _searchFieldPlaceholder.active.textColor = Color.gray;
+                    _searchFieldPlaceholder.normal.textColor = Color.gray;
+                }
+
+                return _searchFieldPlaceholder;
             }
         }
 

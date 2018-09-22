@@ -92,26 +92,6 @@ namespace extOSC
             return false;
         }
 
-/*
-        // Old Marshal method.
-        public static byte[] StructToByte(object structure)
-        {
-            var structureType = structure.GetType();
-            if (IsEnumOrClass(structureType))
-                throw new ArgumentException("Invalid argument type. Must be struct.");
-
-            var structureSize = Marshal.SizeOf(structure);
-            var data = new byte[structureSize];
-            var pointer = Marshal.AllocHGlobal(structureSize);
-
-            Marshal.StructureToPtr(structure, pointer, true);
-            Marshal.Copy(pointer, data, 0, structureSize);
-            Marshal.FreeHGlobal(pointer);
-
-            return data;
-        }
-*/
-
         public static byte[] StructToByte<T>(T structure) where T : struct
         {
             var structureSize = StructSizeOf(structure);
@@ -124,24 +104,6 @@ namespace extOSC
 
             return data;
         }
-
-/*
-        // Old Marshal method.
-        public static object ByteToStruct(Type structureType, byte[] data)
-        {
-            if (IsEnumOrClass(structureType))
-                throw new ArgumentException("Invalid type. Must be struct.");
-
-            var structureSize = Marshal.SizeOf(structureType);
-            var pointer = Marshal.AllocHGlobal(structureSize);
-
-            Marshal.Copy(data, 0, pointer, structureSize);
-            var structure = Marshal.PtrToStructure(pointer, structureType);
-            Marshal.FreeHGlobal(pointer);
-
-            return structure;
-        }
-*/
 
         public static T ByteToStruct<T>(byte[] data) where T : struct
         {
@@ -542,7 +504,7 @@ namespace extOSC
 
         #endregion
 
-        #region Private Static Class
+        #region Private Static Methods
 
         private static bool IsEnumOrClass(Type type)
         {

@@ -333,6 +333,15 @@ namespace extOSC.Editor
             return string.Format("{0} \t{1}{2}", prefix, memberInfo.Name, postfix);
         }
 
+        public static Rect ToScreenPosition(Rect position)
+        {
+            var screenPosition = GUIUtility.GUIToScreenPoint(new Vector2(position.x, position.y));
+            position.x = screenPosition.x;
+            position.y = screenPosition.y;
+
+            return position;
+        }
+
         #endregion
 
         #region Static Private Methods

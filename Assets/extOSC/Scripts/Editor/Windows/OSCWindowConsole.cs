@@ -28,6 +28,8 @@ namespace extOSC.Editor.Windows
 
         private static bool _previousReceived;
 
+        private static string _previousFilter;
+
         private static int _maxBufferCapacity = 256;
 
         private static OSCConsolePacket[] _emptyBuffer = new OSCConsolePacket[0];
@@ -44,7 +46,7 @@ namespace extOSC.Editor.Windows
             Instance.Show();
         }
 
-        public static OSCConsolePacket[] GetConsoleBuffer(bool transmitted, bool received)
+        public static OSCConsolePacket[] GetConsoleBuffer(bool transmitted, bool received, string filter)
         {
             if (ConsoleBuffer == null || (ConsoleBuffer != null && ConsoleBuffer.Count == 0))
                 return _emptyBuffer;
@@ -52,16 +54,18 @@ namespace extOSC.Editor.Windows
             var requireRebuild = false;
 
             if (_previousTransmitted != transmitted ||
-                _previousReceived != received)
+                _previousReceived != received ||
+                _previousFilter != filter)
             {
                 _previousTransmitted = transmitted;
                 _previousReceived = received;
+                _previousFilter = filter;
 
                 requireRebuild = true;
             }
             else if (ConsoleBuffer.Count > 0)
             {
-                requireRebuild = (ConsoleBuffer[0] != _lastMessage);
+                requireRebuild = ConsoleBuffer[0] != _lastMessage;
             }
 
             if (!requireRebuild)
@@ -70,12 +74,28 @@ namespace extOSC.Editor.Windows
             _lastMessage = ConsoleBuffer.Count > 0 ? ConsoleBuffer[0] : null;
 
             var consoleList = new List<OSCConsolePacket>();
-
+            
+            var inverse = filter.StartsWith("!");
+            if (inverse)
+            {
+                filter = filter.Remove(0, 1);
+            }
+            
             foreach (var consoleMessage in ConsoleBuffer)
             {
-                if ((transmitted && consoleMessage.PacketType == OSCConsolePacketType.Transmitted) ||
-                    (received && consoleMessage.PacketType == OSCConsolePacketType.Received))
+                if (transmitted && consoleMessage.PacketType == OSCConsolePacketType.Transmitted ||
+                    received && consoleMessage.PacketType == OSCConsolePacketType.Received)
                 {
+                    if (!string.IsNullOrEmpty(filter))
+                    {
+                        var address = consoleMessage.Packet.Address;
+                        var compare = OSCUtilities.CompareAddresses(filter, address);
+
+                        if ((inverse && compare) ||
+                            (!inverse && !compare))
+                            continue;
+                    }
+
                     consoleList.Add(consoleMessage);
                 }
             }
@@ -113,6 +133,8 @@ namespace extOSC.Editor.Windows
 
         private readonly string _trackLastSettings = OSCEditorSettings.Console + "tracklast";
 
+        private readonly string _filterSettings = OSCEditorSettings.Console + "filter";
+
         #endregion
 
         #region Unity Methods
@@ -122,7 +144,7 @@ namespace extOSC.Editor.Windows
             logPanel = new OSCPanelConsole(this, "oscLogPanel1");
             packetPanel = new OSCPanelPacket(this, "oscPacketPanel1");
 
-            rootPanel.AddPanel(logPanel, 310, 0.6f);
+            rootPanel.AddPanel(logPanel, 350, 0.6f);
             rootPanel.AddPanel(packetPanel, 300, 0.4f);
 
             base.OnEnable();
@@ -174,6 +196,7 @@ namespace extOSC.Editor.Windows
             logPanel.ShowReceived = OSCEditorSettings.GetBool(_showReceivedSettings, true);
             logPanel.ShowTransmitted = OSCEditorSettings.GetBool(_showTransmittedSettings, true);
             logPanel.TrackLast = OSCEditorSettings.GetBool(_trackLastSettings, false);
+            logPanel.Filter = OSCEditorSettings.GetString(_filterSettings, string.Empty);
         }
 
         protected override void SaveWindowSettings()
@@ -185,6 +208,7 @@ namespace extOSC.Editor.Windows
             OSCEditorSettings.SetBool(_showReceivedSettings, logPanel.ShowReceived);
             OSCEditorSettings.SetBool(_showTransmittedSettings, logPanel.ShowTransmitted);
             OSCEditorSettings.SetBool(_trackLastSettings, logPanel.TrackLast);
+            OSCEditorSettings.SetString(_filterSettings, logPanel.Filter);
         }
 
         #endregion

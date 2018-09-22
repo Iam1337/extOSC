@@ -1,10 +1,11 @@
 ﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
 
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 using extOSC.Core;
 using extOSC.Core.Console;
+using extOSC.Editor.Drawers;
 using extOSC.Editor.Windows;
 
 namespace extOSC.Editor.Panels
@@ -24,6 +25,8 @@ namespace extOSC.Editor.Panels
         private static readonly GUIContent _openInDebugContent = new GUIContent("Open in debug");
 
         private static readonly GUIContent _generateCodeContent = new GUIContent("Generate Sharp Code");
+
+        private static readonly GUIContent _filterContent = new GUIContent("Filter:");
 
         #endregion
 
@@ -169,6 +172,12 @@ namespace extOSC.Editor.Panels
             set { if (_consoleBuffer != null && _consoleBuffer.Length > 0) _selectedMessage = _consoleBuffer[Mathf.Clamp(value, 0, _consoleBuffer.Length - 1)]; }
         }
 
+        public string Filter
+        {
+            get { return _filterDrawer.FilterValue; }
+            set { _filterDrawer.FilterValue = value; }
+        }
+
         #endregion
 
         #region Private Vars
@@ -187,6 +196,8 @@ namespace extOSC.Editor.Panels
 
         private Vector2 _scrollPosition;
 
+        private Rect _filterButtonPosition;
+
         private float _lineHeight = 30f;
 
         private OSCConsolePacket _selectedMessage;
@@ -197,12 +208,16 @@ namespace extOSC.Editor.Panels
 
         private GenericMenu _messageGenericMenu;
 
+        private OSCFilterDrawer _filterDrawer;
+
         #endregion
 
         #region Public Methods
 
-        public OSCPanelConsole(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId) 
-        { }
+        public OSCPanelConsole(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
+        {
+            _filterDrawer = new OSCFilterDrawer();
+        }
 
         public void SelectFirstItem()
         {
@@ -268,13 +283,12 @@ namespace extOSC.Editor.Panels
         {
             // TOOLBAR
             DrawToolbar(contentRect);
-
-
+            
             contentRect.y += 18;
             contentRect.height -= 18;
 
             _lastContentRect = new Rect(contentRect);
-            _consoleBuffer = OSCWindowConsole.GetConsoleBuffer(_showTransmitted, _showReceived);
+            _consoleBuffer = OSCWindowConsole.GetConsoleBuffer(_showTransmitted, _showReceived, _filterDrawer.FilterValue);
 
             if (_trackLast)
             {
@@ -318,6 +332,8 @@ namespace extOSC.Editor.Panels
 
                     if (Event.current.type == EventType.MouseDown && itemRect.Contains(Event.current.mousePosition))
                     {
+                        GUIUtility.keyboardControl = 0;
+
                         if (Event.current.button == 0)
                         {
                             _trackLast = false;
@@ -396,17 +412,22 @@ namespace extOSC.Editor.Panels
             _showReceived = GUILayout.Toggle(_showReceived, _recevedContent, EditorStyles.toolbarButton);
             _showTransmitted = GUILayout.Toggle(_showTransmitted, _transmittedContent, EditorStyles.toolbarButton);
 
-            EditorGUILayout.Space();
+            GUILayout.FlexibleSpace();
+            GUILayout.Space(5f);
 
+            //GUILayout.Label(_filterContent);
+            _filterDrawer.Draw();
+
+            GUILayout.Space(5f);
+            
             _trackLast = GUILayout.Toggle(_trackLast, _trackLastContent, EditorStyles.toolbarButton);
 
-            GUILayout.FlexibleSpace();
+            GUILayout.Space(5f);
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
 
             GUILayout.EndArea();
-
 
             if (clearButton)
             {
@@ -414,6 +435,7 @@ namespace extOSC.Editor.Panels
 
                 _selectedMessage = null;
             }
+            
         }
 
         private int GetItemIndex(OSCConsolePacket consoleMessage)
