@@ -24,8 +24,7 @@ namespace extOSC.Editor
         }
 
         #endregion
-
-
+        
         #region Static Public Methods
 
         public static void SetDefine(string define, bool active)
