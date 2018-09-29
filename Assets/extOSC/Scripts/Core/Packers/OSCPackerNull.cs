@@ -2,7 +2,7 @@
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerNull : OSCPacker<object>
+    internal class OSCPackerNull : OSCPacker<object>
     {
         #region Public Methods
 

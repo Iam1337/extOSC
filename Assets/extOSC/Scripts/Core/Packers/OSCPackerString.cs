@@ -4,7 +4,7 @@ using System.Text;
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerString : OSCPacker<string>
+    internal class OSCPackerString : OSCPacker<string>
     {
 
         #region Public Methods
