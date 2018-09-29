@@ -4,7 +4,7 @@ using System;
 
 namespace extOSC.Core.Packers
 {
-    public class OSCPackerLong : OSCPacker<long>
+    internal class OSCPackerLong : OSCPacker<long>
     {
         #region Public Methods
 
@@ -24,7 +24,8 @@ namespace extOSC.Core.Packers
 
             for (var i = 0; i < size; i++)
             {
-                data[i] = bytes[start]; start++;
+                data[i] = bytes[start];
+                start++;
             }
 
             return BitConverter.ToInt64(BitConverter.IsLittleEndian ? ReverseBytes(data) : data, 0);

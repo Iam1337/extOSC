@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerColor : OSCPacker<Color>
+    internal class OSCPackerColor : OSCPacker<Color>
     {
         #region Public Methods
 
@@ -29,7 +29,7 @@ namespace extOSC.Core.Packers
             const int size = 4;
 
             var bytes = new byte[size];
-            var color = (Color32)value;
+            var color = (Color32) value;
 
             bytes[0] = color.r;
             bytes[1] = color.g;

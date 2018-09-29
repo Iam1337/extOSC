@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace extOSC.Core.Network
 {
-	public static class OSCStandaloneManager
+    internal static class OSCStandaloneManager
 	{
 		#region Extensions
 

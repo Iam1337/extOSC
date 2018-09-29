@@ -2,7 +2,7 @@
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerImpulse : OSCPacker<object>
+    internal class OSCPackerImpulse : OSCPacker<object>
     {
         #region Public Methods
 

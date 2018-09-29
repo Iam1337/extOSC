@@ -11,7 +11,7 @@ using Windows.Storage.Streams;
 
 namespace extOSC.Core.Network
 {
-    public class OSCTransmitterWindowsStoreBackend : OSCTransmitterBackend 
+    internal class OSCTransmitterWindowsStoreBackend : OSCTransmitterBackend 
     {
         #region Public Vars
 

@@ -4,7 +4,7 @@ using System;
 
 namespace extOSC.Core.Packers
 {
-    public class OSCPackerDouble : OSCPacker<double>
+    internal class OSCPackerDouble : OSCPacker<double>
     {
         #region Public Methods
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerTimeTag : OSCPacker<DateTime>
+    internal class OSCPackerTimeTag : OSCPacker<DateTime>
     {
         #region Private Static Vars
 
@@ -44,8 +44,10 @@ namespace extOSC.Core.Packers
                 start++;
             }
 
-            var seconds = BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataSeconds) : dataSeconds, 0);
-            var fractional = BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataFractional) : dataFractional, 0);
+            var seconds =
+                BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataSeconds) : dataSeconds, 0);
+            var fractional =
+                BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataFractional) : dataFractional, 0);
 
             return _epoch.AddSeconds(seconds).AddMilliseconds(fractional);
         }
@@ -55,8 +57,8 @@ namespace extOSC.Core.Packers
             var bytes = new List<byte>();
 
             var timeOffset = (value - _epoch);
-            var seconds = (uint)timeOffset.TotalSeconds;
-            var fractional = (uint)timeOffset.Milliseconds;
+            var seconds = (uint) timeOffset.TotalSeconds;
+            var fractional = (uint) timeOffset.Milliseconds;
 
             var dataSeconds = BitConverter.GetBytes(seconds);
             var dataFractional = BitConverter.GetBytes(fractional);

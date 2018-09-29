@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerBlob : OSCPacker<byte[]>
+    internal class OSCPackerBlob : OSCPacker<byte[]>
     {
         #region Public Methods
 

@@ -13,7 +13,7 @@ using Windows.Storage.Streams;
 
 namespace extOSC.Core.Network
 {
-    public class OSCReceiverWindowsStoreBackend : OSCReceiverBackend
+    internal class OSCReceiverWindowsStoreBackend : OSCReceiverBackend
     {
         #region Public Vars
 

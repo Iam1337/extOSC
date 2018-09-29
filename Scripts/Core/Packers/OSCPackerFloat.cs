@@ -4,7 +4,7 @@ using System;
 
 namespace extOSC.Core.Packers
 {
-    public class OSCPackerFloat : OSCPacker<float>
+    internal class OSCPackerFloat : OSCPacker<float>
     {
         #region Public Methods
 

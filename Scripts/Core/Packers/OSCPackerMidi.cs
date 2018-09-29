@@ -4,7 +4,7 @@ using System;
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerMidi : OSCPacker<OSCMidi>
+    internal class OSCPackerMidi : OSCPacker<OSCMidi>
     {
         #region Public Methods
 
@@ -26,7 +26,7 @@ namespace extOSC.Core.Packers
 
         protected override byte[] ValueToBytes(OSCMidi value)
         {
-            return new byte[] { value.Channel, value.Status, value.Data1, value.Data2 };
+            return new byte[] {value.Channel, value.Status, value.Data1, value.Data2};
         }
 
         #endregion
