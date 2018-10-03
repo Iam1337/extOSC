@@ -60,7 +60,6 @@ namespace extOSC.Core.Packers
         #endregion
     }
 
-
     public abstract class OSCPacker<T> : OSCPacker
     {
         #region Public Methods
