@@ -37,7 +37,7 @@ namespace extOSC.Editor
             if (oscBase == null) return;
 
             var rect = new Rect(selectionRect.x + selectionRect.width - 18f, selectionRect.y, 16f, 16f);
-            GUI.DrawTexture(rect, OSCEditorTextures.IronWall);
+            GUI.DrawTexture(rect, OSCEditorTextures.IronWallSmall);
         }
 
         #endregion

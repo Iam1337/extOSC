@@ -53,6 +53,25 @@ namespace extOSC.Editor
             }
         }
 
+        public static Texture2D IronWallSmall
+        {
+            get {
+                if (_iwIconSmall == null || EditorGUIUtility.isProSkin != _isProSkin)
+                {
+                    _isProSkin = EditorGUIUtility.isProSkin;
+
+                    if (_iwIconSmall != null)
+                    {
+                        Resources.UnloadAsset(_iwIconSmall);
+                    }
+
+                    _iwIconSmall = LoadTexture(_isProSkin ? "IW_small_logo_light" : "IW_small_logo_dark");
+                }
+
+                return _iwIconSmall;
+            }
+        }
+
         public static Texture2D Splitter
         {
             get
@@ -165,6 +184,21 @@ namespace extOSC.Editor
         {
             return Resources.Load<Texture2D>(_defaultFolder + fileName);
         }
+
+        /*
+        private static void UnloadTextures()
+        {
+            Resources.UnloadAsset(_iwIcon);
+            Resources.UnloadAsset(_iwIconSmall);
+            Resources.UnloadAsset(_iwIconSmall);
+            Resources.UnloadAsset(_unityOSCTexture);
+            Resources.UnloadAsset(_splitterTexture);
+            Resources.UnloadAsset(_receiverTexture);
+            Resources.UnloadAsset(_transmitterTexture);
+            Resources.UnloadAsset(_messageTexture);
+            Resources.UnloadAsset(_bundleTexture);
+        }
+        */
 
         #endregion
     }

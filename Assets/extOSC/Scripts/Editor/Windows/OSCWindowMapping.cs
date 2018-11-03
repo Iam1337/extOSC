@@ -15,7 +15,7 @@ namespace extOSC.Editor.Windows
         [MenuItem("Window/extOSC/Mapping Window", false, 0)]
         public static void ShowWindow()
         {
-            Instance.titleContent = new GUIContent("OSC Mapping", OSCEditorTextures.IronWall);
+            Instance.titleContent = new GUIContent("OSC Mapping", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(550, 200);
             Instance.Show();
         }

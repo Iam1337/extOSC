@@ -35,7 +35,7 @@ namespace extOSC.Editor.Windows
         public static void ShowWindow(MenuCommand menuCommand, Callback callback)
         {
             var instance = GetWindow<OSCWindowControlCreator>(false);
-            instance.titleContent = new GUIContent("Control Creator", OSCEditorTextures.IronWall);
+            instance.titleContent = new GUIContent("Control Creator", OSCEditorTextures.IronWallSmall);
             instance.minSize = new Vector2(200, 180);
 
             instance.createCallback = callback;
