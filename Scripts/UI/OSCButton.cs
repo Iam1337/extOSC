@@ -171,17 +171,23 @@ namespace extOSC.UI
 
             UpdateMarker(_graphicTransition == ButtonTransition.None);
 
+#if UNITY_2018_3_OR_NEWER
+            var assetType = UnityEditor.PrefabUtility.GetPrefabAssetType(this);
+            if (assetType == UnityEditor.PrefabAssetType.NotAPrefab && !Application.isPlaying)
+                CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+#else
             var prefabType = UnityEditor.PrefabUtility.GetPrefabType(this);
             if (prefabType != UnityEditor.PrefabType.Prefab && !Application.isPlaying)
                 CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+#endif
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region Public Methods
+            #region Public Methods
 
-        public void GraphicUpdateComplete()
+            public void GraphicUpdateComplete()
         { }
 
         public void LayoutComplete()
