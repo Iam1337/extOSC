@@ -172,4 +172,6 @@ v1.11
 v1.12
 -----
 
+- Added Unity 2018.3 support.
 - Added Filter field in OSC Console.
+- Changed icons on OSC windows.
