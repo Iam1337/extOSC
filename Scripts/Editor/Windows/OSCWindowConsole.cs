@@ -41,7 +41,7 @@ namespace extOSC.Editor.Windows
         [MenuItem("Window/extOSC/Console Window", false, 0)]
         public static void ShowWindow()
         {
-            Instance.titleContent = new GUIContent("OSC Console", OSCEditorTextures.IronWall);
+            Instance.titleContent = new GUIContent("OSC Console", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(610, 200);
             Instance.Show();
         }

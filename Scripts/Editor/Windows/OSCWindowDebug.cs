@@ -30,7 +30,7 @@ namespace extOSC.Editor.Windows
         [MenuItem("Window/extOSC/Debug Window", false, 2)]
         public static void ShowWindow()
         {
-            Instance.titleContent = new GUIContent("OSC Debug", OSCEditorTextures.IronWall);
+            Instance.titleContent = new GUIContent("OSC Debug", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(550, 200);
             Instance.Show();
         }
