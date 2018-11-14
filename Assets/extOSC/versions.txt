@@ -1,4 +1,4 @@
-extOSC - Open Sound Control Protocol by V. Sigalkin v1.10
+extOSC - Open Sound Control Protocol by V. Sigalkin
 
 ----
 v1.0
