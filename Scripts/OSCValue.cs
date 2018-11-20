@@ -53,6 +53,7 @@ namespace extOSC
 
         public static OSCValue String(string value)
         {
+            if (value == null) value = string.Empty;
             return new OSCValue(OSCValueType.String, value);
         }
 
