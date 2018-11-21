@@ -162,7 +162,7 @@ namespace extOSC.Editor
 			// ADVANCED SETTIGS BOX
 			EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
 			GUILayout.BeginVertical("box");
-			EditorGUI.BeginChangeCheck();
+			//EditorGUI.BeginChangeCheck();
 
 	        if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.WSA)
 	        {
@@ -218,8 +218,8 @@ namespace extOSC.Editor
             // EDITOR BUTTONS
             GUI.color = Color.white;
 
-
-            serializedObject.ApplyModifiedProperties();
+            if (EditorGUI.EndChangeCheck())
+                serializedObject.ApplyModifiedProperties();
         }
 
         #endregion
