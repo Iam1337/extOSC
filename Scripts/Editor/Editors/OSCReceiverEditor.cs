@@ -146,7 +146,8 @@ namespace extOSC.Editor
             // EDITOR BUTTONS
             GUI.color = Color.white;
 
-            serializedObject.ApplyModifiedProperties();
+            if (EditorGUI.EndChangeCheck())
+                serializedObject.ApplyModifiedProperties();
         }
 
 
