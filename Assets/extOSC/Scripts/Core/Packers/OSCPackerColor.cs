@@ -15,28 +15,32 @@ namespace extOSC.Core.Packers
 
         #endregion
 
+        #region Private Vars
+
+        private readonly byte[] _data = new byte[4];
+
+        #endregion
+
         #region Protected Methods
 
-        protected override Color BytesToValue(byte[] bytes, ref int start)
+        protected override Color BytesToValue(byte[] buffer, ref int index)
         {
-            start += 4;
+            index += 4;
 
-            return new Color32(bytes[start - 4], bytes[start - 3], bytes[start - 2], bytes[start - 1]);
+            return new Color32(buffer[index - 4],
+                               buffer[index - 3], 
+                               buffer[index - 2], 
+                               buffer[index - 1]);
         }
 
-        protected override byte[] ValueToBytes(Color value)
+        protected override void ValueToBytes(byte[] buffer, ref int index, Color value)
         {
-            const int size = 4;
-
-            var bytes = new byte[size];
             var color = (Color32) value;
 
-            bytes[0] = color.r;
-            bytes[1] = color.g;
-            bytes[2] = color.b;
-            bytes[3] = color.a;
-
-            return bytes;
+            buffer[index++] = color.r;
+            buffer[index++] = color.g;
+            buffer[index++] = color.b;
+            buffer[index++] = color.a;
         }
 
         #endregion

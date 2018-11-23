@@ -9,7 +9,7 @@ namespace extOSC.Core.Packers
     {
         #region Private Static Vars
 
-        private static readonly DateTime _epoch = new DateTime(1900, 1, 1, 0, 0, 0, 0);
+        private static readonly DateTime _zeroTime = new DateTime(1900, 1, 1, 0, 0, 0, 0);
 
         #endregion
 
@@ -22,26 +22,35 @@ namespace extOSC.Core.Packers
 
         #endregion
 
+
+        #region Private Vars
+
+        private readonly byte[] _dataSeconds = new byte[sizeof(uint)];
+
+        private readonly byte[] _dataMilliseconds = new byte[sizeof(uint)];
+
+        #endregion
+        
         #region Protected Methods
 
-        protected override DateTime BytesToValue(byte[] bytes, ref int start)
+        protected override DateTime BytesToValue(byte[] buffer, ref int index)
         {
             const int size = sizeof(uint);
 
             var dataSeconds = new byte[size];
             for (var i = 0; i < size; i++)
             {
-                dataSeconds[i] = bytes[start];
+                dataSeconds[i] = buffer[index];
 
-                start++;
+                index++;
             }
 
             var dataFractional = new byte[size];
             for (var i = 0; i < size; i++)
             {
-                dataFractional[i] = bytes[start];
+                dataFractional[i] = buffer[index];
 
-                start++;
+                index++;
             }
 
             var seconds =
@@ -49,24 +58,33 @@ namespace extOSC.Core.Packers
             var fractional =
                 BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataFractional) : dataFractional, 0);
 
-            return _epoch.AddSeconds(seconds).AddMilliseconds(fractional);
+            return _zeroTime.AddSeconds(seconds).AddMilliseconds(fractional);
         }
 
-        protected override byte[] ValueToBytes(DateTime value)
+        protected override void ValueToBytes(byte[] buffer, ref int index, DateTime value)
         {
-            var bytes = new List<byte>();
+            var deltaTime = value - _zeroTime;
 
-            var timeOffset = (value - _epoch);
-            var seconds = (uint) timeOffset.TotalSeconds;
-            var fractional = (uint) timeOffset.Milliseconds;
+            var seconds = (uint) deltaTime.TotalSeconds;
+            var milliseconds = (uint) deltaTime.Milliseconds;
 
             var dataSeconds = BitConverter.GetBytes(seconds);
-            var dataFractional = BitConverter.GetBytes(fractional);
+            var dataMilliseconds = BitConverter.GetBytes(milliseconds);
 
-            bytes.AddRange(BitConverter.IsLittleEndian ? ReverseBytes(dataSeconds) : dataSeconds);
-            bytes.AddRange(BitConverter.IsLittleEndian ? ReverseBytes(dataFractional) : dataFractional);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(dataSeconds);
+                Array.Reverse(dataMilliseconds);
+            }
 
-            return bytes.ToArray();
+            buffer[index++] = dataSeconds[0];
+            buffer[index++] = dataSeconds[1];
+            buffer[index++] = dataSeconds[2];
+            buffer[index++] = dataSeconds[3];
+            buffer[index++] = dataMilliseconds[0];
+            buffer[index++] = dataMilliseconds[1];
+            buffer[index++] = dataMilliseconds[2];
+            buffer[index++] = dataMilliseconds[3];
         }
 
         #endregion

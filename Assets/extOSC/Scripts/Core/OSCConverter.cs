@@ -1,9 +1,12 @@
 ﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
 
+using System;
+
 using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 using extOSC.Core.Packers;
 
@@ -12,6 +15,14 @@ namespace extOSC.Core
     public static class OSCConverter
     {
         #region Static Public Vars
+
+        private static readonly byte[] _packetBuffer = new byte[65507]; // Max UDP size. But better use available default MTU size - 1432.
+
+        private static readonly byte[] _bundleBuffer = new byte[65507]; // Max UDP size. But better use available default MTU size - 1432.
+
+        private static readonly byte[] _headerBuffer = new byte[65507]; // Max UDP size. But better use available default MTU size - 1432.
+
+        private static readonly byte[] _valuesBuffer = new byte[65507]; // Max UDP size. But better use available default MTU size - 1432.
 
         private static readonly Dictionary<OSCValueType, OSCPacker> _packersDictionary = new Dictionary<OSCValueType, OSCPacker>()
         {
@@ -55,11 +66,13 @@ namespace extOSC.Core
         }
 
         //  PACK METHODS
-        private static byte[] PackBundle(OSCBundle bundle)
+        private static int PackBundle(OSCBundle bundle, byte[] buffer)
         {
-            var finalBytes = new List<byte>();
-            var valuesBytes = new List<byte>();
+            //_bundleStream.Position = 0;
+            //_bundleStream.SetLength(0);
 
+
+            /*
             foreach (var packet in bundle.Packets)
             {
                 if (packet != null)
@@ -70,50 +83,76 @@ namespace extOSC.Core
                     InsertBytes(valuesBytes, bytes);
                 }
             }
+            */
 
-            InsertBytes(finalBytes, PackValue(OSCValueType.String, bundle.Address));
-            InsertBytes(finalBytes, PackValue(OSCValueType.Long, bundle.TimeStamp));
-            InsertBytes(finalBytes, valuesBytes);
+            var packets = bundle.Packets;
+            var packetsIndex = 0;
+            var packetsCount = packets.Count;
 
-            return finalBytes.ToArray();
-        }
-
-        private static byte[] PackMessage(OSCMessage message)
-        {
-            var finalBytes = new List<byte>();
-            var valuesBytes = new List<byte>();
-            var typeTags = ",";
-
-            foreach (var value in message.Values)
+            for (var i = 0; i < packetsCount; ++i)
             {
-                ProcessValue(ref typeTags, ref valuesBytes, value);
+                var packetSize = 0;
+
+                Pack()
             }
 
-            InsertBytes(finalBytes, PackValue(OSCValueType.String, message.Address));
-            InsertBytes(finalBytes, PackValue(OSCValueType.String, typeTags));
+
+            var headerIndex = 0;
+            PackValue(_headerBuffer, ref headerIndex, OSCValueType.String, bundle.Address);
+            PackValue(_headerBuffer, ref headerIndex, OSCValueType.Long, bundle.TimeStamp);
+            
+
+
             InsertBytes(finalBytes, valuesBytes);
 
-            return finalBytes.ToArray();
+            //return finalBytes.ToArray();
         }
 
-        private static void ProcessValue(ref string typeTags, ref List<byte> valuesBytes, OSCValue value)
+        private static void PackMessage(OSCMessage message, byte[] buffer, ref int index)
+        {
+            var typeTags = ",";
+
+            var values = message.Values;
+            var valuesIndex = 0;
+            var valuesCount = values.Count;
+
+            for (var i = 0; i < valuesCount; ++i)
+            {
+                ProcessValue(ref typeTags, _valuesBuffer, ref valuesIndex, values[i]);
+            }
+
+            var headerIndex = 0;
+            PackValue(_headerBuffer, ref headerIndex, OSCValueType.String, message.Address);
+            PackValue(_headerBuffer, ref headerIndex, OSCValueType.String, typeTags);
+
+            Buffer.BlockCopy(_headerBuffer, 0, buffer, index, _headerBuffer.Length);
+            index += _headerBuffer.Length;
+
+            Buffer.BlockCopy(_valuesBuffer, 0, buffer, index, _valuesBuffer.Length);
+            index += _valuesBuffer.Length;
+        }
+
+        private static void ProcessValue(ref string typeTags, byte[] buffer, ref int index, OSCValue value)
         {
             if (value.Type == OSCValueType.Array)
             {
                 typeTags += '[';
 
-                foreach (var arrayValue in value.ArrayValue)
-                {
-                    ProcessValue(ref typeTags, ref valuesBytes, arrayValue);
-                }
+                var array = value.ArrayValue;
+                var arraySize = array.Count;
 
+                for (var i = 0; i < arraySize; ++i)
+                {
+                    ProcessValue(ref typeTags, buffer, ref index, array[i]);
+                }
+                
                 typeTags += ']';
 
                 return;
             }
 
             typeTags += value.Tag;
-            InsertBytes(valuesBytes, PackValue(value));
+            PackValue(buffer, ref index, value.Type, value);
         }
 
         //  UNPACK METHODS.
@@ -186,7 +225,10 @@ namespace extOSC.Core
                 else
                 {
                     // DEFAULT VALUE
-                    value = UnpackValue(valueTag, bytes, ref start);
+                    var valueType = OSCValue.GetValueType(valueTag);
+                    var @object = UnpackValue(valueType, bytes, ref start);
+
+                    value = new OSCValue(valueType, @object); // TODO: Make pool.
                 }
 
                 if (valuesArray != null && valuesArray.Count > 0)
@@ -202,70 +244,38 @@ namespace extOSC.Core
         }
 
         //  PACK VALUE
-        private static byte[] PackValue(OSCValue value)
+        private static void PackValue(byte[] buffer, ref int index, OSCValueType valueType, object value)
         {
-            var packer = GetPacker(value);
-            if (packer != null)
-            {
-                return packer.Pack(value);
-            }
+            if (!_packersDictionary.ContainsKey(valueType))
+                throw new Exception("[OSCConverter.PackValue] Unknown value type: '" + valueType + "'.");
 
-            Debug.LogErrorFormat("[OSCConverter] Unknown value type: '{0}' [1].", value.Value != null ? value.Value.GetType().ToString() : "null");
-            return default(byte[]);
+            _packersDictionary[valueType].Pack(buffer, ref index, value);
         }
 
+        /*
         private static byte[] PackValue(OSCValueType valueType, object value)
         {
-            var packer = GetPacker(valueType);
-            if (packer != null)
-            {
-                return packer.PackValue(value);
-            }
+            if (!_packersDictionary.ContainsKey(valueType))
+                throw new Exception("[OSCConverter.PackValue] Unknown value type: '" + valueType +"'.");
 
-            Debug.LogErrorFormat("[OSCConverter] Unknown value type: '{0}' [2].", valueType);
+            //_packersDictionary[valueType].Pack(b);
+            
             return default(byte[]);
-        }
+        }*/
 
         //  UNPACK VALUE
-        private static OSCValue UnpackValue(char valueTag, byte[] bytes, ref int start)
-        {
-            var packer = GetPacker(valueTag);
-            if (packer != null)
-            {
-                return packer.Unpack(bytes, ref start);
-            }
-
-            Debug.LogErrorFormat("[OSCConverter] Unknown value tag: '{0}'.", valueTag);
-            return default(OSCValue);
-        }
-
         private static object UnpackValue(OSCValueType valueType, byte[] bytes, ref int start)
         {
-            var packer = GetPacker(valueType);
-            return packer != null ? packer.UnpackValue(bytes, ref start) : default(object);
-        }
+            if (!_packersDictionary.ContainsKey(valueType))
+                throw new Exception("[OSCConverter.UnpackValue] Unknown value type: '" + valueType + "'.");
 
-        //  Get packers.
-
-        private static OSCPacker GetPacker(OSCValue value)
-        {
-            return GetPacker(value.Type);
-        }
-
-        private static OSCPacker GetPacker(char tag)
-        {
-            return GetPacker(OSCValue.GetValueType(tag));
-        }
-
-        private static OSCPacker GetPacker(OSCValueType valueType)
-        {
-            return _packersDictionary.ContainsKey(valueType) ? _packersDictionary[valueType] : null;
+            return _packersDictionary[valueType].Unpack(bytes, ref start);
         }
 
         //  External
-
         private static void InsertBytes(IList data, IEnumerable bytes)
         {
+            // TODO: Lol.
             if (bytes == null) return;
             foreach (var b in bytes) data.Add(b);
         }
