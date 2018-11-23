@@ -15,28 +15,39 @@ namespace extOSC.Core.Packers
 
         #endregion
 
+        #region Private Vars
+
+        private readonly byte[] _data = new byte[sizeof(int)];
+
+        #endregion
+
         #region Protected Methods
 
-        protected override int BytesToValue(byte[] bytes, ref int start)
+        protected override int BytesToValue(byte[] buffer, ref int index)
         {
-            const int size = sizeof(int);
-            var data = new byte[size];
+            _data[0] = buffer[index++];
+            _data[1] = buffer[index++];
+            _data[2] = buffer[index++];
+            _data[3] = buffer[index++];
 
-            for (var i = 0; i < size; i++)
-            {
-                data[i] = bytes[start];
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(_data);
 
-                start++;
-            }
-
-            return BitConverter.ToInt32(BitConverter.IsLittleEndian ? ReverseBytes(data) : data, 0);
+            return BitConverter.ToInt32(_data, 0);
         }
 
-        protected override byte[] ValueToBytes(int value)
+        protected override void ValueToBytes(byte[] buffer, ref int index, int value)
         {
-            var bytes = BitConverter.GetBytes(value);
+            // TODO: To marshall structure
+            var data = BitConverter.GetBytes(value);
 
-            return BitConverter.IsLittleEndian ? ReverseBytes(bytes) : bytes;
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(_data);
+
+            buffer[index++] = data[0];
+            buffer[index++] = data[1];
+            buffer[index++] = data[2];
+            buffer[index++] = data[3];
         }
 
         #endregion

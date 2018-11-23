@@ -15,15 +15,13 @@ namespace extOSC.Core.Packers
 
         #region Protected Methods
 
-        protected override bool BytesToValue(byte[] bytes, ref int start)
+        protected override bool BytesToValue(byte[] buffer, ref int index)
         {
             return true;
         }
 
-        protected override byte[] ValueToBytes(bool value)
-        {
-            return default(byte[]);
-        }
+        protected override void ValueToBytes(byte[] buffer, ref int index, bool value)
+        { }
 
         #endregion
     }

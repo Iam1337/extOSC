@@ -16,39 +16,51 @@ namespace extOSC.Core.Packers
 
         #endregion
 
+        #region Private Vars
+
+        private readonly byte[] _data = new byte[sizeof(int)];
+
+        #endregion
+
         #region Protected Methods
 
-        protected override byte[] BytesToValue(byte[] bytes, ref int start)
+        protected override byte[] BytesToValue(byte[] buffer, ref int index)
         {
-            const int size = sizeof(int);
-            var data = new byte[size];
+            _data[0] = buffer[index++];
+            _data[1] = buffer[index++];
+            _data[2] = buffer[index++];
+            _data[3] = buffer[index++];
 
-            for (var i = 0; i < size; i++)
-            {
-                data[i] = bytes[start];
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(_data);
 
-                start++;
-            }
+            var blobSize = BitConverter.ToInt32(_data, 0);
+            var blob = new byte[blobSize];
 
-            var length = BitConverter.ToInt32(BitConverter.IsLittleEndian ? ReverseBytes(data) : data, 0);
-            var blob = new byte[length];
+            Array.Copy(buffer, index, blob, 0, blobSize);
 
-            Array.Copy(bytes, start, blob, 0, length);
-
-            start += length + (4 - (length % 4));
+            index += blobSize + (4 - blobSize % 4);
 
             return blob;
         }
 
-        protected override byte[] ValueToBytes(byte[] value)
+        protected override void ValueToBytes(byte[] buffer, ref int index, byte[] value)
         {
-            var bytes = new List<byte>();
-            var lengthBytes = BitConverter.GetBytes(value.Length);
+            var bytes = BitConverter.GetBytes(value.Length);
 
-            bytes.AddRange(BitConverter.IsLittleEndian ? ReverseBytes(lengthBytes) : lengthBytes);
-            bytes.AddRange(IncludeZeroBytes(value));
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
 
-            return bytes.ToArray();
+            buffer[index++] = bytes[0];
+            buffer[index++] = bytes[1];
+            buffer[index++] = bytes[2];
+            buffer[index++] = bytes[3];
+
+            Array.Copy(value, 0, buffer, index, value.Length);
+
+            index += value.Length;
+
+            IncludeZeroBytes(buffer, value.Length, ref index);
         }
 
         #endregion
