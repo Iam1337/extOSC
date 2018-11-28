@@ -239,9 +239,10 @@ namespace extOSC
 			if (mapBundle != null)
 				mapBundle.Map(packet);
 
-            var data = OSCConverter.Pack(packet);
+            var length = 0;
+            var buffer = OSCConverter.Pack(packet, out length);
 
-            transmitterBackend.Send(data);
+            transmitterBackend.Send(buffer, length);
 
             OSCConsole.Transmitted(this, packet);
         }

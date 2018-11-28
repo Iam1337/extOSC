@@ -31,7 +31,7 @@ namespace extOSC.Core.Network
 
         public abstract void Close();
 
-        public abstract void Send(byte[] data);
+        public abstract void Send(byte[] data, int length);
 
         #endregion
     }
