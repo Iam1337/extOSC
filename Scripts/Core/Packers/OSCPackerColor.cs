@@ -15,12 +15,6 @@ namespace extOSC.Core.Packers
 
         #endregion
 
-        #region Private Vars
-
-        private readonly byte[] _data = new byte[4];
-
-        #endregion
-
         #region Protected Methods
 
         protected override Color BytesToValue(byte[] buffer, ref int index)
