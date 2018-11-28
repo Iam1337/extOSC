@@ -119,7 +119,7 @@ namespace extOSC.Core
                 _bufferIndex = 0;
 
                 throw new Exception("[OSCConverter.PackInternal] You have reached the nesting package depth limit. Maximum depth of nested packages: " + _buffers.Count +"\n" +
-                                    "To change the depth use: OSCConverter.SetBuffersDepth");
+                                    "To change the depth use: OSCConverter.SetBuffersDepth() method.");
             }
 
             var buffer = _buffers[_bufferIndex];
