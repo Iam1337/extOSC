@@ -17,7 +17,10 @@ namespace extOSC.Core
 
 		public static string ToBase64String(OSCPacket packet)
 		{
-			return Convert.ToBase64String(OSCConverter.Pack(packet));
+		    var length = 0;
+		    var buffer = OSCConverter.Pack(packet, out length);
+
+		    return Convert.ToBase64String(buffer, 0, length);
 		}
 
 		public static OSCPacket FromBase64String(string base64String)

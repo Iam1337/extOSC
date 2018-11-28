@@ -64,8 +64,10 @@ namespace extOSC.Core.Console
         {
 #if UNITY_EDITOR
             // COPY PACKET
-            var rawData = OSCConverter.Pack(message.Packet);
-            message.Packet = OSCConverter.Unpack(rawData);
+            var size = 0;
+            var buffer = OSCConverter.Pack(message.Packet, out size);
+
+            message.Packet = OSCConverter.Unpack(buffer, size);
             
             _consoleBuffer.Add(message);
 #else

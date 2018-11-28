@@ -85,13 +85,13 @@ namespace extOSC.Core.Network
             _client = null;
         }
 
-        public override void Send(byte[] data)
+        public override void Send(byte[] data, int length)
         {
             if (_client == null) return;
 
             try
             {
-                _client.Send(data, data.Length, _remoteEndPoint);
+                _client.Send(data, length, _remoteEndPoint);
             }
             catch (SocketException exception)
             {
