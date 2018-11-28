@@ -35,30 +35,27 @@ namespace extOSC.Core.Packers
 
         protected override DateTime BytesToValue(byte[] buffer, ref int index)
         {
-            const int size = sizeof(uint);
+            _dataSeconds[0] = buffer[index++];
+            _dataSeconds[1] = buffer[index++];
+            _dataSeconds[2] = buffer[index++];
+            _dataSeconds[3] = buffer[index++];
+            _dataMilliseconds[0] = buffer[index++];
+            _dataMilliseconds[1] = buffer[index++];
+            _dataMilliseconds[2] = buffer[index++];
+            _dataMilliseconds[3] = buffer[index++];
 
-            var dataSeconds = new byte[size];
-            for (var i = 0; i < size; i++)
+
+            if (BitConverter.IsLittleEndian)
             {
-                dataSeconds[i] = buffer[index];
-
-                index++;
+                Array.Reverse(_dataSeconds);
+                Array.Reverse(_dataMilliseconds);
             }
 
-            var dataFractional = new byte[size];
-            for (var i = 0; i < size; i++)
-            {
-                dataFractional[i] = buffer[index];
+            var seconds = BitConverter.ToUInt32(_dataSeconds, 0);
+            var milliseconds = BitConverter.ToUInt32(_dataMilliseconds, 0);
 
-                index++;
-            }
-
-            var seconds =
-                BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataSeconds) : dataSeconds, 0);
-            var fractional =
-                BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataFractional) : dataFractional, 0);
-
-            return _zeroTime.AddSeconds(seconds).AddMilliseconds(fractional);
+            return _zeroTime.AddSeconds(seconds).
+                             AddMilliseconds(milliseconds);
         }
 
         protected override void ValueToBytes(byte[] buffer, ref int index, DateTime value)
