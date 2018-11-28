@@ -23,7 +23,7 @@ namespace extOSC.Core.Network
 
 		#region Static Private Vars
 
-		private static IPEndPoint _localEndPoint;
+		//private static IPEndPoint _localEndPoint;
 
 		private static List<ClientData> _clientsData = new List<ClientData>();
 
