@@ -12,7 +12,7 @@ namespace extOSC.Editor.Windows
     {
         #region Static Public Methods
 
-        [MenuItem("Window/extOSC/Mapping Window", false, 0)]
+        [MenuItem("Window/extOSC/Mapping Window", false, 1001)]
         public static void ShowWindow()
         {
             Instance.titleContent = new GUIContent("OSC Mapping", OSCEditorTextures.IronWallSmall);
