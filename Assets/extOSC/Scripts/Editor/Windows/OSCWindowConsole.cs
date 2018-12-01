@@ -38,7 +38,7 @@ namespace extOSC.Editor.Windows
 
         #region Public Static Methods
 
-        [MenuItem("Window/extOSC/Console Window", false, 0)]
+        [MenuItem("Window/extOSC/Console Window", false, 1000)]
         public static void ShowWindow()
         {
             Instance.titleContent = new GUIContent("OSC Console", OSCEditorTextures.IronWallSmall);
