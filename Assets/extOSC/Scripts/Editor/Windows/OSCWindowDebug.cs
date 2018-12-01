@@ -27,7 +27,7 @@ namespace extOSC.Editor.Windows
 
         #region Static Public Methods
 
-        [MenuItem("Window/extOSC/Debug Window", false, 2)]
+        [MenuItem("Window/extOSC/Debug Window", false, 1002)]
         public static void ShowWindow()
         {
             Instance.titleContent = new GUIContent("OSC Debug", OSCEditorTextures.IronWallSmall);
