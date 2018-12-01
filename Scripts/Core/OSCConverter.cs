@@ -87,9 +87,32 @@ namespace extOSC.Core
             }
         }
 
+        /// <summary>
+        /// Serializes a OSCPacket and writes it to a buffer, returning the size of the packet.
+        /// </summary>
+        /// <param name="packet">Packet</param>
+        /// <param name="size">Serialized packet size</param>
+        /// <returns>Buffer with a fixed value.</returns>
         public static byte[] Pack(OSCPacket packet, out int size)
         {
             size = 0; return PackInternal(packet, ref size);
+        }
+
+        /// <summary>
+        /// Serializes a packet and returns the packet data in byte array.
+        /// </summary>
+        /// <param name="packet">Packet</param>
+        /// <returns>Packet data</returns>
+        public static byte[] Pack(OSCPacket packet)
+        {
+            var size = 0;
+            var buffer = PackInternal(packet, ref size);
+
+            var bytes = new byte[size];
+
+            Buffer.BlockCopy(buffer, 0, bytes, 0, size);
+
+            return bytes;
         }
 
         public static OSCPacket Unpack(byte[] bytes)
@@ -97,9 +120,9 @@ namespace extOSC.Core
             return Unpack(bytes, bytes.Length);
         }
 
-        public static OSCPacket Unpack(byte[] bytes, int length)
+        public static OSCPacket Unpack(byte[] buffer, int length)
         {
-            var start = 0; return Unpack(bytes, ref start, length);
+            var start = 0; return Unpack(buffer, ref start, length);
         }
 
         #endregion
