@@ -175,3 +175,9 @@ v1.12
 - Added Unity 2018.3 and newer support.
 - Added Filter field in OSC Console.
 - Changed icons on OSC windows.
+
+-----
+v1.13
+-----
+
+- OSCConverter optimization.
