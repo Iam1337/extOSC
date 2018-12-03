@@ -263,9 +263,15 @@ namespace extOSC.UI
 
             _layoutTransform = _layoutGroup.GetComponent<RectTransform>();
 
+#if UNITY_2018_3_OR_NEWER
+            var assetType = UnityEditor.PrefabUtility.GetPrefabAssetType(this);
+            if (assetType == UnityEditor.PrefabAssetType.NotAPrefab && !Application.isPlaying)
+                CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+#else
             var prefabType = UnityEditor.PrefabUtility.GetPrefabType(this);
             if (prefabType != UnityEditor.PrefabType.Prefab && !Application.isPlaying)
                 CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+#endif
         }
 #endif
 

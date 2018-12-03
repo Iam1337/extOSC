@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace extOSC.Core.Network
 {
-	public static class OSCStandaloneManager
+    internal static class OSCStandaloneManager
 	{
 		#region Extensions
 
@@ -23,7 +23,7 @@ namespace extOSC.Core.Network
 
 		#region Static Private Vars
 
-		private static IPEndPoint _localEndPoint;
+		//private static IPEndPoint _localEndPoint;
 
 		private static List<ClientData> _clientsData = new List<ClientData>();
 

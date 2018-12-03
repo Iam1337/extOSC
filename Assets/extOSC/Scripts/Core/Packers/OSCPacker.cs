@@ -32,68 +32,51 @@ namespace extOSC.Core.Packers
 
         public abstract OSCValueType GetPackerType();
 
-        public abstract OSCValue Unpack(byte[] bytes, ref int start);
+        public abstract object Unpack(byte[] bytes, ref int start);
 
-        public abstract object UnpackValue(byte[] bytes, ref int start);
-
-        public abstract byte[] Pack(OSCValue oscValue);
-
-        public abstract byte[] PackValue(object value);
+        public abstract void Pack(byte[] bytes, ref int index, object value);
 
         #endregion
 
         #region Protected Static Methods
 
-        protected byte[] IncludeZeroBytes(byte[] bytes)
+        protected void IncludeZeroBytes(byte[] bytes, int size, ref int index)
         {
-            var byteList = bytes.ToList();
-
-            var zeroCount = 4 - (byteList.Count % 4);
+            var zeroCount = 4 - size % 4;
             for (var i = 0; i < zeroCount; i++)
             {
-                byteList.Add(ZeroByte);
+                bytes[index] = 0;
+                index++;
             }
-
-            return byteList.ToArray();
         }
 
         #endregion
     }
 
-
     public abstract class OSCPacker<T> : OSCPacker
     {
         #region Public Methods
 
-        public override OSCValue Unpack(byte[] bytes, ref int start)
-        {
-            return new OSCValue(GetPackerType(), BytesToValue(bytes, ref start));
-        }
-
-        public override object UnpackValue(byte[] bytes, ref int start)
+        public override object Unpack(byte[] bytes, ref int start)
         {
             return BytesToValue(bytes, ref start);
         }
 
-        public override byte[] Pack(OSCValue oscValue)
-        {
-            var value = (T)oscValue.Value;
-            return value != null ? ValueToBytes((T)oscValue.Value) : null;
-        }
-
-        public override byte[] PackValue(object value)
+        public override void Pack(byte[] bytes, ref int index, object value)
         {
             var unpackedValue = (T)value;
-            return unpackedValue != null ? ValueToBytes((T)value) : null;
+            if (unpackedValue == null) return;
+
+            ValueToBytes(bytes, ref index, (T)value);
         }
 
         #endregion
 
         #region Protected Methods
 
-        protected abstract T BytesToValue(byte[] bytes, ref int start);
+        protected abstract T BytesToValue(byte[] buffer, ref int index);
 
-        protected abstract byte[] ValueToBytes(T value);
+        protected abstract void ValueToBytes(byte[] buffer, ref int index, T value);
 
         #endregion
     }

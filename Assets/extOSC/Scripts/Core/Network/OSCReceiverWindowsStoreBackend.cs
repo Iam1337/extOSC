@@ -6,6 +6,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 using Windows.Networking;
 using Windows.Networking.Sockets;
@@ -13,7 +14,7 @@ using Windows.Storage.Streams;
 
 namespace extOSC.Core.Network
 {
-    public class OSCReceiverWindowsStoreBackend : OSCReceiverBackend
+    internal class OSCReceiverWindowsStoreBackend : OSCReceiverBackend
     {
         #region Public Vars
 
@@ -108,7 +109,10 @@ namespace extOSC.Core.Network
             {
                 try
                 {
-                    dataWriter.WriteBytes(OSCConverter.Pack(new OSCMessage("/wsainit")));
+                    var length = 0;
+                    var buffer = OSCConverter.Pack(new OSCMessage("/wsainit"), out length);
+
+                    dataWriter.WriteBuffer(buffer.AsBuffer(0, length));
                     await dataWriter.StoreAsync();
                 }
                 catch (Exception exception)

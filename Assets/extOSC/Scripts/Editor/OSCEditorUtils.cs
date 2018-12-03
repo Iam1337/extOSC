@@ -212,7 +212,13 @@ namespace extOSC.Editor
 
         public static void SavePacket(string filePath, OSCPacket packet)
         {
-            File.WriteAllBytes(filePath, OSCConverter.Pack(packet));
+            using (var fileWriter = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
+            {
+                var size = 0;
+                var buffer = OSCConverter.Pack(packet, out size);
+
+                fileWriter.Write(buffer, 0, size);
+            }
         }
 
         public static OSCControls.Resources GetStandardResources()
@@ -280,7 +286,10 @@ namespace extOSC.Editor
 
         public static OSCPacket CopyPacket(OSCPacket packet)
         {
-            return OSCConverter.Unpack(OSCConverter.Pack(packet));
+            var size = 0;
+            var buffer = OSCConverter.Pack(packet, out size);
+
+            return OSCConverter.Unpack(buffer, size);
         }
 
         public static string NicifyName(string name, bool removePrefix = true)

@@ -2,7 +2,7 @@
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerFalse : OSCPacker<bool>
+    internal class OSCPackerFalse : OSCPacker<bool>
     {
         #region Public Methods
 
@@ -15,15 +15,13 @@ namespace extOSC.Core.Packers
 
         #region Protected Methods
 
-        protected override bool BytesToValue(byte[] bytes, ref int start)
+        protected override bool BytesToValue(byte[] buffer, ref int index)
         {
             return false;
         }
 
-        protected override byte[] ValueToBytes(bool value)
-        {
-            return default(byte[]);
-        }
+        protected override void ValueToBytes(byte[] buffer, ref int index, bool value)
+        { }
 
         #endregion
     }

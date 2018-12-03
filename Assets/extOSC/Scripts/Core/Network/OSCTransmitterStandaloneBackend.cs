@@ -9,7 +9,7 @@ using System;
 
 namespace extOSC.Core.Network
 {
-    public class OSCTransmitterStandaloneBackend : OSCTransmitterBackend
+    internal class OSCTransmitterStandaloneBackend : OSCTransmitterBackend
     {
         #region Public Vars
 
@@ -85,13 +85,13 @@ namespace extOSC.Core.Network
             _client = null;
         }
 
-        public override void Send(byte[] data)
+        public override void Send(byte[] data, int length)
         {
             if (_client == null) return;
 
             try
             {
-                _client.Send(data, data.Length, _remoteEndPoint);
+                _client.Send(data, length, _remoteEndPoint);
             }
             catch (SocketException exception)
             {
@@ -100,25 +100,6 @@ namespace extOSC.Core.Network
         }
 
         #endregion
-		/*
-		// Some old code.
-        #region Private Methods
-
-        private IPEndPoint CreateEndPoint(string remoteHost, int remotePort, bool showWarning = true)
-        {
-            IPAddress ipAddress;
-
-            if (!IPAddress.TryParse(remoteHost, out ipAddress))
-            {
-                if (showWarning) Debug.LogWarningFormat("[OSCTranmitter] Invalid IP address: {0}.", remoteHost);
-                return null;
-            }
-
-            return new IPEndPoint(ipAddress, remotePort);
-        }
-
-        #endregion
-		*/
     }
 }
 #endif

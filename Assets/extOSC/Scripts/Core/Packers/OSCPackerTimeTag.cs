@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerTimeTag : OSCPacker<DateTime>
+    internal class OSCPackerTimeTag : OSCPacker<DateTime>
     {
         #region Private Static Vars
 
-        private static readonly DateTime _epoch = new DateTime(1900, 1, 1, 0, 0, 0, 0);
+        private static readonly DateTime _zeroTime = new DateTime(1900, 1, 1, 0, 0, 0, 0);
 
         #endregion
 
@@ -22,49 +22,66 @@ namespace extOSC.Core.Packers
 
         #endregion
 
+
+        #region Private Vars
+
+        private readonly byte[] _dataSeconds = new byte[sizeof(uint)];
+
+        private readonly byte[] _dataMilliseconds = new byte[sizeof(uint)];
+
+        #endregion
+        
         #region Protected Methods
 
-        protected override DateTime BytesToValue(byte[] bytes, ref int start)
+        protected override DateTime BytesToValue(byte[] buffer, ref int index)
         {
-            const int size = sizeof(uint);
+            _dataSeconds[0] = buffer[index++];
+            _dataSeconds[1] = buffer[index++];
+            _dataSeconds[2] = buffer[index++];
+            _dataSeconds[3] = buffer[index++];
+            _dataMilliseconds[0] = buffer[index++];
+            _dataMilliseconds[1] = buffer[index++];
+            _dataMilliseconds[2] = buffer[index++];
+            _dataMilliseconds[3] = buffer[index++];
 
-            var dataSeconds = new byte[size];
-            for (var i = 0; i < size; i++)
+
+            if (BitConverter.IsLittleEndian)
             {
-                dataSeconds[i] = bytes[start];
-
-                start++;
+                Array.Reverse(_dataSeconds);
+                Array.Reverse(_dataMilliseconds);
             }
 
-            var dataFractional = new byte[size];
-            for (var i = 0; i < size; i++)
-            {
-                dataFractional[i] = bytes[start];
+            var seconds = BitConverter.ToUInt32(_dataSeconds, 0);
+            var milliseconds = BitConverter.ToUInt32(_dataMilliseconds, 0);
 
-                start++;
-            }
-
-            var seconds = BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataSeconds) : dataSeconds, 0);
-            var fractional = BitConverter.ToUInt32(BitConverter.IsLittleEndian ? ReverseBytes(dataFractional) : dataFractional, 0);
-
-            return _epoch.AddSeconds(seconds).AddMilliseconds(fractional);
+            return _zeroTime.AddSeconds(seconds).
+                             AddMilliseconds(milliseconds);
         }
 
-        protected override byte[] ValueToBytes(DateTime value)
+        protected override void ValueToBytes(byte[] buffer, ref int index, DateTime value)
         {
-            var bytes = new List<byte>();
+            var deltaTime = value - _zeroTime;
 
-            var timeOffset = (value - _epoch);
-            var seconds = (uint)timeOffset.TotalSeconds;
-            var fractional = (uint)timeOffset.Milliseconds;
+            var seconds = (uint) deltaTime.TotalSeconds;
+            var milliseconds = (uint) deltaTime.Milliseconds;
 
             var dataSeconds = BitConverter.GetBytes(seconds);
-            var dataFractional = BitConverter.GetBytes(fractional);
+            var dataMilliseconds = BitConverter.GetBytes(milliseconds);
 
-            bytes.AddRange(BitConverter.IsLittleEndian ? ReverseBytes(dataSeconds) : dataSeconds);
-            bytes.AddRange(BitConverter.IsLittleEndian ? ReverseBytes(dataFractional) : dataFractional);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(dataSeconds);
+                Array.Reverse(dataMilliseconds);
+            }
 
-            return bytes.ToArray();
+            buffer[index++] = dataSeconds[0];
+            buffer[index++] = dataSeconds[1];
+            buffer[index++] = dataSeconds[2];
+            buffer[index++] = dataSeconds[3];
+            buffer[index++] = dataMilliseconds[0];
+            buffer[index++] = dataMilliseconds[1];
+            buffer[index++] = dataMilliseconds[2];
+            buffer[index++] = dataMilliseconds[3];
         }
 
         #endregion

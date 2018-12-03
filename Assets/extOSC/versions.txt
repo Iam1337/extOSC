@@ -1,4 +1,4 @@
-extOSC - Open Sound Control Protocol by V. Sigalkin v1.10
+extOSC - Open Sound Control Protocol by V. Sigalkin
 
 ----
 v1.0
@@ -167,3 +167,17 @@ v1.11
 
 - Added OSCBundle.Create method.
 - Added OSCBundle(OSCPacket[]) constructor.
+
+-----
+v1.12
+-----
+
+- Added Unity 2018.3 and newer support.
+- Added Filter field in OSC Console.
+- Changed icons on OSC windows.
+
+-----
+v1.13
+-----
+
+- OSCConverter optimization.

@@ -2,7 +2,7 @@
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerImpulse : OSCPacker<object>
+    internal class OSCPackerImpulse : OSCPacker<object>
     {
         #region Public Methods
 
@@ -15,15 +15,13 @@ namespace extOSC.Core.Packers
 
         #region Protected Methods
 
-        protected override object BytesToValue(byte[] bytes, ref int start)
+        protected override object BytesToValue(byte[] buffer, ref int index)
         {
             return null;
         }
 
-        protected override byte[] ValueToBytes(object value)
-        {
-            return default(byte[]);
-        }
+        protected override void ValueToBytes(byte[] buffer, ref int index, object value)
+        { }
 
         #endregion
     }

@@ -1,10 +1,11 @@
 ﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
 
+using System;
 using System.Text;
 
 namespace extOSC.Core.Packers
 {
-    class OSCPackerString : OSCPacker<string>
+    internal class OSCPackerString : OSCPacker<string>
     {
 
         #region Public Methods
@@ -18,28 +19,33 @@ namespace extOSC.Core.Packers
 
         #region Protected Methods
 
-        protected override string BytesToValue(byte[] bytes, ref int start)
+        protected override string BytesToValue(byte[] buffer, ref int index)
         {
             var length = 0;
-            var index = start;
+            var position = index;
 
-            while (bytes[index] != 0 && index < bytes.Length)
+            while (buffer[position] != 0 && position < buffer.Length)
             {
-                index++;
+                position++;
                 length++;
             }
 
-            var stringValue = Encoding.ASCII.GetString(bytes, start, length);
-            start += length + (4 - (length % 4));
+            var value = Encoding.ASCII.GetString(buffer, index, length);
 
-            return stringValue;
+            index += length + (4 - length % 4);
+
+            return value;
         }
 
-        protected override byte[] ValueToBytes(string value)
+        protected override void ValueToBytes(byte[] buffer, ref int index, string value)
         {
             var data = Encoding.ASCII.GetBytes(value);
+            
+            Array.Copy(data, 0, buffer, index, data.Length);
 
-            return IncludeZeroBytes(data);
+            index += value.Length;
+
+            IncludeZeroBytes(buffer, value.Length, ref index);
         }
 
         #endregion

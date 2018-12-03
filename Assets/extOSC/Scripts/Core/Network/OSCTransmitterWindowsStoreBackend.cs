@@ -4,6 +4,7 @@
 using UnityEngine;
 
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 using Windows.Networking;
 using Windows.Networking.Sockets;
@@ -11,7 +12,7 @@ using Windows.Storage.Streams;
 
 namespace extOSC.Core.Network
 {
-    public class OSCTransmitterWindowsStoreBackend : OSCTransmitterBackend 
+    internal class OSCTransmitterWindowsStoreBackend : OSCTransmitterBackend 
     {
         #region Public Vars
 
@@ -59,22 +60,22 @@ namespace extOSC.Core.Network
             _datagramSocket = null;
         }
 
-        public override void Send(byte[] data)
+        public override void Send(byte[] data, int length)
         {
-            SendAsync(data);
+            SendAsync(data.AsBuffer(0, length));
         }
 
         #endregion
 
         #region Private Methods
 
-        private async void SendAsync(byte[] data)
+        private async void SendAsync(IBuffer buffer)
         {
             using (var dataWriter = new DataWriter(await _datagramSocket.GetOutputStreamAsync(_remoteHost, _remotePort)))
             {
                 try
                 {
-                    dataWriter.WriteBytes(data);
+                    dataWriter.WriteBuffer(buffer);
                     await dataWriter.StoreAsync();
                 }
                 catch (Exception exception)

@@ -9,7 +9,7 @@ using System.Net.Sockets;
 
 namespace extOSC.Core.Network
 {
-    public class OSCReceiverStandaloneBackend : OSCReceiverBackend
+    internal class OSCReceiverStandaloneBackend : OSCReceiverBackend
     {
         #region Public Vars
 
