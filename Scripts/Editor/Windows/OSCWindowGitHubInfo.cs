@@ -10,10 +10,6 @@ namespace extOSC.Editor.Windows
 {
     public class OSCWindowGitHubInfo : OSCWindow<OSCWindowGitHubInfo, OSCPanelGitHubInfo>
     {
-        #region Public Vars
-
-        #endregion
-
         #region Public Methods
 
         [MenuItem("Window/extOSC/GitHub Info", false, 1040)]
