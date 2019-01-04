@@ -29,6 +29,32 @@ namespace extOSC.Editor
 
         #region Static Public Methods
 
+        // LINKS
+        [MenuItem("Window/extOSC/Links/GitHub: Repository", false, 1040)]
+        public static void ShowRepository(MenuCommand menuCommand)
+        {
+            Application.OpenURL("https://github.com/iam1337/extOSC");
+        }
+
+        [MenuItem("Window/extOSC/Links/GitHub: Roadmap", false, 1041)]
+        public static void ShowRoadmap(MenuCommand menuCommand)
+        {
+            Application.OpenURL("https://github.com/Iam1337/extOSC/projects/1");
+        }
+
+        [MenuItem("Window/extOSC/Links/GitHub: Wiki", false, 1042)]
+        public static void ShowWiki(MenuCommand menuCommand)
+        {
+            Application.OpenURL("https://github.com/Iam1337/extOSC/wiki");
+        }
+
+        [MenuItem("Window/extOSC/Links/Unity Forums: Thread", false, 1061)]
+        public static void ShowForum(MenuCommand menuCommand)
+        {
+            Application.OpenURL("https://forum.unity.com/threads/436159/");
+        }
+
+        // GAME OBJECTS
         [MenuItem("GameObject/extOSC/OSC Manager", false, 40)]
         public static void AddManager(MenuCommand menuCommand)
         {
