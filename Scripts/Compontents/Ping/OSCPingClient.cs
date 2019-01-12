@@ -27,9 +27,9 @@ namespace extOSC.Components.Ping
             set { autoStart = value; }
         }
 
-        public bool IsAvaible
+        public bool IsAvailable
         {
-            get { return _isAvaible; }
+            get { return _IsAvailable; }
         }
 
         public float Timer
@@ -68,7 +68,7 @@ namespace extOSC.Components.Ping
 
         protected float _lastReceiveTime;
 
-        protected bool _isAvaible;
+        protected bool _IsAvailable;
 
         protected bool _isRunning;
 
@@ -95,7 +95,7 @@ namespace extOSC.Components.Ping
             }
 
             _lastReceiveTime += Time.deltaTime;
-            _isAvaible = timeout > _lastReceiveTime;
+            _IsAvailable = timeout > _lastReceiveTime;
         }
 
         #endregion

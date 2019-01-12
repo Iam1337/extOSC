@@ -16,13 +16,6 @@ namespace extOSC.Components
             set { transmitter = value; }
         }
 
-	    [System.Obsolete("\"Address\" is deprecated, please use \"TransmitterAddress\" instead.")]
-	    public virtual string Address
-	    {
-		    get { return TransmitterAddress; }
-		    set { TransmitterAddress = value; }
-	    }
-
 		public virtual string TransmitterAddress
         {
             get { return address; }

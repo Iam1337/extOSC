@@ -28,13 +28,6 @@ namespace extOSC.Components
             }
         }
 
-        [System.Obsolete("\"Address\" is deprecated, please use \"ReceiverAddress\" instead.")]
-        public virtual string Address
-        {
-            get { return ReceiverAddress; }
-            set { ReceiverAddress = value; }
-        }
-
         public string ReceiverAddress
         {
             get { return address; }

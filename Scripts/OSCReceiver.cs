@@ -35,7 +35,7 @@ namespace extOSC
 
 				localPort = value;
 
-                if (receiverBackend.IsRunning && IsAvaible)
+                if (receiverBackend.IsRunning && IsAvailable)
                 {
                     Close();
                     Connect();
@@ -43,11 +43,11 @@ namespace extOSC
             }
         }
 
-        public override bool IsAvaible
+        public override bool IsAvailable
         {
             get
             {
-                return receiverBackend.IsAvaible;
+                return receiverBackend.IsAvailable;
             }
         }
 
@@ -65,8 +65,6 @@ namespace extOSC
 
         [SerializeField]
         protected int localPort = 7001;
-
-        protected Thread thread;
 
         protected Queue<OSCPacket> packets = new Queue<OSCPacket>();
 
@@ -100,7 +98,7 @@ namespace extOSC
 
         protected virtual void Update()
         {
-            if (!IsAvaible || !receiverBackend.IsRunning) return;
+            if (!IsAvailable || !receiverBackend.IsRunning) return;
 
             lock (_lock)
             {
@@ -123,7 +121,7 @@ namespace extOSC
         {
             localPort = OSCUtilities.ClampPort(localPort);
 
-            if (receiverBackend.IsRunning && IsAvaible)
+            if (receiverBackend.IsRunning && IsAvailable)
             {
                 Close();
                 Connect();
@@ -179,15 +177,6 @@ namespace extOSC
 
             if (bindings.Contains(bind))
                 bindings.Remove(bind);
-        }
-
-        [System.Obsolete("\"FakeReceive(OSCPacket)\" is deprecated. OSC Debug now use reflection.")]
-        public void FakeReceive(OSCPacket packet)
-        {
-            lock (_lock)
-            {
-                packets.Enqueue(packet);
-            }
         }
 
         public void UnbindAll()

@@ -19,7 +19,7 @@ namespace extOSC.Core.Network
 
         #region Public Vars
 
-        public abstract bool IsAvaible { get; }
+        public abstract bool IsAvailable { get; }
 
         #endregion
 

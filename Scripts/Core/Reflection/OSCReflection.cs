@@ -17,18 +17,6 @@ namespace extOSC.Core.Reflection
 
         #region Static Public Methods
 
-        [Obsolete("\"GetProperties\" is deprecated, please use \"GetMembersByType\" instead.")]
-        public static MemberInfo[] GetProperties(object target, Type propertyType)
-        {
-            return GetMembersByType(target, propertyType, OSCReflectionAccess.Any, OSCReflectionType.Field | OSCReflectionType.Property);
-        }
-
-        [Obsolete("\"GetProperties\" is deprecated, please use \"GetMembers\" instead.")]
-        public static MemberInfo[] GetProperties(object target)
-        {
-            return GetMembers(target, OSCReflectionType.Field | OSCReflectionType.Property);
-        }
-
         public static MemberInfo[] GetMembers(object memberTarget, OSCReflectionType memberTypes)
         {
             return GetMembers(memberTarget.GetType(), memberTypes);
