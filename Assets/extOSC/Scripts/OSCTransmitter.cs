@@ -15,12 +15,12 @@ namespace extOSC
     {
         #region Public Vars
 
-        public override bool IsAvaible
+        public override bool IsAvailable
         {
             get
             {
                 if (transmitterBackend != null)
-                    return transmitterBackend.IsAvaible;
+                    return transmitterBackend.IsAvailable;
 
                 return false;
             }
@@ -36,7 +36,7 @@ namespace extOSC
 
 				localPortMode = value;
 
-				if (IsAvaible)
+				if (IsAvailable)
 				{
 					Close();
 					Connect();
@@ -54,7 +54,7 @@ namespace extOSC
 
 				localReceiver = value;
 
-				if (IsAvaible && localPortMode == OSCLocalPortMode.FromReceiver)
+				if (IsAvailable && localPortMode == OSCLocalPortMode.FromReceiver)
 				{
 					Close();
 					Connect();
@@ -75,7 +75,7 @@ namespace extOSC
 
 				localPort = value;
 
-				if (IsAvaible && localPortMode == OSCLocalPortMode.Custom)
+				if (IsAvailable && localPortMode == OSCLocalPortMode.Custom)
 				{
 					Close();
 					Connect();
@@ -95,7 +95,7 @@ namespace extOSC
 
                 transmitterBackend.RefreshConnection(remoteHost, remotePort);
 
-                if (IsAvaible && localPortMode == OSCLocalPortMode.FromRemotePort)
+                if (IsAvailable && localPortMode == OSCLocalPortMode.FromRemotePort)
                 {
                     Close();
                     Connect();
@@ -197,7 +197,7 @@ namespace extOSC
 
 			transmitterBackend.RefreshConnection(remoteHost, remotePort);
 
-			if (IsAvaible)
+			if (IsAvailable)
 			{
 				Close();
 				Connect();
@@ -233,7 +233,7 @@ namespace extOSC
                 return;
             }
 
- 			if (!transmitterBackend.IsAvaible)
+ 			if (!transmitterBackend.IsAvailable)
 				return; 
 
 			if (mapBundle != null)

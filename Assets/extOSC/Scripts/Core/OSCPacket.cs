@@ -5,15 +5,9 @@ using System.Net;
 
 namespace extOSC.Core
 {
-	abstract public class OSCPacket
+	public abstract class OSCPacket
 	{
 		#region Static Public Methods
-
-		[Obsolete("\"OSCPacket.IsBundle(OSCPacket)\" is deprecated, please use \"packet.IsBundle()\" instead.")]
-		public static bool IsBundle(OSCPacket packet)
-		{
-			return packet.IsBundle();
-		}
 
 		public static string ToBase64String(OSCPacket packet)
 		{

@@ -378,12 +378,6 @@ namespace extOSC
             ArrayValue.Add(arrayValue);
         }
 
-        [Obsolete("\"GetTag()\"is deprecated, please use \"Tag\" instead.")]
-        public char GetTag()
-        {
-            return GetTag(type);
-        }
-
         public override string ToString()
         {
             if (type == OSCValueType.True || type == OSCValueType.False || type == OSCValueType.Null || type == OSCValueType.Impulse)

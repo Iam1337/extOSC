@@ -27,7 +27,7 @@ namespace extOSC.Core.Network
 
         public abstract OSCReceivedCallback ReceivedCallback { get; set; }
 
-        public abstract bool IsAvaible { get; }
+        public abstract bool IsAvailable { get; }
 
         public abstract bool IsRunning { get; }
 

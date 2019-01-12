@@ -145,7 +145,7 @@ namespace extOSC.Editor.Components
             EditorGUILayout.LabelField(_pingStatusContent, EditorStyles.boldLabel);
             GUILayout.BeginVertical("box");
 
-            _drawedState = _ping.IsAvaible;
+            _drawedState = _ping.IsAvailable;
 
             GUI.color = _drawedState ? Color.green : Color.red;
             GUILayout.BeginVertical(EditorStyles.helpBox);
@@ -165,7 +165,7 @@ namespace extOSC.Editor.Components
             if (_ping == null)
                 return;
 
-            if (_ping.IsAvaible != _drawedState)
+            if (_ping.IsAvailable != _drawedState)
                 Repaint();
         }
 

@@ -1,7 +1,5 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using UnityEngine;
-
 using System;
 using System.Reflection;
 

@@ -80,16 +80,6 @@ namespace extOSC.Components.Informers
 
         #endregion
 
-        #region Public Methods
-
-        [Obsolete("\"SetProperty(OSCReflectionMember)\" is deprecated, please use \"ReflectionTarget\" instead.")]
-        public void SetProperty(OSCReflectionMember property)
-        {
-            reflectionMember = property;
-        }
-
-        #endregion
-
         #region Private Methods
 
         private void UpdateCachedReferences()

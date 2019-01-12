@@ -59,7 +59,7 @@ namespace extOSC.Editor
 
             EditorApplication.update += ReceiverEditorUpdate;
 
-            if (!Application.isPlaying && !_receiver.IsAvaible && _workInEditorProperty.boolValue)
+            if (!Application.isPlaying && !_receiver.IsAvailable && _workInEditorProperty.boolValue)
             {
                 _receiver.Connect();
             }
@@ -72,7 +72,7 @@ namespace extOSC.Editor
 
             EditorApplication.update -= ReceiverEditorUpdate;
 
-            if (!Application.isPlaying && _receiver.IsAvaible)
+            if (!Application.isPlaying && _receiver.IsAvailable)
             {
                 _receiver.Close();
             }
@@ -88,7 +88,7 @@ namespace extOSC.Editor
             GUILayout.Space(5);
 
             // STATUS
-            EditorGUILayout.LabelField("Active: " + _receiver.IsAvaible, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Active: " + _receiver.IsAvailable, EditorStyles.boldLabel);
 
             // SETTINGS BLOCK
             GUILayout.BeginVertical("box");
@@ -159,11 +159,11 @@ namespace extOSC.Editor
         {
             EditorGUILayout.BeginHorizontal("box");
 
-            GUI.color = _receiver.IsAvaible ? Color.green : Color.red;
-            var connection = GUILayout.Button(_receiver.IsAvaible ? "Connected" : "Disconnected");
+            GUI.color = _receiver.IsAvailable ? Color.green : Color.red;
+            var connection = GUILayout.Button(_receiver.IsAvailable ? "Connected" : "Disconnected");
 
             GUI.color = Color.yellow;
-            EditorGUI.BeginDisabledGroup(!_receiver.IsAvaible);
+            EditorGUI.BeginDisabledGroup(!_receiver.IsAvailable);
             var reconect = GUILayout.Button("Reconnect");
             EditorGUI.EndDisabledGroup();
 
@@ -171,13 +171,13 @@ namespace extOSC.Editor
 
             if (connection)
             {
-                if (_receiver.IsAvaible) _receiver.Close();
+                if (_receiver.IsAvailable) _receiver.Close();
                 else _receiver.Connect();
             }
 
             if (reconect)
             {
-                if (_receiver.IsAvaible) _receiver.Close();
+                if (_receiver.IsAvailable) _receiver.Close();
 
                 _receiver.Connect();
             }
@@ -203,13 +203,13 @@ namespace extOSC.Editor
 
                 if (_workInEditorProperty.boolValue)
                 {
-                    if (_receiver.IsAvaible) _receiver.Close();
+                    if (_receiver.IsAvailable) _receiver.Close();
 
                     _receiver.Connect();
                 }
                 else
                 {
-                    if (_receiver.IsAvaible) _receiver.Close();
+                    if (_receiver.IsAvailable) _receiver.Close();
                 }
             }
 
@@ -217,7 +217,7 @@ namespace extOSC.Editor
             {
                 if (!_workInEditorProperty.boolValue) return;
 
-                if (_receiver.IsAvaible) _receiver.Close();
+                if (_receiver.IsAvailable) _receiver.Close();
 
                 _receiver.Connect();
             }

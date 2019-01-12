@@ -37,10 +37,6 @@ namespace extOSC
 
         protected List<OSCValue> values = new List<OSCValue>();
 
-        protected OSCValue[] cachedValues;
-
-        protected OSCValueType[] cachedTypes;
-
         #endregion
 
         #region Public Methods
