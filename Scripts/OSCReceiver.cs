@@ -33,7 +33,7 @@ namespace extOSC
                 if (localPort == value)
                     return;
 
-				localPort = value;
+                localPort = value;
 
                 if (receiverBackend.IsRunning && IsAvailable)
                 {
@@ -45,26 +45,19 @@ namespace extOSC
 
         public override bool IsAvailable
         {
-            get
-            {
-                return receiverBackend.IsAvailable;
-            }
+            get { return receiverBackend.IsAvailable; }
         }
 
         public bool IsRunning
         {
-            get
-            {
-                return enabled ? false : receiverBackend.IsRunning;
-            }
+            get { return enabled ? false : receiverBackend.IsRunning; }
         }
 
         #endregion
 
         #region Protected Vars
 
-        [SerializeField]
-        protected int localPort = 7001;
+        [SerializeField] protected int localPort = 7001;
 
         protected Queue<OSCPacket> packets = new Queue<OSCPacket>();
 
@@ -91,6 +84,12 @@ namespace extOSC
         private object _lock = new object();
 
         private OSCReceiverBackend _receiverBackend;
+
+        private Stack<IOSCBind> _bindStack = new Stack<IOSCBind>();
+
+        private Stack<IOSCBind> _unbindStack = new Stack<IOSCBind>();
+
+        private bool _processMessage;
 
         #endregion
 
@@ -158,6 +157,13 @@ namespace extOSC
                 return;
             }
 
+            if (_processMessage)
+            {
+                _bindStack.Push(bind);
+
+                return;
+            }
+
             if (!bindings.Contains(bind))
                 bindings.Add(bind);
         }
@@ -174,6 +180,13 @@ namespace extOSC
         public void Unbind(IOSCBind bind)
         {
             if (bind == null) return;
+
+            if (_processMessage)
+            {
+                _unbindStack.Push(bind);
+
+                return;
+            }
 
             if (bindings.Contains(bind))
                 bindings.Remove(bind);
@@ -214,6 +227,11 @@ namespace extOSC
         {
             if (message == null) return;
 
+            _bindStack.Clear();
+            _bindStack.Clear();
+
+            _processMessage = true;
+
             foreach (var bind in bindings)
             {
                 if (bind == null) continue;
@@ -223,6 +241,18 @@ namespace extOSC
                     if (bind.Callback != null)
                         bind.Callback.Invoke(message);
                 }
+            }
+
+            _processMessage = false;
+
+            while (_bindStack.Count > 0)
+            {
+                Bind(_bindStack.Pop());
+            }
+
+            while (_unbindStack.Count > 0)
+            {
+                Unbind(_unbindStack.Pop());
             }
         }
 
