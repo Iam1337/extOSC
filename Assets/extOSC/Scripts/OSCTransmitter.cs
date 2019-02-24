@@ -62,12 +62,25 @@ namespace extOSC
 			}
 		}
 
+        public string LocalHost
+        {
+            get { return localHost; }
+            set
+            {
+                if (localHost == value)
+                    return;
+
+                if (IsAvailable && localPortMode == OSCLocalPortMode.Custom)
+                {
+                    Close();
+                    Connect();
+                }
+            }
+        }
+
 		public int LocalPort
 		{
-		    get
-		    {
-                return RequestLocalPort();
-            }
+		    get { return RequestLocalPort(); }
 			set 
 			{
 				if (localPort == value)
@@ -93,7 +106,7 @@ namespace extOSC
 
 				remoteHost = value;
 
-                transmitterBackend.RefreshConnection(remoteHost, remotePort);
+                transmitterBackend.RefreshRemote(remoteHost, remotePort);
 
                 if (IsAvailable && localPortMode == OSCLocalPortMode.FromRemotePort)
                 {
@@ -115,7 +128,7 @@ namespace extOSC
 
 				remotePort = value;
 
-				transmitterBackend.RefreshConnection(remoteHost, remotePort);
+				transmitterBackend.RefreshRemote(remoteHost, remotePort);
             }
         }
 
@@ -134,6 +147,9 @@ namespace extOSC
 
 		[SerializeField]
 		protected OSCReceiver localReceiver;
+
+        [SerializeField]
+        protected string localHost;
 
 		[SerializeField]
 		protected int localPort = 7000;
@@ -195,7 +211,7 @@ namespace extOSC
 			if (localPort > 0)
 				localPort = OSCUtilities.ClampPort(localPort);
 
-			transmitterBackend.RefreshConnection(remoteHost, remotePort);
+			transmitterBackend.RefreshRemote(remoteHost, remotePort);
 
 			if (IsAvailable)
 			{
@@ -211,7 +227,8 @@ namespace extOSC
 
         public override void Connect()
         {
-            transmitterBackend.Connect(RequestLocalPort(), remoteHost, remotePort);
+            transmitterBackend.Connect(RequestLocalPort());
+            transmitterBackend.RefreshRemote(remoteHost, remotePort);
         }
 
         public override void Close()

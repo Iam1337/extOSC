@@ -57,7 +57,7 @@ namespace extOSC.Core.Network
             {
 				_localEndPoint = OSCStandaloneManager.CreateLocalEndPoint(localPort);
 
-				_client = OSCStandaloneManager.CreateClient(_localEndPoint);
+				_client = OSCStandaloneManager.Create(_localEndPoint);
 
                 _controllerThreadAsync = new AsyncCallback(ControllerThread);
                 _client.BeginReceive(_controllerThreadAsync, _client);
@@ -97,7 +97,7 @@ namespace extOSC.Core.Network
         {
             _isRunning = false;
 
-			OSCStandaloneManager.RemoveClient(_client);
+			OSCStandaloneManager.Close(_client);
 
             _client = null;
         }

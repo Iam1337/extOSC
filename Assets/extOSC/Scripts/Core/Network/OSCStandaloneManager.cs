@@ -30,7 +30,7 @@ namespace extOSC.Core.Network
 
 		#region Static Public Methods
 
-		public static UdpClient CreateClient(IPEndPoint localEndPoint)
+		public static UdpClient Create(IPEndPoint localEndPoint)
 		{
 			var clientData = RequestClientData(localEndPoint);
 			clientData.Links++;
@@ -38,7 +38,7 @@ namespace extOSC.Core.Network
 			return clientData.Client;
 		}
 
-		public static void RemoveClient(UdpClient client)
+		public static void Close(UdpClient client)
 		{
 			var clientData = _clientsData.FirstOrDefault(c => c.Client == client);
 			if (clientData == null) return;

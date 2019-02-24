@@ -33,17 +33,17 @@ namespace extOSC.Core.Network
 
         #region Public Methods
 
-		public override void Connect(int localPort, string remoteHost, int remotePort)
+		public override void Connect(int localPort)
         {
             if (_client != null)
                 Close();
 
 			_localEndPoint = OSCStandaloneManager.CreateLocalEndPoint(localPort);
-			_remoteEndPoint = OSCStandaloneManager.CreateRemoteEndPoint(remoteHost, remotePort);
+			//_remoteEndPoint = OSCStandaloneManager.CreateRemoteEndPoint(remoteHost, remotePort);
 
 			try
 			{
-				_client = OSCStandaloneManager.CreateClient(_localEndPoint);
+				_client = OSCStandaloneManager.Create(_localEndPoint);
 			}
 			catch (SocketException e)
 			{
@@ -74,14 +74,14 @@ namespace extOSC.Core.Network
 			}
         }
 
-		public override void RefreshConnection(string remoteHost, int remotePort)
+		public override void RefreshRemote(string remoteHost, int remotePort)
         {
 			_remoteEndPoint = OSCStandaloneManager.CreateRemoteEndPoint(remoteHost, remotePort);
         }
 
         public override void Close()
         {
-			OSCStandaloneManager.RemoveClient(_client);
+			OSCStandaloneManager.Close(_client);
 
             _client = null;
         }

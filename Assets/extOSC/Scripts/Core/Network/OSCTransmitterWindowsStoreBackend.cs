@@ -36,18 +36,18 @@ namespace extOSC.Core.Network
 
         #region Public Methods
 
-		public override void Connect(int localPort, string remoteHost, int remotePort)
+		public override void Connect(int localPort)
         {
             if (_datagramSocket != null)
                 Close();
 
-            _remoteHost = new HostName(remoteHost);
-            _remotePort = remotePort.ToString();
+            //_remoteHost = new HostName(remoteHost);
+            //_remotePort = remotePort.ToString();
 
             _datagramSocket = new DatagramSocket();
         }
 
-		public override void RefreshConnection(string remoteHost, int remotePort)
+		public override void RefreshRemote(string remoteHost, int remotePort)
         {
             _remoteHost = new HostName(remoteHost);
             _remotePort = remotePort.ToString();
