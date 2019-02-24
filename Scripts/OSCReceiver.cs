@@ -23,6 +23,24 @@ namespace extOSC
 
         #region Public Vars
 
+        public string LocalHost
+        {
+            get { return localHost; }
+            set
+            {
+                if (localHost == value)
+                    return;
+
+                localHost = value;
+
+                if (receiverBackend.IsRunning && IsAvailable)
+                {
+                    Close();
+                    Connect();
+                }
+            }
+        }
+
         public int LocalPort
         {
             get { return localPort; }
@@ -57,7 +75,11 @@ namespace extOSC
 
         #region Protected Vars
 
-        [SerializeField] protected int localPort = 7001;
+        [SerializeField]
+        protected string localHost;
+
+        [SerializeField]
+        protected int localPort = 7001;
 
         protected Queue<OSCPacket> packets = new Queue<OSCPacket>();
 

@@ -25,9 +25,9 @@ namespace extOSC.Core.Network
 
         #region Public Methods
 
-		public abstract void Connect(int localPort, string remoteHost, int remotePort);
+		public abstract void Connect(int localPort);
 
-        public abstract void RefreshConnection(string remoteHost, int remotePort);
+        public abstract void RefreshRemote(string remoteHost, int remotePort);
 
         public abstract void Close();
 
