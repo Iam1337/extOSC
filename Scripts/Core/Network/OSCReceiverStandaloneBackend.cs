@@ -48,16 +48,14 @@ namespace extOSC.Core.Network
 
         #region Public Methods
 
-        public override void Connect(int localPort)
+        public override void Connect(string localHost, int localPort)
         {
             if (_client != null)
                 Close();
 
             try
             {
-				_localEndPoint = OSCStandaloneManager.CreateLocalEndPoint(localPort);
-
-				_client = OSCStandaloneManager.Create(_localEndPoint);
+				_client = OSCStandaloneManager.Create(localHost, localPort);
 
                 _controllerThreadAsync = new AsyncCallback(ControllerThread);
                 _client.BeginReceive(_controllerThreadAsync, _client);
@@ -68,9 +66,13 @@ namespace extOSC.Core.Network
             {
                 if (e.ErrorCode == 10048)
                 {
-                    Debug.LogErrorFormat(
-                        "[OSCReceiver] Socket Error: Could not use port {0} because another application is listening on it.",
+                    Debug.LogErrorFormat("[OSCReceiver] Socket Error: Could not use port {0} because another application is listening on it.",
                         localPort);
+                }
+                else if (e.ErrorCode == 10049)
+                {
+                    Debug.LogErrorFormat("[OSCReceiver] Socket Error: Could not use local host \"{0}\". Cannot assign requested address.",
+                        localHost);
                 }
                 else
                 {
@@ -95,10 +97,9 @@ namespace extOSC.Core.Network
 
         public override void Close()
         {
+            OSCStandaloneManager.Close(_client);
+
             _isRunning = false;
-
-			OSCStandaloneManager.Close(_client);
-
             _client = null;
         }
 

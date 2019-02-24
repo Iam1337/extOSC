@@ -42,6 +42,12 @@ namespace extOSC
         ReadWrite
     }
 
+    public enum OSCLocalHostMode
+    {
+        Any,
+        Custom
+    }
+
 	public enum OSCLocalPortMode
 	{
 		FromRemotePort,

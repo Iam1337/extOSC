@@ -16,6 +16,10 @@ namespace extOSC.Editor
 
         private static readonly GUIContent _hostContent = new GUIContent("Local Host:");
 
+        private static readonly GUIContent _hostModeContent = new GUIContent("Local Host Mode:");
+
+        private static readonly GUIContent _advancedContent = new GUIContent("Advanced Settings:");
+
         private static readonly GUIContent _mapBundleContent = new GUIContent("Map Bundle:");
 
         private static readonly GUIContent _inGameContent = new GUIContent("In Game Controls:");
@@ -27,6 +31,10 @@ namespace extOSC.Editor
         #endregion
 
         #region Private Vars
+
+        private SerializedProperty _localHostModeProperty;
+
+        private SerializedProperty _localHostProperty;
 
         private SerializedProperty _localPortProperty;
 
@@ -40,7 +48,7 @@ namespace extOSC.Editor
 
         private OSCReceiver _receiver;
 
-        private string _localHost;
+        private string _localHostCache;
 
         #endregion
 
@@ -49,8 +57,10 @@ namespace extOSC.Editor
         protected void OnEnable()
         {
             _receiver = target as OSCReceiver;
-            _localHost = OSCUtilities.GetLocalHost();
+            _localHostCache = OSCUtilities.GetLocalHost();
 
+            _localHostModeProperty = serializedObject.FindProperty("localHostMode");
+            _localHostProperty = serializedObject.FindProperty("localHost");
             _localPortProperty = serializedObject.FindProperty("localPort");
             _autoConnectProperty = serializedObject.FindProperty("autoConnect");
             _workInEditorProperty = serializedObject.FindProperty("workInEditor");
@@ -100,10 +110,17 @@ namespace extOSC.Editor
             EditorGUI.BeginChangeCheck();
 
             //LOCAL HOST
-            GUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(_hostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-            EditorGUILayout.SelectableLabel(_localHost, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-            GUILayout.EndHorizontal();
+            if (_receiver.LocalHostMode == OSCLocalHostMode.Any)
+            {
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(_hostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+                EditorGUILayout.SelectableLabel(_localHostCache, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                GUILayout.EndHorizontal();
+            }
+            else
+            {
+                EditorGUILayout.PropertyField(_localHostProperty, _hostContent);
+            }
 
             // LOCAL PORT
             EditorGUILayout.PropertyField(_localPortProperty, _portContent);
@@ -134,11 +151,20 @@ namespace extOSC.Editor
             // SETTINGS BLOCK END
             EditorGUILayout.EndHorizontal();
 
+            // ADVANCED BLOCK
+            EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal("box");
+
+            EditorGUILayout.PropertyField(_localHostModeProperty, _hostModeContent);
+
+            // ADVANCED BLOCK END
+            EditorGUILayout.EndHorizontal();
+
             // CONTROLS
             EditorGUILayout.LabelField(Application.isPlaying ? _inGameContent : _inEditorContent, EditorStyles.boldLabel);
 
-            if (Application.isPlaying) DrawControllsInGame();
-            else DrawControllsInEditor();
+            if (Application.isPlaying) DrawControlsInGame();
+            else DrawControlsInEditor();
 
             // CONTROLS END
             EditorGUILayout.EndVertical();
@@ -155,7 +181,7 @@ namespace extOSC.Editor
 
 		#region Private Methods
 
-		protected void DrawControllsInGame()
+		protected void DrawControlsInGame()
         {
             EditorGUILayout.BeginHorizontal("box");
 
@@ -183,7 +209,7 @@ namespace extOSC.Editor
             }
         }
 
-        protected void DrawControllsInEditor()
+        protected void DrawControlsInEditor()
         {
             EditorGUILayout.BeginHorizontal("box");
 

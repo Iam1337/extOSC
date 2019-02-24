@@ -36,7 +36,7 @@ namespace extOSC.Core.Network
 
         #region Public Methods
 
-		public override void Connect(int localPort)
+		public override void Connect(string localHost, int localPort)
         {
             if (_datagramSocket != null)
                 Close();

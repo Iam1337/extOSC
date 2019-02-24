@@ -22,13 +22,21 @@ namespace extOSC.Editor
 
 		private static readonly GUIContent _localPortModeContent = new GUIContent("Local Port Mode:");
 
-		private static readonly GUIContent _localReceiverContent = new GUIContent("Receiver:");
+        private static readonly GUIContent _localHostModeContent = new GUIContent("Local Host Mode:");
 
-		private static readonly GUIContent _localPortContent = new GUIContent("Local Port:");
+        private static readonly GUIContent _sourceReceiverContent = new GUIContent("Source Receiver:");
+
+        private static readonly GUIContent _localHostContent = new GUIContent("Local Host:");
+
+        private static readonly GUIContent _localPortContent = new GUIContent("Local Port:");
 
         private static readonly GUIContent _inGameContent = new GUIContent("In Game Controls:");
 
         private static readonly GUIContent _inEditorContent = new GUIContent("In Editor Controls:");
+
+        private static string _advancedHelp = "Currently \"Advanced settings\" are not available for UWP (WSA).";
+
+        private static string _fromReceiverHelp = "\"FromReceiver\" option is deprecated. Use \"Source Receiver\" settings.";
 
         #endregion
 
@@ -48,13 +56,19 @@ namespace extOSC.Editor
 
         private SerializedProperty _closeOnPauseProperty;
 
-		private SerializedProperty _localPortMode;
+        private SerializedProperty _sourceReceiverProperty;
 
-		private SerializedProperty _localReceiver;
+        private SerializedProperty _localHostModeProperty;
 
-		private SerializedProperty _localPort;
+        private SerializedProperty _localHostProperty;
+
+		private SerializedProperty _localPortModeProperty;
+
+		private SerializedProperty _localPortProperty;
 
         private OSCTransmitter _transmitter;
+
+        private string _localHostCache;
 
         #endregion
 
@@ -63,6 +77,7 @@ namespace extOSC.Editor
         protected void OnEnable()
         {
             _transmitter = target as OSCTransmitter;
+            _localHostCache = OSCUtilities.GetLocalHost();
 
             _remoteHostProperty = serializedObject.FindProperty("remoteHost");
             _remotePortProperty = serializedObject.FindProperty("remotePort");
@@ -71,10 +86,11 @@ namespace extOSC.Editor
             _mapBundleProperty = serializedObject.FindProperty("mapBundle");
             _useBundleProperty = serializedObject.FindProperty("useBundle");
             _closeOnPauseProperty = serializedObject.FindProperty("closeOnPause");
-			_localPortMode = serializedObject.FindProperty("localPortMode");
-			_localReceiver = serializedObject.FindProperty("localReceiver");
-			_localPort = serializedObject.FindProperty("localPort");
-
+            _sourceReceiverProperty = serializedObject.FindProperty("localReceiver");
+            _localHostModeProperty = serializedObject.FindProperty("localHostMode");
+            _localHostProperty = serializedObject.FindProperty("localHost");
+            _localPortModeProperty = serializedObject.FindProperty("localPortMode");
+			_localPortProperty = serializedObject.FindProperty("localPort");
 
             if (!Application.isPlaying && !_transmitter.IsAvailable && _workInEditorProperty.boolValue)
             {
@@ -162,55 +178,98 @@ namespace extOSC.Editor
 			// ADVANCED SETTIGS BOX
 			EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
 			GUILayout.BeginVertical("box");
-			//EditorGUI.BeginChangeCheck();
 
 	        if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.WSA)
 	        {
 		        GUI.color = Color.yellow;
-				EditorGUILayout.HelpBox("Currently \"Advanced settings\" are not available for UWP (WSA).", MessageType.Info);
+				EditorGUILayout.HelpBox(_advancedHelp, MessageType.Info);
 		        GUI.color = Color.white;
 	        }
 
-	        // LOCAL PORT MODE
-			EditorGUILayout.PropertyField(_localPortMode, _localPortModeContent);
+            EditorGUILayout.PropertyField(_sourceReceiverProperty, _sourceReceiverContent);
 
-			// LOCAL PORT
-			if (_transmitter.LocalPortMode == OSCLocalPortMode.FromRemotePort)
-			{
-				// LOCAL FROM REMOTE PORT
-				GUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-				EditorGUILayout.SelectableLabel(_transmitter.RemotePort.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
-				GUILayout.EndHorizontal();
-			}
-			else if (_transmitter.LocalPortMode == OSCLocalPortMode.FromReceiver)
-			{
-				// LOCAL RECEIVER
-				EditorGUILayout.PropertyField(_localReceiver, _localReceiverContent);
+            var sourceReceiver = _transmitter.SourceReceiver;
+            if (sourceReceiver != null)
+            {
+                var localHost = sourceReceiver.LocalHostMode == OSCLocalHostMode.Any ? _localHostCache : sourceReceiver.LocalHost;
+                var localPort = sourceReceiver.LocalPort.ToString();
 
-				var localPort = _transmitter.RemotePort.ToString();
-				var receiver = _localReceiver.objectReferenceValue as OSCReceiver;
-				if (receiver != null) localPort = receiver.LocalPort.ToString();
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+                EditorGUILayout.SelectableLabel(localHost, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                GUILayout.EndHorizontal();
 
-				GUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-				EditorGUILayout.SelectableLabel(localPort, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-				GUILayout.EndHorizontal();
-			}
-			else if (_transmitter.LocalPortMode == OSCLocalPortMode.Custom)
-			{
-				// LOCAL PORT
-				EditorGUILayout.PropertyField(_localPort, _localPortContent);
-			}
+                GUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+                EditorGUILayout.SelectableLabel(localPort, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                GUILayout.EndHorizontal();
+            }
+            else
+            {
+                EditorGUILayout.LabelField("Or...", EditorStyles.boldLabel);
 
-			EditorGUILayout.EndVertical();
+                // LOCAL HOST MODE
+                EditorGUILayout.PropertyField(_localHostModeProperty, _localHostModeContent);
+
+                if (_transmitter.LocalHostMode == OSCLocalHostMode.Any)
+                {
+                    GUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+                    EditorGUILayout.SelectableLabel(_localHostCache,
+                        GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    EditorGUILayout.PropertyField(_localHostProperty, _localHostContent);
+                }
+
+                // LOCAL PORT MODE
+                EditorGUILayout.PropertyField(_localPortModeProperty, _localPortModeContent);
+
+                // LOCAL PORT
+                if (_transmitter.LocalPortMode == OSCLocalPortMode.FromRemotePort)
+                {
+                    // LOCAL FROM REMOTE PORT
+                    GUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+                    EditorGUILayout.SelectableLabel(_transmitter.RemotePort.ToString(),
+                        GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                    GUILayout.EndHorizontal();
+                }
+                else if (_transmitter.LocalPortMode == OSCLocalPortMode.FromReceiver)
+                {
+                    /*
+                    // LOCAL RECEIVER
+                    EditorGUILayout.PropertyField(_sourceReceiverProperty, _sourceReceiverContent);
+    
+                    var localPort = _transmitter.RemotePort.ToString();
+                    var receiver = _sourceReceiverProperty.objectReferenceValue as OSCReceiver;
+                    if (receiver != null) localPort = receiver.LocalPort.ToString();
+    
+                    GUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+                    EditorGUILayout.SelectableLabel(localPort, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                    GUILayout.EndHorizontal();
+                    */
+
+                    EditorGUILayout.HelpBox(_fromReceiverHelp, MessageType.Warning);
+                }
+                else if (_transmitter.LocalPortMode == OSCLocalPortMode.Custom)
+                {
+                    // LOCAL PORT
+                    EditorGUILayout.PropertyField(_localPortProperty, _localPortContent);
+                }
+            }
+
+            EditorGUILayout.EndVertical();
 
 
             // CONTROLS
             EditorGUILayout.LabelField(Application.isPlaying ? _inGameContent : _inEditorContent, EditorStyles.boldLabel);
 
-            if (Application.isPlaying) DrawControllsInGame();
-            else DrawControllsInEditor();
+            if (Application.isPlaying) DrawControlsInGame();
+            else DrawControlsInEditor();
 
             // CONTROLS END
             EditorGUILayout.EndVertical();
@@ -226,7 +285,7 @@ namespace extOSC.Editor
 
         #region Private Methods
 
-        protected void DrawControllsInGame()
+        protected void DrawControlsInGame()
         {
             EditorGUILayout.BeginHorizontal("box");
 
@@ -235,7 +294,7 @@ namespace extOSC.Editor
 
             GUI.color = Color.yellow;
             EditorGUI.BeginDisabledGroup(!_transmitter.IsAvailable);
-            var reconect = GUILayout.Button("Reconnect");
+            var reconnect = GUILayout.Button("Reconnect");
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.EndHorizontal();
@@ -246,14 +305,14 @@ namespace extOSC.Editor
                 else _transmitter.Connect();
             }
 
-            if (reconect)
+            if (reconnect)
             {
                 if (_transmitter.IsAvailable) _transmitter.Close();
                 _transmitter.Connect();
             }
         }
 
-        protected void DrawControllsInEditor()
+        protected void DrawControlsInEditor()
         {
             EditorGUILayout.BeginHorizontal("box");
 
