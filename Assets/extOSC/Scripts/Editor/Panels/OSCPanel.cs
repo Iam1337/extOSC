@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
 using UnityEditor;
@@ -110,12 +110,6 @@ namespace extOSC.Editor.Panels
         {
             _panelId = panelId;
             _parentWindow = parentWindow;
-        }
-
-        [Obsolete("\"SetContentRect(Rect)\" is deprecated, please use \"Rect\" instead.")]
-        public virtual void SetContentRect(Rect rect)
-        {
-            _rect = rect;
         }
 
         public virtual void Update()

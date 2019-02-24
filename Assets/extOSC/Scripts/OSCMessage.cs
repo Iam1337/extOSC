@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using System.Collections.Generic;
 
@@ -36,10 +36,6 @@ namespace extOSC
         #region Protected Vars
 
         protected List<OSCValue> values = new List<OSCValue>();
-
-        protected OSCValue[] cachedValues;
-
-        protected OSCValueType[] cachedTypes;
 
         #endregion
 

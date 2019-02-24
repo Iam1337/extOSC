@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using System;
 using System.Linq;
@@ -16,18 +16,6 @@ namespace extOSC.Core.Reflection
         #endregion
 
         #region Static Public Methods
-
-        [Obsolete("\"GetProperties\" is deprecated, please use \"GetMembersByType\" instead.")]
-        public static MemberInfo[] GetProperties(object target, Type propertyType)
-        {
-            return GetMembersByType(target, propertyType, OSCReflectionAccess.Any, OSCReflectionType.Field | OSCReflectionType.Property);
-        }
-
-        [Obsolete("\"GetProperties\" is deprecated, please use \"GetMembers\" instead.")]
-        public static MemberInfo[] GetProperties(object target)
-        {
-            return GetMembers(target, OSCReflectionType.Field | OSCReflectionType.Property);
-        }
 
         public static MemberInfo[] GetMembers(object memberTarget, OSCReflectionType memberTypes)
         {

@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
 
@@ -61,12 +61,6 @@ namespace extOSC.Components.ReceiverReflections
             UpdateCachedReferences();
         }
 
-	    [Obsolete("\"AddMember(Component, string)\" is deprecated. Use \"AddMember(OSCReflectionMember)\".")]
-		public void AddMember(Component target, string memberName)
-        {
-            AddMember(new OSCReflectionMember() { Target = target, MemberName = memberName });
-        }
-
         public void RemoveMember(OSCReflectionMember member)
         {
             if (!reflectionMembers.Contains(member))
@@ -75,21 +69,6 @@ namespace extOSC.Components.ReceiverReflections
             reflectionMembers.Remove(member);
 
             UpdateCachedReferences();
-        }
-
-	    [Obsolete("\"RemoveMember(Component, string)\" is deprecated. Use \"RemoveMember(OSCReflectionMember)\".")]
-		public void RemoveMember(Component target, string memberName)
-        {
-            OSCReflectionMember reflectionMember = null;
-
-            foreach (var member in reflectionMembers)
-            {
-                if (member.Target == target && member.MemberName == memberName)
-                    reflectionMember = member;
-            }
-
-            if (reflectionMember != null)
-                RemoveMember(reflectionMember);
         }
 
         #endregion

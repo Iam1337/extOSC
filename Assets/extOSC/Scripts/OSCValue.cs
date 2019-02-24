@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
 
@@ -376,12 +376,6 @@ namespace extOSC
                 throw new Exception("OSCValue with \"Array\" type cannot store itself.");
 
             ArrayValue.Add(arrayValue);
-        }
-
-        [Obsolete("\"GetTag()\"is deprecated, please use \"Tag\" instead.")]
-        public char GetTag()
-        {
-            return GetTag(type);
         }
 
         public override string ToString()

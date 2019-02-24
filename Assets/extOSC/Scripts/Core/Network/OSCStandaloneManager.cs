@@ -1,6 +1,7 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 #if !NETFX_CORE
+
 using System.Net;
 using System.Net.Sockets;
 using System.Linq;
@@ -22,8 +23,6 @@ namespace extOSC.Core.Network
 		#endregion
 
 		#region Static Private Vars
-
-		//private static IPEndPoint _localEndPoint;
 
 		private static List<ClientData> _clientsData = new List<ClientData>();
 
@@ -112,4 +111,5 @@ namespace extOSC.Core.Network
 		#endregion
 	}
 }
+
 #endif

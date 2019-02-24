@@ -1,11 +1,12 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 #if !NETFX_CORE
+
 using UnityEngine;
 
+using System;
 using System.Net;
 using System.Net.Sockets;
-using System;
 
 namespace extOSC.Core.Network
 {
@@ -13,7 +14,7 @@ namespace extOSC.Core.Network
     {
         #region Public Vars
 
-        public override bool IsAvaible
+        public override bool IsAvailable
         {
             get { return _client != null; }
         }
@@ -102,4 +103,5 @@ namespace extOSC.Core.Network
         #endregion
     }
 }
+
 #endif

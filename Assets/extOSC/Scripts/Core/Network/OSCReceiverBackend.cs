@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 namespace extOSC.Core.Network
 {
@@ -27,7 +27,7 @@ namespace extOSC.Core.Network
 
         public abstract OSCReceivedCallback ReceivedCallback { get; set; }
 
-        public abstract bool IsAvaible { get; }
+        public abstract bool IsAvailable { get; }
 
         public abstract bool IsRunning { get; }
 

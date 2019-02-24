@@ -1,33 +1,9 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
-
-using System.Linq;
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 namespace extOSC.Core.Packers
 {
     public abstract class OSCPacker
     {
-        #region Protected Static Methods
-
-        protected static byte[] ReverseBytes(byte[] bytes)
-        {
-            var newBytes = new byte[bytes.Length];
-
-            for (var i = 0; i < bytes.Length; i++)
-            {
-                newBytes[i] = bytes[(bytes.Length - 1) - i];
-            }
-
-            return newBytes;
-        }
-
-        #endregion
-
-        #region Protected Vars
-
-        protected const byte ZeroByte = 0;
-
-        #endregion
-
         #region Public Methods
 
         public abstract OSCValueType GetPackerType();

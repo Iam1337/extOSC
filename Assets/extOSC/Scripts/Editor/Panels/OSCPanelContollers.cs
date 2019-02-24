@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
 using UnityEditor;
@@ -120,7 +120,7 @@ namespace extOSC.Editor.Panels
 
         private void DrawElement(string name, OSCBase osc)
         {
-            var elementColor = osc.IsAvaible ? Color.green : Color.red;
+            var elementColor = osc.IsAvailable ? Color.green : Color.red;
 
             GUI.color = elementColor;
 
@@ -129,7 +129,7 @@ namespace extOSC.Editor.Panels
             GUILayout.Label(name);
 
             GUILayout.BeginVertical("box");
-            GUILayout.Label("Active: " + osc.IsAvaible);
+            GUILayout.Label("Active: " + osc.IsAvailable);
             GUILayout.EndVertical();
 
             GUILayout.Label(_actionsContent);
@@ -145,7 +145,7 @@ namespace extOSC.Editor.Panels
         private void DrawActions(OSCBase osc, Color elementColor)
         {
             GUI.color = Color.yellow;
-            GUI.enabled = osc.IsAvaible;
+            GUI.enabled = osc.IsAvailable;
 
             if (osc is OSCTransmitter) DrawTransmitterActions((OSCTransmitter)osc);
             else if (osc is OSCReceiver) DrawReceiverActions((OSCReceiver)osc);

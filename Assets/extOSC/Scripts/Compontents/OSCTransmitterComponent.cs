@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
 
@@ -15,13 +15,6 @@ namespace extOSC.Components
             get { return transmitter; }
             set { transmitter = value; }
         }
-
-	    [System.Obsolete("\"Address\" is deprecated, please use \"TransmitterAddress\" instead.")]
-	    public virtual string Address
-	    {
-		    get { return TransmitterAddress; }
-		    set { TransmitterAddress = value; }
-	    }
 
 		public virtual string TransmitterAddress
         {

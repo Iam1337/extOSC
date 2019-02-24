@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
 
@@ -77,16 +77,6 @@ namespace extOSC.Components.Informers
             UpdateCachedReferences();
         }
 #endif
-
-        #endregion
-
-        #region Public Methods
-
-        [Obsolete("\"SetProperty(OSCReflectionMember)\" is deprecated, please use \"ReflectionTarget\" instead.")]
-        public void SetProperty(OSCReflectionMember property)
-        {
-            reflectionMember = property;
-        }
 
         #endregion
 

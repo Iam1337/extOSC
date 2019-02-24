@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
 
@@ -26,13 +26,6 @@ namespace extOSC.Components
 
                 Bind();
             }
-        }
-
-        [System.Obsolete("\"Address\" is deprecated, please use \"ReceiverAddress\" instead.")]
-        public virtual string Address
-        {
-            get { return ReceiverAddress; }
-            set { ReceiverAddress = value; }
         }
 
         public string ReceiverAddress

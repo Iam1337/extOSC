@@ -1,6 +1,4 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
-
-using UnityEngine;
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using System;
 using System.Reflection;

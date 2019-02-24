@@ -1,12 +1,7 @@
-﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using System;
-
-using UnityEngine;
-
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 
 using extOSC.Core.Packers;
 

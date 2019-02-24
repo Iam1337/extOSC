@@ -180,4 +180,7 @@ v1.12
 v1.13
 -----
 
+- Code clean up.
+- Removed obsolete methods.
 - OSCConverter optimization.
+- OSCReceiver updated Bind and Unbind methods.
