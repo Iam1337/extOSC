@@ -33,7 +33,7 @@ namespace extOSC.Editor.Components
 
 		private static readonly GUIContent _valueTypeContent = new GUIContent("Value Type:");
 
-		private static readonly GUIContent _valueSourceConent = new GUIContent("Value Source:");
+		private static readonly GUIContent _valueSourceContent = new GUIContent("Value Source:");
 
 		private static readonly GUIContent _targetContent = new GUIContent("Target:");
 

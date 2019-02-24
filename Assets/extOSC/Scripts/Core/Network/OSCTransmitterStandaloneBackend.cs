@@ -33,26 +33,27 @@ namespace extOSC.Core.Network
 
         #region Public Methods
 
-		public override void Connect(int localPort)
+		public override void Connect(string localHost, int localPort)
         {
             if (_client != null)
                 Close();
 
-			_localEndPoint = OSCStandaloneManager.CreateLocalEndPoint(localPort);
-			//_remoteEndPoint = OSCStandaloneManager.CreateRemoteEndPoint(remoteHost, remotePort);
-
 			try
 			{
-				_client = OSCStandaloneManager.Create(_localEndPoint);
-			}
+				_client = OSCStandaloneManager.Create(localHost, localPort);
+            }
 			catch (SocketException e)
 			{
 				if (e.ErrorCode == 10048)
 				{
-					Debug.LogErrorFormat(
-						"[OSCTransmitter] Socket Error: Could not use local port {0} because another application is listening on it.",
+					Debug.LogErrorFormat("[OSCTransmitter] Socket Error: Could not use local port {0} because another application is listening on it.",
 						localPort);
 				}
+                else if (e.ErrorCode == 10049)
+			    {
+			        Debug.LogErrorFormat("[OSCTransmitter] Socket Error: Could not use local host \"{0}\". Cannot assign requested address.",
+			            localHost);
+                }
 				else
 				{
 					Debug.LogErrorFormat("[OSCTransmitter] Socket Error: Error Code {0}.\n{1}", e.ErrorCode, e.Message);
@@ -76,12 +77,13 @@ namespace extOSC.Core.Network
 
 		public override void RefreshRemote(string remoteHost, int remotePort)
         {
-			_remoteEndPoint = OSCStandaloneManager.CreateRemoteEndPoint(remoteHost, remotePort);
+			_remoteEndPoint = new IPEndPoint(IPAddress.Parse(remoteHost), remotePort);
         }
 
         public override void Close()
         {
-			OSCStandaloneManager.Close(_client);
+            if (_client != null)
+			    OSCStandaloneManager.Close(_client);
 
             _client = null;
         }
@@ -96,7 +98,7 @@ namespace extOSC.Core.Network
             }
             catch (SocketException exception)
             {
-                Debug.LogWarningFormat("[OSCTranmitter] Error: {0}", exception);
+                Debug.LogWarningFormat("[OSCTransmitter] Error: {0}", exception);
             }
         }
 

@@ -3,7 +3,6 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-using System.Threading;
 using System.Collections.Generic;
 
 using extOSC.Core;
@@ -23,9 +22,27 @@ namespace extOSC
 
         #region Public Vars
 
+        public OSCLocalHostMode LocalHostMode
+        {
+            get { return localHostMode; }
+            set
+            {
+                if (localHostMode == value)
+                    return;
+
+                localHostMode = value;
+
+                if (receiverBackend.IsRunning && IsAvailable)
+                {
+                    Close();
+                    Connect();
+                }
+            }
+        }
+
         public string LocalHost
         {
-            get { return localHost; }
+            get { return RequestLocalHost(); }
             set
             {
                 if (localHost == value)
@@ -74,6 +91,9 @@ namespace extOSC
         #endregion
 
         #region Protected Vars
+
+        [SerializeField]
+        protected OSCLocalHostMode localHostMode = OSCLocalHostMode.Any;
 
         [SerializeField]
         protected string localHost;
@@ -140,8 +160,11 @@ namespace extOSC
 #if UNITY_EDITOR
         protected void OnValidate()
         {
-            localPort = OSCUtilities.ClampPort(localPort);
+            if (string.IsNullOrEmpty(localHost))
+                localHost = OSCUtilities.GetLocalHost();
 
+            localPort = OSCUtilities.ClampPort(localPort);
+            
             if (receiverBackend.IsRunning && IsAvailable)
             {
                 Close();
@@ -156,17 +179,18 @@ namespace extOSC
 
         public override string ToString()
         {
-            return string.Format("<{0} (Port: {1})>", GetType().Name, localPort);
+            return string.Format("<{0} (LocalHost: {1} LocalPort: {2})>", GetType().Name, localHost, localPort);
         }
 
         public override void Connect()
         {
-            receiverBackend.Connect(localPort);
+            receiverBackend.Connect(RequestLocalHost(), localPort);
         }
 
         public override void Close()
         {
-            receiverBackend.Close();
+            if (receiverBackend.IsAvailable)
+                receiverBackend.Close();
         }
 
         public void Bind(IOSCBind bind)
@@ -291,6 +315,18 @@ namespace extOSC
             {
                 packets.Enqueue(packet);
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private string RequestLocalHost()
+        {
+            if (localHostMode == OSCLocalHostMode.Any)
+                return "0.0.0.0";
+
+            return localHost;
         }
 
         #endregion

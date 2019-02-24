@@ -1,5 +1,6 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
+using System;
 using UnityEngine;
 
 using System.Collections.Generic;
@@ -26,7 +27,24 @@ namespace extOSC
             }
         }
 
-		public OSCLocalPortMode LocalPortMode
+        public OSCLocalHostMode LocalHostMode 
+        {
+            get { return localHostMode; }
+            set {
+                if (localHostMode == value)
+                    return;
+
+                localHostMode = value;
+
+                if (IsAvailable)
+                {
+                    Close();
+                    Connect();
+                }
+            }
+        }
+
+        public OSCLocalPortMode LocalPortMode
 		{
 		    get { return localPortMode; }
 			set
@@ -44,33 +62,41 @@ namespace extOSC
 			}
 		}
 
+        public OSCReceiver SourceReceiver
+        {
+            get { return localReceiver; }
+            set {
+                if (localReceiver == value)
+                    return;
+
+                localReceiver = value;
+
+                if (IsAvailable && localPortMode == OSCLocalPortMode.FromReceiver)
+                {
+                    Close();
+                    Connect();
+                }
+            }
+        }
+        
+        [Obsolete("\"LocalReceiver\" is deprecated. Use \"SourceReceiver\" property.")]
 		public OSCReceiver LocalReceiver
 		{
-			get { return localReceiver; }
-			set 
-			{
-				if (localReceiver == value)
-					return;
-
-				localReceiver = value;
-
-				if (IsAvailable && localPortMode == OSCLocalPortMode.FromReceiver)
-				{
-					Close();
-					Connect();
-				}
-			}
+		    get { return SourceReceiver; }
+		    set { SourceReceiver = value; }
 		}
 
         public string LocalHost
         {
-            get { return localHost; }
+            get { return RequestLocalHost(); }
             set
             {
                 if (localHost == value)
                     return;
 
-                if (IsAvailable && localPortMode == OSCLocalPortMode.Custom)
+                if (IsAvailable &&
+                    localPortMode == OSCLocalPortMode.Custom &&
+                    localHostMode == OSCLocalHostMode.Custom)
                 {
                     Close();
                     Connect();
@@ -138,11 +164,14 @@ namespace extOSC
             set { useBundle = value; }
         }
 
-		#endregion
+        #endregion
 
-		#region Protected Vars
+        #region Protected Vars
+        
+        [SerializeField]
+        protected OSCLocalHostMode localHostMode = OSCLocalHostMode.Any;
 
-		[SerializeField]
+        [SerializeField]
 		protected OSCLocalPortMode localPortMode = OSCLocalPortMode.Random;
 
 		[SerializeField]
@@ -208,7 +237,10 @@ namespace extOSC
 		{
 			remotePort = OSCUtilities.ClampPort(remotePort);
 
-			if (localPort > 0)
+		    if (string.IsNullOrEmpty(localHost))
+		        localHost = OSCUtilities.GetLocalHost();
+
+            if (localPort > 0)
 				localPort = OSCUtilities.ClampPort(localPort);
 
 			transmitterBackend.RefreshRemote(remoteHost, remotePort);
@@ -227,18 +259,20 @@ namespace extOSC
 
         public override void Connect()
         {
-            transmitterBackend.Connect(RequestLocalPort());
+            transmitterBackend.Connect(RequestLocalHost(), RequestLocalPort());
             transmitterBackend.RefreshRemote(remoteHost, remotePort);
         }
 
         public override void Close()
         {
-            transmitterBackend.Close();
+            if (transmitterBackend.IsAvailable)
+                transmitterBackend.Close();
         }
 
         public override string ToString()
         {
-            return string.Format("<{0} (Host: {1}, Port: {2})>", GetType().Name, remoteHost, remotePort);
+            return string.Format("<{0} (LocalHost: {1} LocalPort: {2} | RemoteHost: {3}, RemotePort: {4})>",
+                GetType().Name, localHost, localPort, remoteHost, remotePort);
         }
 
         public void Send(OSCPacket packet)
@@ -276,13 +310,27 @@ namespace extOSC
 
         #region Private Methods
 
+        private string RequestLocalHost()
+        {
+            if (localReceiver != null)
+                return localReceiver.LocalHost;
+
+            if (localHostMode == OSCLocalHostMode.Any)
+                return "0.0.0.0";
+
+            return localHost;
+        }
+
         private int RequestLocalPort()
         {
+            if (localReceiver != null)
+                return localReceiver.LocalPort;
+            
             if (localPortMode == OSCLocalPortMode.Random)
                 return 0;
 
-            if (localPortMode == OSCLocalPortMode.FromReceiver && localReceiver != null)
-                return localReceiver.LocalPort;
+            if (localPortMode == OSCLocalPortMode.FromReceiver)
+                throw new Exception(); //TODO: Error.
 
             if (localPortMode == OSCLocalPortMode.Custom)
                 return localPort;

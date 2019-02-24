@@ -2,10 +2,12 @@
 
 #if !NETFX_CORE
 
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace extOSC.Core.Network
 {
@@ -13,7 +15,7 @@ namespace extOSC.Core.Network
 	{
 		#region Extensions
 
-		private class ClientData
+		private class ClientInfo
 		{
 			public UdpClient Client;
 
@@ -24,92 +26,52 @@ namespace extOSC.Core.Network
 
 		#region Static Private Vars
 
-		private static List<ClientData> _clientsData = new List<ClientData>();
+        private static List<ClientInfo> _clientsList = new List<ClientInfo>();
 
 		#endregion
 
 		#region Static Public Methods
 
-		public static UdpClient Create(IPEndPoint localEndPoint)
+		public static UdpClient Create(string localHost, int localPort)
 		{
-			var clientData = RequestClientData(localEndPoint);
-			clientData.Links++;
+            var localEndPoint = new IPEndPoint(IPAddress.Parse(localHost), localPort);
+		    var clientInfo = _clientsList.FirstOrDefault(c => c.Client.Client.LocalEndPoint != null &&
+		                                                      c.Client.Client.LocalEndPoint.Equals(localEndPoint));
 
-			return clientData.Client;
+            if (clientInfo == null)
+		    {
+		        clientInfo = new ClientInfo();
+                clientInfo.Client = new UdpClient(localEndPoint);
+		        clientInfo.Client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+		        clientInfo.Client.DontFragment = true;
+
+		        _clientsList.Add(clientInfo);
+            }
+
+		    clientInfo.Links++;
+
+            return clientInfo.Client;
 		}
 
 		public static void Close(UdpClient client)
 		{
-			var clientData = _clientsData.FirstOrDefault(c => c.Client == client);
-			if (clientData == null) return;
+		    var clientInfo = _clientsList.FirstOrDefault(c => c.Client == client);
+            if (clientInfo == null)
+                throw new Exception();
 
-			clientData.Links--;
+			clientInfo.Links--;
 
-			if (clientData.Links <= 0)
+			if (clientInfo.Links <= 0)
 			{
-				clientData.Client.Close();
-				clientData.Client = null;
+				clientInfo.Client.Close();
+				clientInfo.Client = null;
 
-				_clientsData.Remove(clientData);
+				_clientsList.Remove(clientInfo);
 			}
 		}
 
-		public static IPEndPoint CreateLocalEndPoint(int localPort)
-		{
-			if (localPort == 0)
-				return null;
-
-			return new IPEndPoint(IPAddress.Any, localPort);
-		}
-
-		public static IPEndPoint CreateRemoteEndPoint(string remoteHost, int remotePort)
-		{
-			IPAddress ipAddress;
-
-			if (!IPAddress.TryParse(remoteHost, out ipAddress))
-				return null;
-
-			return new IPEndPoint(ipAddress, remotePort);
-		}
-
-		#endregion
-
-		#region Static Private Methods
-
-		private static ClientData RequestClientData(IPEndPoint localEndPoint)
-		{
-			var clientData = (ClientData)null;
-
-			if (localEndPoint != null)
-			{
-				clientData = _clientsData.FirstOrDefault(c => c.Client.Client.LocalEndPoint != null &&
-				                                         c.Client.Client.LocalEndPoint.Equals(localEndPoint));
-			}
-
-			if (clientData == null)
-			{
-				clientData = new ClientData();
-
-				if (localEndPoint != null)
-				{
-					clientData.Client = new UdpClient(localEndPoint);
-				}
-				else
-				{
-					clientData.Client = new UdpClient();
-				}
-
-				clientData.Client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-				clientData.Client.DontFragment = true;
-
-				_clientsData.Add(clientData);
-			}
-
-			return clientData;
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }
 
 #endif
