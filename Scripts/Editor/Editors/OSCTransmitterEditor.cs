@@ -239,20 +239,6 @@ namespace extOSC.Editor
                 }
                 else if (_transmitter.LocalPortMode == OSCLocalPortMode.FromReceiver)
                 {
-                    /*
-                    // LOCAL RECEIVER
-                    EditorGUILayout.PropertyField(_sourceReceiverProperty, _sourceReceiverContent);
-    
-                    var localPort = _transmitter.RemotePort.ToString();
-                    var receiver = _sourceReceiverProperty.objectReferenceValue as OSCReceiver;
-                    if (receiver != null) localPort = receiver.LocalPort.ToString();
-    
-                    GUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-                    EditorGUILayout.SelectableLabel(localPort, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                    GUILayout.EndHorizontal();
-                    */
-
                     EditorGUILayout.HelpBox(_fromReceiverHelp, MessageType.Warning);
                 }
                 else if (_transmitter.LocalPortMode == OSCLocalPortMode.Custom)
