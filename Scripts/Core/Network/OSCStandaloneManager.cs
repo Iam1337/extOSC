@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace extOSC.Core.Network
 {

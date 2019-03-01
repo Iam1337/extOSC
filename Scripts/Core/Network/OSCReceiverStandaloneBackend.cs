@@ -38,8 +38,6 @@ namespace extOSC.Core.Network
 
         private UdpClient _client;
 
-		private IPEndPoint _localEndPoint;
-
         private AsyncCallback _controllerThreadAsync;
 
         private OSCReceivedCallback _receivedCallback;
