@@ -184,3 +184,9 @@ v1.13
 - Removed obsolete methods.
 - OSCConverter optimization.
 - OSCReceiver updated Bind and Unbind methods.
+
+-----
+v1.14
+-----
+
+- OSCTransmitterInformer big fix.
