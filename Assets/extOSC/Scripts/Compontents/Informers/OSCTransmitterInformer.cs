@@ -71,6 +71,11 @@ namespace extOSC.Components.Informers
 
         #region Unity Methods
 
+        protected virtual void Awake()
+        {
+            UpdateCachedReferences();
+        }
+
 #if UNITY_EDITOR
         protected void OnValidate()
         {
@@ -118,8 +123,10 @@ namespace extOSC.Components.Informers
 
         #region Unity Methods
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+
             if (cachedProperty != null)
                 _previousValue = (T)cachedProperty.GetValue();
         }
