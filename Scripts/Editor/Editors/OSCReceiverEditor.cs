@@ -26,6 +26,8 @@ namespace extOSC.Editor
 
         private static readonly GUIContent _inEditorContent = new GUIContent("In Editor Controls:");
 
+        private static string _advancedHelp = "Currently \"Advanced settings\" are not available for UWP (WSA).";
+
         private static MethodInfo _updateMethod;
 
         #endregion
@@ -154,6 +156,13 @@ namespace extOSC.Editor
             // ADVANCED BLOCK
             EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal("box");
+
+            if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.WSA)
+            {
+                GUI.color = Color.yellow;
+                EditorGUILayout.HelpBox(_advancedHelp, MessageType.Info);
+                GUI.color = Color.white;
+            }
 
             EditorGUILayout.PropertyField(_localHostModeProperty, _hostModeContent);
 
