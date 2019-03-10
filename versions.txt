@@ -190,3 +190,15 @@ v1.14
 -----
 
 - OSCTransmitterInformer big fix.
+
+-----
+v1.15
+-----
+
+- Added Advanced options in OSCReceiver.
+- Added LocalHostMode property in OSCReceiver.
+- Added LocalHost property in OSCReceiver.
+- Updated Advanced options in OSCTransmitter.
+- Added LocalHostMode property in OSCTransmitter.
+- Removed FromReceiver option in LocalPortMode property in OSCTransmitter.
+- Update network backend.
