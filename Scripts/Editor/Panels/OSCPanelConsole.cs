@@ -212,7 +212,7 @@ namespace extOSC.Editor.Panels
 
         #region Public Methods
 
-        public OSCPanelConsole(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
+        public OSCPanelConsole(OSCWindow window, string panelId) : base(window, panelId)
         {
             _filterDrawer = new OSCFilterDrawer();
         }
@@ -277,7 +277,7 @@ namespace extOSC.Editor.Panels
 
         #region Protected Methods
 
-        protected override void DrawContent(Rect contentRect)
+        protected override void DrawContent(ref Rect contentRect)
         {
             // TOOLBAR
             DrawToolbar(contentRect);
@@ -339,7 +339,7 @@ namespace extOSC.Editor.Panels
                             if (_selectedMessage != consoleMessage)
                             {
                                 _selectedMessage = consoleMessage;
-                                _parentWindow.Repaint();
+                                Window.Repaint();
                             }
 
                             Event.current.Use();
@@ -389,7 +389,7 @@ namespace extOSC.Editor.Panels
 
             current.Use();
 
-            _parentWindow.Repaint();
+            Window.Repaint();
         }
 
         #endregion

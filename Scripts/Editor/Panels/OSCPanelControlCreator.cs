@@ -93,16 +93,16 @@ namespace extOSC.Editor.Panels
 
         #region Public Methods
 
-        public OSCPanelControlCreator(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
+        public OSCPanelControlCreator(OSCWindow window, string panelId) : base(window, panelId)
         {
-            _controlCreator = parentWindow as OSCWindowControlCreator;
+            _controlCreator = window as OSCWindowControlCreator;
         }
 
         #endregion
 
         #region Protected Methods
 
-        protected override void DrawContent(Rect contentRect)
+        protected override void DrawContent(ref Rect contentRect)
         {
             if (!_controlCreator.IsValid)
             {

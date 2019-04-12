@@ -3,12 +3,13 @@
 using UnityEditor;
 using UnityEngine;
 
-using extOSC.Editor.Panels;
 using System;
+
+using extOSC.Editor.Panels;
 
 namespace extOSC.Editor.Windows
 {
-	public abstract class OSCWindow : EditorWindow, IHasCustomMenu
+	public abstract class OSCWindow : EditorWindow
     {
         #region Public Vars
 
@@ -20,8 +21,6 @@ namespace extOSC.Editor.Windows
 
         protected virtual void Awake()
         { }
-
-        protected abstract void Update();
 
         protected virtual void OnEnable()
         {
@@ -40,15 +39,6 @@ namespace extOSC.Editor.Windows
 
         #endregion
 
-        #region Public Methods
-
-		public void AddItemsToMenu(GenericMenu menu)
-		{
-			
-		}
-
-        #endregion
-
         #region Protected Methods
 
         protected virtual void LoadWindowSettings()
@@ -58,7 +48,7 @@ namespace extOSC.Editor.Windows
         { }
 
 		#endregion
-	}
+    }
 
     public class OSCWindow<TWindow, TPanel> : OSCWindow where TWindow : OSCWindow where TPanel : OSCPanel
     {
@@ -98,12 +88,6 @@ namespace extOSC.Editor.Windows
         #endregion
 
         #region Unity Methods
-
-        protected override void Update()
-        {
-            if (rootPanel != null)
-                rootPanel.Update();
-        }
 
         protected override void OnGUI()
         {

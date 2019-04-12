@@ -45,6 +45,7 @@ namespace extOSC.Editor.Windows
 
             instance.ShowUtility();
             instance.Repaint();
+	        Instance.Focus();
         }
 
 

@@ -17,13 +17,13 @@ namespace extOSC.Editor.Windows
             Instance.titleContent = new GUIContent("OSC Mapping", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(550, 200);
             Instance.Show();
+	        Instance.Focus();
         }
 
         public static void OpenBundle(OSCMapBundle bundle)
         {
             Open();
 
-            Instance.Focus();
             Instance.rootPanel.CurrentMapBundle = bundle;
         }
 
@@ -33,9 +33,27 @@ namespace extOSC.Editor.Windows
 
         private readonly string _lastFileSettings = OSCEditorSettings.Mapping + "lastfile";
 
+	    private int _frameCounter = 0;
+
         #endregion
 
         #region Unity Methods
+
+        protected void Update()
+	    {
+			//TODO: Replace
+		    if (!EditorApplication.isPlaying)
+		    {
+			    _frameCounter++;
+
+			    if (_frameCounter > 200)
+			    {
+				    _frameCounter = 0;
+
+				    rootPanel.SaveCurrentMapBundle();
+			    }
+		    }
+	    }
 
         protected override void OnDestroy()
         {

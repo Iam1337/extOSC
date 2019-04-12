@@ -64,9 +64,7 @@ namespace extOSC.Editor.Drawers
 		#endregion
 
 		#region Private Methods
-
-
-
+		
 		private string TransmitterCallback(OSCTransmitter transmitter)
 		{
 			return string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);

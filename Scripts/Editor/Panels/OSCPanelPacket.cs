@@ -41,7 +41,7 @@ namespace extOSC.Editor.Panels
 
         #region Public Methods
 
-        public OSCPanelPacket(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
+        public OSCPanelPacket(OSCWindow window, string panelId) : base(window, panelId)
         {
             _packetDrawer = new OSCPacketDrawer();
         }
@@ -50,7 +50,7 @@ namespace extOSC.Editor.Panels
 
         #region Protected Methods
 
-        protected override void DrawContent(Rect contentRect)
+        protected override void DrawContent(ref Rect contentRect)
         {
             if (_selectedMessage == null)
             {

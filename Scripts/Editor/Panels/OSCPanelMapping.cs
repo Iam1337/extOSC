@@ -82,15 +82,13 @@ namespace extOSC.Editor.Panels
 
         private OSCMapBundle _currentMapBundle;
 
-        private int _frameCounter = 0;
-
         private Dictionary<object, OSCMapType> _mapTypeTemp = new Dictionary<object, OSCMapType>();
 
         #endregion
 
         #region Public Methods
 
-        public OSCPanelMapping(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId) 
+        public OSCPanelMapping(OSCWindow window, string panelId) : base(window, panelId) 
         { }
 
         public void SaveCurrentMapBundle()
@@ -101,26 +99,11 @@ namespace extOSC.Editor.Panels
             AssetDatabase.SaveAssets();
         }
 
-        public override void Update()
-        {
-            if (!EditorApplication.isPlaying)
-            {
-                _frameCounter++;
-
-                if (_frameCounter > 200)
-                {
-                    _frameCounter = 0;
-
-                    SaveCurrentMapBundle();
-                }
-            }
-        }
-
         #endregion
 
         #region Protected Methods
 
-        protected override void DrawContent(Rect contentRect)
+        protected override void DrawContent(ref Rect contentRect)
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
