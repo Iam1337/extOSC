@@ -59,7 +59,7 @@ namespace extOSC.Editor
 		    {
 			    if (_box == null)
 			    {
-					_box = new GUIStyle(OSCEditorStyles.Box);
+					_box = new GUIStyle("box");
 			    }
 
 			    return _box;
