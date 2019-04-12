@@ -18,11 +18,11 @@ namespace extOSC.Editor.Drawers
 
 		private static Type _receiverType = typeof(OSCReceiver);
 
-		#endregion
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			if (property.propertyType != SerializedPropertyType.ObjectReference)
 			{
