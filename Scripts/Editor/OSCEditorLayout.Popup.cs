@@ -22,22 +22,26 @@ namespace extOSC.Editor
             return OSCPopup(OSCEditorUtils.GetReceivers(), receiver, content);
         }
 
+		/*
         public static void ReceiversPopup(SerializedProperty property, GUIContent content)
         {
             property.objectReferenceValue = OSCPopup(OSCEditorUtils.GetReceivers(),
                 property.objectReferenceValue as OSCReceiver, content);
         }
+		*/
 
         public static OSCTransmitter TransmittersPopup(OSCTransmitter transmitter, GUIContent content)
         {
             return OSCPopup(OSCEditorUtils.GetTransmitters(), transmitter, content);
         }
 
+        /*
         public static void TransmittersPopup(SerializedProperty property, GUIContent content)
         {
             property.objectReferenceValue = OSCPopup(OSCEditorUtils.GetTransmitters(),
                 property.objectReferenceValue as OSCTransmitter, content);
         }
+		*/
 
         #endregion
 

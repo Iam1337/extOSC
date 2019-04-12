@@ -13,6 +13,8 @@ using extOSC.UI;
 using extOSC.Core;
 using extOSC.Core.Console;
 
+using Object = UnityEngine.Object;
+
 namespace extOSC.Editor
 {
     public static class OSCEditorUtils
@@ -64,11 +66,46 @@ namespace extOSC.Editor
 
         private static OSCControls.Resources _defaultResources;
 
-        #endregion
+		#endregion
 
-        #region Static Public Methods
+		#region Static Public Methods
 
-        public static OSCReceiver FindReceiver(int localPort)
+		// NEW
+
+		public static void FindObjectsForPopup<T>(Func<T, string> namingCallback, bool withNone, out GUIContent[] contents, out T[] objects) where T : Object
+		{
+			var sceneObjects = Object.FindObjectsOfType<T>();
+			var offset = 0;
+			var count = sceneObjects.Length;
+
+			if (withNone)
+			{
+				offset++;
+				count++;
+			}
+
+			objects = new T[count];
+			contents = new GUIContent[count];
+
+			if (withNone)
+			{
+				objects[0] = null;
+				contents[0] = new GUIContent("- None -");
+			}
+
+			for (var i = 0; i < sceneObjects.Length; ++i)
+			{
+				var obj = sceneObjects[i];
+				var name = namingCallback != null ? namingCallback.Invoke(sceneObjects[i]) : obj.ToString();
+
+				objects[i + offset] = sceneObjects[i];
+				contents[i + offset] = new GUIContent(name);
+			}
+		}
+
+		// OLD
+
+		public static OSCReceiver FindReceiver(int localPort)
         {
             var receivers = GameObject.FindObjectsOfType<OSCReceiver>();
 
@@ -111,7 +148,7 @@ namespace extOSC.Editor
             });
         }
 
-        public static List<OSCConsolePacket> LoadConsoleMessages(string filePath)
+		public static List<OSCConsolePacket> LoadConsoleMessages(string filePath)
         {
             var list = new List<OSCConsolePacket>();
 

@@ -170,7 +170,8 @@ namespace extOSC.UI
         [SerializeField]
         private string _address = "/address";
 
-        [SerializeField]
+	    [OSCSelector]
+		[SerializeField]
         private OSCTransmitter _transmitter;
 
         [SerializeField]

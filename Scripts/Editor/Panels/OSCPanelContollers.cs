@@ -128,12 +128,12 @@ namespace extOSC.Editor.Panels
 
             GUILayout.Label(name);
 
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             GUILayout.Label("Active: " + osc.IsAvailable);
             GUILayout.EndVertical();
 
             GUILayout.Label(_actionsContent);
-            GUILayout.BeginHorizontal("box");
+            GUILayout.BeginHorizontal(OSCEditorStyles.Box);
             DrawActions(osc, elementColor);
             GUILayout.EndHorizontal();
 

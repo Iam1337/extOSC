@@ -32,14 +32,14 @@ namespace extOSC.Editor.Windows
 
         #region Static Public Methods
 
-        public static void ShowWindow(MenuCommand menuCommand, Callback callback)
+        public static void Open(MenuCommand menuCommand, Callback callback)
         {
             var instance = GetWindow<OSCWindowControlCreator>(false);
             instance.titleContent = new GUIContent("Control Creator", OSCEditorTextures.IronWallSmall);
             instance.minSize = new Vector2(200, 180);
 
-            instance.createCallback = callback;
-            instance.menuCommand = menuCommand;
+            instance._createCallback = callback;
+            instance._menuCommand = menuCommand;
 			
             instance.LoadWindowSettings();
 
@@ -48,12 +48,11 @@ namespace extOSC.Editor.Windows
         }
 
 
-        public static void Invoke(ControlData data)
+        public static void CreateControl(ControlData data)
         {
             var instance = GetWindow<OSCWindowControlCreator>(false);
-
-            if (instance.createCallback != null)
-                instance.createCallback(data, instance.menuCommand);
+			if (instance._createCallback != null)
+                instance._createCallback(data, instance._menuCommand);
 
             instance.Close();
         }
@@ -64,16 +63,16 @@ namespace extOSC.Editor.Windows
 
         public bool IsValid
         {
-            get { return createCallback != null && menuCommand != null; }
+            get { return _createCallback != null && _menuCommand != null; }
         }
 
         #endregion
 
         #region Protected Vars
 
-        protected Callback createCallback;
+        protected Callback _createCallback;
 
-        protected MenuCommand menuCommand;
+        protected MenuCommand _menuCommand;
 
         #endregion
 
@@ -97,8 +96,8 @@ namespace extOSC.Editor.Windows
 
         protected override void OnDestroy()
         {
-            createCallback = null;
-            menuCommand = null;
+            _createCallback = null;
+            _menuCommand = null;
 
             SaveWindowSettings();
 

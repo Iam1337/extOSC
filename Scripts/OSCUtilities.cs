@@ -117,7 +117,7 @@ namespace extOSC
             return structure;
         }
 
-        #endregion
+		#endregion
 
         #region Public Extensions Static Methods
 
@@ -501,6 +501,20 @@ namespace extOSC
         {
             return IsSubclassOf(target.GetType(), targetType);
         }
+
+	    public static int IndexOf<T>(this T[] array, T target)
+	    {
+		    for (var i = 0; i < array.Length; ++i)
+		    {
+			    if (array[i] == null && target == null)
+				    return i;
+
+			    if (array[i] != null && array[i].Equals(target))
+				    return i;
+		    }
+
+		    return -1;
+	    }
 
         #endregion
 

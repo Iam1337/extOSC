@@ -103,12 +103,12 @@ namespace extOSC.Editor
             EditorGUILayout.LabelField("Active: " + _receiver.IsAvailable, EditorStyles.boldLabel);
 
             // SETTINGS BLOCK
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.LabelField("Receiver Settings:", EditorStyles.boldLabel);
 
             // SETTINGS BOX
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUI.BeginChangeCheck();
 
             //LOCAL HOST
@@ -134,7 +134,7 @@ namespace extOSC.Editor
             EditorGUILayout.EndVertical();
 
             // PARAMETERS BLOCK
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             GUI.color = _autoConnectProperty.boolValue ? Color.green : Color.red;
             if (GUILayout.Button("Auto Connect"))
@@ -155,7 +155,7 @@ namespace extOSC.Editor
 
             // ADVANCED BLOCK
             EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.WSA)
             {
@@ -192,7 +192,7 @@ namespace extOSC.Editor
 
 		protected void DrawControlsInGame()
         {
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             GUI.color = _receiver.IsAvailable ? Color.green : Color.red;
             var connection = GUILayout.Button(_receiver.IsAvailable ? "Connected" : "Disconnected");
@@ -220,7 +220,7 @@ namespace extOSC.Editor
 
         protected void DrawControlsInEditor()
         {
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             GUI.color = _workInEditorProperty.boolValue ? Color.green : Color.red;
             var connection = GUILayout.Button("Work In Editor");

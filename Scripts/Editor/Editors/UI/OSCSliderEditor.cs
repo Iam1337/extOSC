@@ -80,17 +80,17 @@ namespace extOSC.Editor.Components.UI
             GUILayout.Space(5);
 
             GUILayout.Label(string.Format("Value: {0}", _valueProperty.floatValue), EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUILayout.Label(_settingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             base.OnInspectorGUI();
             GUILayout.EndVertical();
 
             serializedObject.Update();
 
             GUILayout.Label(_sliderSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.PropertyField(_fillRecrProperty);
             EditorGUILayout.PropertyField(_handleProperty);
             EditorGUILayout.PropertyField(_multiplyControllerProperty);
@@ -112,7 +112,7 @@ namespace extOSC.Editor.Components.UI
                 GUILayout.EndVertical();
 
                 GUILayout.Label(_valueSettingsContent, EditorStyles.boldLabel);
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.PropertyField(_minValueProperty);
                 EditorGUILayout.PropertyField(_maxValueProperty);
                 EditorGUILayout.PropertyField(_wholeNumbersProperty);
@@ -120,7 +120,7 @@ namespace extOSC.Editor.Components.UI
                 GUILayout.EndVertical();
 
                 GUILayout.Label(_resetValueContent, EditorStyles.boldLabel);
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.PropertyField(_resetValueProperty);
                 EditorGUILayout.PropertyField(_resetValueTimeProperty);
                 EditorGUILayout.PropertyField(_callbackOnResetProperty);

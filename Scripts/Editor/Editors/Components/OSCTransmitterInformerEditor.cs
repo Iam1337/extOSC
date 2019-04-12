@@ -68,7 +68,7 @@ namespace extOSC.Editor.Components
         {
             // TARGET
             EditorGUILayout.LabelField(_targetTitleContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             _reflectionDrawer.DrawLayout();
 
@@ -76,7 +76,7 @@ namespace extOSC.Editor.Components
 
             //SETTINGS
             EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUI.color = _informOnChangedProperty.boolValue ? Color.green : Color.red;
             if (GUILayout.Button(_informOnChangedContent))

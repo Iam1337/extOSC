@@ -1,12 +1,11 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using UnityEngine;
-
 using extOSC.Mapping;
+using UnityEngine;
 
 namespace extOSC.Components
 {
-    public abstract class OSCTransmitterComponent : MonoBehaviour, IOSCTransmitterComponent
+	public abstract class OSCTransmitterComponent : MonoBehaviour, IOSCTransmitterComponent
     {
         #region Public Vars
 
@@ -32,8 +31,9 @@ namespace extOSC.Components
 
 		#region Protected Vars
 
+	    [OSCSelector]
 		[SerializeField]
-        protected OSCTransmitter transmitter;
+		protected OSCTransmitter transmitter;
 
         [SerializeField]
         protected string address = "/address";

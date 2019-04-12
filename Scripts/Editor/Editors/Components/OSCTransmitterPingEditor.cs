@@ -54,7 +54,7 @@ namespace extOSC.Editor.Components
         {
             // INTERVALL
             EditorGUILayout.LabelField(_settingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.PropertyField(_intervalProperty, _intervalContent);
 
@@ -64,7 +64,7 @@ namespace extOSC.Editor.Components
 
             GUILayout.EndVertical();
 
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
             if (GUILayout.Button(_autoStartContent))
@@ -78,7 +78,7 @@ namespace extOSC.Editor.Components
             GUI.enabled = Application.isPlaying;
 
             EditorGUILayout.LabelField(_inGameContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             if ((!_ping.IsRunning && (!Application.isPlaying && !_ping.AutoStart)) ||
                 (Application.isPlaying && !_ping.IsRunning))

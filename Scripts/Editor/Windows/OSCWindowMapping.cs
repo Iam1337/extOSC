@@ -12,8 +12,7 @@ namespace extOSC.Editor.Windows
     {
         #region Static Public Methods
 
-        [MenuItem("Window/extOSC/Mapping Window", false, 1001)]
-        public static void ShowWindow()
+        public static void Open()
         {
             Instance.titleContent = new GUIContent("OSC Mapping", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(550, 200);
@@ -22,7 +21,7 @@ namespace extOSC.Editor.Windows
 
         public static void OpenBundle(OSCMapBundle bundle)
         {
-            ShowWindow();
+            Open();
 
             Instance.Focus();
             Instance.rootPanel.CurrentMapBundle = bundle;

@@ -4,9 +4,9 @@ namespace extOSC.Components
 {
     public interface IOSCReceiverComponent
     {
-        #region Public Vars
+		#region Public Vars
 
-        OSCReceiver Receiver { get; }
+	    OSCReceiver Receiver { get; }
 
         string ReceiverAddress { get; }
 

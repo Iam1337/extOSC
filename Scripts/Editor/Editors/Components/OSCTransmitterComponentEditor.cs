@@ -57,12 +57,12 @@ namespace extOSC.Editor.Components
             OSCEditorLayout.DrawLogo();
             GUILayout.Space(5);
 
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
 			// SETTINGS BLOCK
 			EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
 
-	        GUILayout.BeginVertical("box");
+	        GUILayout.BeginVertical(OSCEditorStyles.Box);
 			OSCEditorLayout.TransmitterSettings(_transmitterProperty, _addressProperty, false);
 	        EditorGUILayout.PropertyField(_mapBundleProperty, _mapBundleContent);
 
@@ -90,7 +90,7 @@ namespace extOSC.Editor.Components
         {
             // CUSTOM SETTINGS
             EditorGUILayout.LabelField(_otherSettingsContent, EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
             OSCEditorLayout.DrawProperties(serializedObject, _addressProperty.name, _transmitterProperty.name, _mapBundleProperty.name);
 

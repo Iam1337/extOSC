@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2018 ExT (V.Sigalkin) */
 
 using UnityEngine;
 using UnityEditor;
@@ -13,192 +13,225 @@ using extOSC.Components.Informers;
 
 namespace extOSC.Editor
 {
-    public static class OSCMenuOptions
-    {
-        #region Extensions
+	public static class OSCMenuOptions
+	{
+		#region Extensions
 
-        private delegate GameObject CreateCallback(OSCControls.Resources resources);
+		private delegate GameObject CreateCallback(OSCControls.Resources resources);
 
-        #endregion
+		#endregion
 
-        #region Static Private Vars
+		#region Static Private Vars
 
-        private static MethodInfo _placeUIElementMethod;
+		private const string _toolsRoot = "Tools/extOSC/";
 
-        #endregion
+		private const string _windowsRoot = _toolsRoot;
 
-        #region Static Public Methods
+		private const int _windowsIndex = 0;
 
-        // LINKS
-        [MenuItem("Window/extOSC/Links/GitHub: Repository", false, 1040)]
-        public static void ShowRepository(MenuCommand menuCommand)
-        {
-            Application.OpenURL("https://github.com/iam1337/extOSC");
-        }
+		private const string _linksRoot = _toolsRoot + "Links/";
 
-        [MenuItem("Window/extOSC/Links/GitHub: Roadmap", false, 1041)]
-        public static void ShowRoadmap(MenuCommand menuCommand)
-        {
-            Application.OpenURL("https://github.com/Iam1337/extOSC/projects/1");
-        }
+		private const int _linksIndex = _windowsIndex + 20;
 
-        [MenuItem("Window/extOSC/Links/GitHub: Wiki", false, 1042)]
-        public static void ShowWiki(MenuCommand menuCommand)
-        {
-            Application.OpenURL("https://github.com/Iam1337/extOSC/wiki");
-        }
+		private const string _objectRoot = "GameObject/extOSC/";
 
-        [MenuItem("Window/extOSC/Links/Unity Forums: Thread", false, 1061)]
-        public static void ShowForum(MenuCommand menuCommand)
-        {
-            Application.OpenURL("https://forum.unity.com/threads/436159/");
-        }
+		private const int _objectIndex = 40;
 
-        // GAME OBJECTS
-        [MenuItem("GameObject/extOSC/OSC Manager", false, 40)]
-        public static void AddManager(MenuCommand menuCommand)
-        {
-            var gameObject = OSCControls.CreateManager();
-            Undo.RegisterCreatedObjectUndo(gameObject, "Create OSC Manager");
-        }
+		private static MethodInfo _placeUIElementMethod;
 
-        [MenuItem("GameObject/extOSC/Pad", false, 42)]
-        public static void AddPad(MenuCommand menuCommand)
-        {
-            OSCWindowControlCreator.ShowWindow(menuCommand, (data, command) =>
-            {
-                InitUIElement<OSCPad, OSCTransmitterInformerVector2>(OSCControls.CreatePad, data, command);
-            });
-        }
+		#endregion
 
-        [MenuItem("GameObject/extOSC/Slider", false, 43)]
-        public static void AddSlider(MenuCommand menuCommand)
-        {
-            OSCWindowControlCreator.ShowWindow(menuCommand, (data, command) =>
-            {
-                InitUIElement<OSCSlider, OSCTransmitterInformerFloat>(OSCControls.CreateSlider, data, command);
-            });
-        }
+		#region Static Public Methods
 
-        [MenuItem("GameObject/extOSC/Button", false, 44)]
-        public static void AddButton(MenuCommand menuCommand)
-        {
-            OSCWindowControlCreator.ShowWindow(menuCommand, (data, command) =>
-            {
-                InitUIElement<OSCButton, OSCTransmitterInformerBool>(OSCControls.CreateButton, data, command);
-            });
-        }
+		// WINDOWS
+		[MenuItem(_windowsRoot + "OSC Console", false, _windowsIndex + 0)]
+		public static void ShowConsole()
+		{
+			OSCWindowConsole.Open();
+		}
 
-        [MenuItem("GameObject/extOSC/Rotary", false, 45)]
-        public static void AddRotary(MenuCommand menuCommand)
-        {
-            OSCWindowControlCreator.ShowWindow(menuCommand, (data, command) =>
-            {
-                InitUIElement<OSCRotary, OSCTransmitterInformerFloat>(OSCControls.CreateRotary, data, command);
-            });
-        }
+		[MenuItem(_windowsRoot + "OSC Debug", false, _windowsIndex + 1)]
+		public static void ShowDebug()
+		{
+			OSCWindowDebug.Open();
+		}
 
-        [MenuItem("GameObject/extOSC/Multiply Sliders (Vertical)", false, 46)]
-        public static void AddMultiplySlidersVertical(MenuCommand menuCommand)
-        {
-            OSCWindowControlCreator.ShowWindow(menuCommand, (data, command) =>
-            {
-                InitMultiplySlidersUIElement(OSCControls.CreateMultiplySlidersVertical, data, command);
-            });
-        }
+		[MenuItem(_windowsRoot + "OSC Mapping", false, _windowsIndex + 2)]
+		public static void ShowMapping()
+		{
+			OSCWindowMapping.Open();
+		}
 
-        [MenuItem("GameObject/extOSC/Multiply Sliders (Horizontal)", false, 47)]
-        public static void AddMultiplySlidersHorizontal(MenuCommand menuCommand)
-        {
-            OSCWindowControlCreator.ShowWindow(menuCommand, (data, command) =>
-            {
-                InitMultiplySlidersUIElement(OSCControls.CreateMultiplySlidersHorizontal, data, command);
-            });
-        }
+		// LINKS
+		[MenuItem(_linksRoot + "GitHub: Repository", false, _linksIndex + 0)]
+		public static void ShowRepository(MenuCommand menuCommand)
+		{
+			Application.OpenURL("https://github.com/iam1337/extOSC");
+		}
 
-        #endregion
+		[MenuItem(_linksRoot + "GitHub: Roadmap", false, _linksIndex + 1)]
+		public static void ShowRoadmap(MenuCommand menuCommand)
+		{
+			Application.OpenURL("https://github.com/Iam1337/extOSC/projects/1");
+		}
 
-        #region Static Private Methods
+		[MenuItem(_linksRoot + "GitHub: Wiki", false, _linksIndex + 2)]
+		public static void ShowWiki(MenuCommand menuCommand)
+		{
+			Application.OpenURL("https://github.com/Iam1337/extOSC/wiki");
+		}
 
-        private static void InitUIElement<T, K>(CreateCallback createAction,
-                                                 OSCWindowControlCreator.ControlData data,
-                                                 MenuCommand menuCommand) where K : OSCTransmitterInformer where T : Component
-        {
-            if (createAction == null)
-                return;
+		[MenuItem(_linksRoot + "Unity Forums: Thread", false, _linksIndex + 10)]
+		public static void ShowForum(MenuCommand menuCommand)
+		{
+			Application.OpenURL("https://forum.unity.com/threads/436159/");
+		}
 
-            var resources = OSCEditorUtils.GetStandardResources();
-            resources.Color = data.ControlColor;
+		// GAME OBJECTS
+		[MenuItem(_objectRoot + "OSC Manager", false, _objectIndex + 1)]
+		public static void AddManager(MenuCommand menuCommand)
+		{
+			var gameObject = OSCControls.CreateManager();
+			Undo.RegisterCreatedObjectUndo(gameObject, "Create OSC Manager");
+		}
 
-            var element = createAction(resources);
+		[MenuItem(_objectRoot + "Pad", false, _objectIndex + 10)]
+		public static void AddPad(MenuCommand menuCommand)
+		{
+			OSCWindowControlCreator.Open(menuCommand, (data, command) =>
+			{
+				InitUIElement<OSCPad, OSCTransmitterInformerVector2>(OSCControls.CreatePad, data, command);
+			});
+		}
 
-            PlaceUIElement(element, menuCommand);
+		[MenuItem(_objectRoot + "Slider", false, _objectIndex + 11)]
+		public static void AddSlider(MenuCommand menuCommand)
+		{
+			OSCWindowControlCreator.Open(menuCommand, (data, command) =>
+			{
+				InitUIElement<OSCSlider, OSCTransmitterInformerFloat>(OSCControls.CreateSlider, data, command);
+			});
+		}
 
-            if (data.UseInformer)
-            {
-                AddInformer<K>(element.GetComponent<T>(),
-                                                         data.InformerTransmitter,
-                                                         data.InformAddress,
-                                                         data.InformOnChanged,
-                                                         data.InformInterval);
-            }
-        }
+		[MenuItem(_objectRoot + "Button", false, _objectIndex + 12)]
+		public static void AddButton(MenuCommand menuCommand)
+		{
+			OSCWindowControlCreator.Open(menuCommand, (data, command) =>
+			{
+				InitUIElement<OSCButton, OSCTransmitterInformerBool>(OSCControls.CreateButton, data, command);
+			});
+		}
 
-        private static void InitMultiplySlidersUIElement(CreateCallback createAction, OSCWindowControlCreator.ControlData data, MenuCommand menuCommand)
-        {
-            if (createAction == null)
-                return;
+		[MenuItem(_objectRoot + "Rotary", false, _objectIndex + 13)]
+		public static void AddRotary(MenuCommand menuCommand)
+		{
+			OSCWindowControlCreator.Open(menuCommand, (data, command) =>
+			{
+				InitUIElement<OSCRotary, OSCTransmitterInformerFloat>(OSCControls.CreateRotary, data, command);
+			});
+		}
 
-            var resources = OSCEditorUtils.GetStandardResources();
-            resources.Color = data.ControlColor;
+		[MenuItem(_objectRoot + "Multiply Sliders (Vertical)", false, _objectIndex + 14)]
+		public static void AddMultiplySlidersVertical(MenuCommand menuCommand)
+		{
+			OSCWindowControlCreator.Open(menuCommand, (data, command) =>
+			{
+				InitMultiplySlidersUIElement(OSCControls.CreateMultiplySlidersVertical, data, command);
+			});
+		}
 
-            var element = createAction(resources);
+		[MenuItem(_objectRoot + "Multiply Sliders (Horizontal)", false, _objectIndex + 15)]
+		public static void AddMultiplySlidersHorizontal(MenuCommand menuCommand)
+		{
+			OSCWindowControlCreator.Open(menuCommand, (data, command) =>
+			{
+				InitMultiplySlidersUIElement(OSCControls.CreateMultiplySlidersHorizontal, data, command);
+			});
+		}
 
-            if (data.UseInformer)
-            {
-                var multiplySliders = element.GetComponent<OSCMultiplySliders>();
-                multiplySliders.Address = data.InformAddress;
-                multiplySliders.Transmitter = data.InformerTransmitter;
-            }
+		#endregion
 
-            PlaceUIElement(element, menuCommand);
-        }
+		#region Static Private Methods
 
-        private static void AddInformer<T>(Component component,
-                                           OSCTransmitter transmitter,
-                                           string address,
-                                           bool onChanged,
-                                           float interval) where T : OSCTransmitterInformer
-        {
-            var informer = component.gameObject.AddComponent<T>();
-            informer.TransmitterAddress = address;
-            informer.Transmitter = transmitter;
-            informer.InformOnChanged = onChanged;
-            informer.InformInterval = interval;
+		private static void InitUIElement<T, K>(CreateCallback createAction,
+												 OSCWindowControlCreator.ControlData data,
+												 MenuCommand menuCommand) where K : OSCTransmitterInformer where T : Component
+		{
+			if (createAction == null)
+				return;
 
-            var reflection = new OSCReflectionMember();
-            reflection.Target = component;
-            reflection.MemberName = "Value";
+			var resources = OSCEditorUtils.GetStandardResources();
+			resources.Color = data.ControlColor;
 
-            if (!reflection.IsValid())
-                reflection.MemberName = "value";
+			var element = createAction(resources);
 
-            informer.ReflectionTarget = reflection;
-        }
+			PlaceUIElement(element, menuCommand);
 
-        private static void PlaceUIElement(GameObject gameObject, MenuCommand menuCommand)
-        {
-            if (_placeUIElementMethod == null)
-            {
-                var assembly = Assembly.GetAssembly(typeof(SelectableEditor));
-                var menuOptionsType = assembly.GetType("UnityEditor.UI.MenuOptions");
+			if (data.UseInformer)
+			{
+				AddInformer<K>(element.GetComponent<T>(),
+														 data.InformerTransmitter,
+														 data.InformAddress,
+														 data.InformOnChanged,
+														 data.InformInterval);
+			}
+		}
 
-                _placeUIElementMethod = menuOptionsType.GetMethod("PlaceUIElementRoot", BindingFlags.Static | BindingFlags.NonPublic);
-            }
+		private static void InitMultiplySlidersUIElement(CreateCallback createAction, OSCWindowControlCreator.ControlData data, MenuCommand menuCommand)
+		{
+			if (createAction == null)
+				return;
 
-            _placeUIElementMethod.Invoke(null, new object[] { gameObject, menuCommand });
-        }
+			var resources = OSCEditorUtils.GetStandardResources();
+			resources.Color = data.ControlColor;
 
-        #endregion
-    }
+			var element = createAction(resources);
+
+			if (data.UseInformer)
+			{
+				var multiplySliders = element.GetComponent<OSCMultiplySliders>();
+				multiplySliders.Address = data.InformAddress;
+				multiplySliders.Transmitter = data.InformerTransmitter;
+			}
+
+			PlaceUIElement(element, menuCommand);
+		}
+
+		private static void AddInformer<T>(Component component,
+										   OSCTransmitter transmitter,
+										   string address,
+										   bool onChanged,
+										   float interval) where T : OSCTransmitterInformer
+		{
+			var informer = component.gameObject.AddComponent<T>();
+			informer.TransmitterAddress = address;
+			informer.Transmitter = transmitter;
+			informer.InformOnChanged = onChanged;
+			informer.InformInterval = interval;
+
+			var reflection = new OSCReflectionMember();
+			reflection.Target = component;
+			reflection.MemberName = "Value";
+
+			if (!reflection.IsValid())
+				reflection.MemberName = "value";
+
+			informer.ReflectionTarget = reflection;
+		}
+
+		private static void PlaceUIElement(GameObject gameObject, MenuCommand menuCommand)
+		{
+			if (_placeUIElementMethod == null)
+			{
+				var assembly = Assembly.GetAssembly(typeof(SelectableEditor));
+				var menuOptionsType = assembly.GetType("UnityEditor.UI.MenuOptions");
+
+				_placeUIElementMethod = menuOptionsType.GetMethod("PlaceUIElementRoot", BindingFlags.Static | BindingFlags.NonPublic);
+			}
+
+			_placeUIElementMethod.Invoke(null, new object[] { gameObject, menuCommand });
+		}
+
+		#endregion
+	}
 }
