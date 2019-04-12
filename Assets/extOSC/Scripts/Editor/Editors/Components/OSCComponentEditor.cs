@@ -55,29 +55,21 @@ namespace extOSC.Editor.Components
             EditorGUI.BeginChangeCheck();
 
             // LOGO
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(5);
+            OSCEditorInterface.LogoLayout();
 
+			EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+		        EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
+		        OSCEditorInterface.TransmitterSettings(_transmitterProperty, _transmitterAddressProperty);
 
-            EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+		        EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
+		        OSCEditorInterface.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
 
-            // TRANSMITTER SETTINGS BLOCK
-            EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
-            OSCEditorLayout.TransmitterSettings(_transmitterProperty, _transmitterAddressProperty);
-            // TRANSMITTER SETTINGS BOX END
+		        DrawSettings();
+	        }
 
-            // RECEIVER SETTINGS BLOCK
-            EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
-            OSCEditorLayout.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
-            // SETTINGS BOX END
-
-            DrawSettings();
-
-            EditorGUILayout.EndVertical();
-
-            if (EditorGUI.EndChangeCheck())
+	        if (EditorGUI.EndChangeCheck())
                 serializedObject.ApplyModifiedProperties();
         }
 
@@ -85,19 +77,18 @@ namespace extOSC.Editor.Components
 
         #region Protected Methods
 
-        protected virtual void DrawSettings()
-        {
-            // CUSTOM SETTINGS
-            EditorGUILayout.LabelField(_otherSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	    protected virtual void DrawSettings()
+	    {
+		    // CUSTOM SETTINGS
+		    EditorGUILayout.LabelField(_otherSettingsContent, EditorStyles.boldLabel);
+		    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		    {
+				OSCEditorInterface.DrawProperties(serializedObject, _transmitterAddressProperty.name,
+			                                      _transmitterProperty.name, _receiverAddressProperty.name,
+			                                      _receiverProperty.name);
+		    }
+	    }
 
-            OSCEditorLayout.DrawProperties(serializedObject, _transmitterAddressProperty.name,
-                                           _transmitterProperty.name, _receiverAddressProperty.name,
-                                           _receiverProperty.name);
-
-            EditorGUILayout.EndVertical();
-        }
-
-        #endregion
+	    #endregion
     }
 }

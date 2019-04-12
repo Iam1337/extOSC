@@ -5,9 +5,11 @@ using UnityEditor;
 
 using System.Linq;
 
+using extOSC.Core;
+
 namespace extOSC.Editor
 {
-    public static partial class OSCEditorLayout
+    public static partial class OSCEditorInterface
     {
         #region Static Private Vars
 
@@ -29,27 +31,29 @@ namespace extOSC.Editor
 
         #region Static Public Methods
 
-        public static void DrawLogo()
-        {
-            if (OSCEditorTextures.IronWall != null)
-            {
-                EditorGUILayout.Space();
+	    public static void LogoLayout()
+	    {
+		    if (OSCEditorTextures.IronWall == null)
+			    return;
 
-                var rect = GUILayoutUtility.GetRect(0, 0);
-                var width = OSCEditorTextures.IronWall.width * 0.2f;
-                var height = OSCEditorTextures.IronWall.height * 0.2f;
+		    GUILayout.Space(10);
+            EditorGUILayout.Space();
 
-                rect.x = rect.width * 0.5f - width * 0.5f;
-                rect.y = rect.y + rect.height * 0.5f - height * 0.5f;
-                rect.width = width;
-                rect.height = height;
+		    var rect = GUILayoutUtility.GetRect(0, 0);
+		    var width = OSCEditorTextures.IronWall.width * 0.2f;
+		    var height = OSCEditorTextures.IronWall.height * 0.2f;
 
-                GUI.DrawTexture(rect, OSCEditorTextures.IronWall);
-                EditorGUILayout.Space();
-            }
+		    rect.x = rect.width * 0.5f - width * 0.5f;
+		    rect.y = rect.y + rect.height * 0.5f - height * 0.5f;
+		    rect.width = width;
+		    rect.height = height;
+
+		    GUI.DrawTexture(rect, OSCEditorTextures.IronWall);
+		    EditorGUILayout.Space();
+		    GUILayout.Space(5);
         }
 
-        public static void DrawProperties(SerializedObject serializedObject, params string[] exceptionsNames)
+	    public static void DrawProperties(SerializedObject serializedObject, params string[] exceptionsNames)
         {
             var serializedProperty = serializedObject.GetIterator();
             var isEmpty = true;
@@ -96,6 +100,24 @@ namespace extOSC.Editor
 
 			if (drawBox) EditorGUILayout.EndVertical();
         }
+		
+		// POPUP
+	    public static TOSC Popup<TOSC>(Rect position,
+		    GUIContent label,
+		    TOSC currentObject,
+		    GUIContent[] content,
+		    TOSC[] objects) where TOSC : OSCBase
+	    {
+		    return objects[EditorGUI.Popup(position, label, Mathf.Max(objects.IndexOf(currentObject), 0), content)];
+	    }
+
+	    public static TOSC PopupLayout<TOSC>(GUIContent label,
+		    TOSC currentObject,
+		    GUIContent[] content,
+		    TOSC[] objects) where TOSC : OSCBase
+	    {
+		    return objects[EditorGUILayout.Popup(label, Mathf.Max(objects.IndexOf(currentObject), 0), content)];
+	    }
 
         #endregion
     }

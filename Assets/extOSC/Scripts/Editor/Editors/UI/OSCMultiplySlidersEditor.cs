@@ -54,9 +54,7 @@ namespace extOSC.Editor.Components.UI
         {
             serializedObject.Update();
 
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(5);
+            OSCEditorInterface.LogoLayout();
 
             GUILayout.Label(string.Format("Sliders: {0}", _slidersProperty.arraySize), EditorStyles.boldLabel);
             GUILayout.BeginVertical(OSCEditorStyles.Box);

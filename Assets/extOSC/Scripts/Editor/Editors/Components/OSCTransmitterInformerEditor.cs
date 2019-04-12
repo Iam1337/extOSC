@@ -35,6 +35,8 @@ namespace extOSC.Editor.Components
 
         private OSCReflectionMemberDrawer _reflectionDrawer;
 
+	    private Color _defaultColor;
+
         #endregion
 
         #region Unity Methods
@@ -66,35 +68,38 @@ namespace extOSC.Editor.Components
 
         protected override void DrawSettings()
         {
+	        _defaultColor = GUI.color;
+
             // TARGET
             EditorGUILayout.LabelField(_targetTitleContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
 
-            _reflectionDrawer.DrawLayout();
+		        _reflectionDrawer.DrawLayout();
+	        }
 
-            GUILayout.EndVertical();
-
-            //SETTINGS
+	        //SETTINGS
             EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+		        GUI.color = _informOnChangedProperty.boolValue ? Color.green : Color.red;
+		        if (GUILayout.Button(_informOnChangedContent))
+		        {
+			        _informOnChangedProperty.boolValue = !_informOnChangedProperty.boolValue;
+		        }
 
-            GUI.color = _informOnChangedProperty.boolValue ? Color.green : Color.red;
-            if (GUILayout.Button(_informOnChangedContent))
-            {
-                _informOnChangedProperty.boolValue = !_informOnChangedProperty.boolValue;
-            }
-            GUI.color = Color.white;
+		        GUI.color = _defaultColor;
 
-            if (!_informOnChangedProperty.boolValue)
-            {
-                EditorGUILayout.PropertyField(_informIntervalProperty, _informIntervalContent);
+		        if (!_informOnChangedProperty.boolValue)
+		        {
+			        EditorGUILayout.PropertyField(_informIntervalProperty, _informIntervalContent);
 
-                if (_informIntervalProperty.floatValue < 0) _informIntervalProperty.floatValue = 0;
+			        if (_informIntervalProperty.floatValue < 0)
+				        _informIntervalProperty.floatValue = 0;
 
-                EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
-            }
-
-            GUILayout.EndVertical();
+			        EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
+		        }
+	        }
         }
 
         #endregion

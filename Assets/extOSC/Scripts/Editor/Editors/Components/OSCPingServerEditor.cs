@@ -57,43 +57,36 @@ namespace extOSC.Editor.Components
             EditorGUI.BeginChangeCheck();
 
             // LOGO
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(5);
+            OSCEditorInterface.LogoLayout();
 
             EditorGUILayout.LabelField(string.Format("{0} Settings:", target.GetType().Name), EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+				EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
+		        OSCEditorInterface.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
 
-            // RECEIVER SETTINGS BLOCK
-            EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
-            OSCEditorLayout.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
+		        EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
+		        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		        {
+			        EditorGUILayout.PropertyField(_transmitterProperty, _transmitterContent);
 
-            // TRANSMITTER SETTINGS BLOCK
-            EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+			        var transmitterAddress = "- None -";
 
-            //OSCEditorLayout.TransmittersPopup(_transmitterProperty, _transmitterContent);
-	        EditorGUILayout.PropertyField(_transmitterProperty, _transmitterContent);
+			        if (Application.isPlaying)
+			        {
+				        transmitterAddress = _ping.TransmitterAddress;
+			        }
 
-            var transmitterAddress = "- None -";
+			        EditorGUILayout.LabelField(EditorGUIUtility.currentViewWidth > 410
+				                                   ? _transmitterAddressContent.text
+				                                   : _transmitterAddressContentSmall.text,
+			                                   transmitterAddress);
+		        }
 
-            if (Application.isPlaying)
-            {
-                transmitterAddress = _ping.TransmitterAddress;
-            }
+		        DrawSettings();
+	        }
 
-            EditorGUILayout.LabelField(EditorGUIUtility.currentViewWidth > 410 ?
-                                       _transmitterAddressContent.text : _transmitterAddressContentSmall.text,
-                                       transmitterAddress);
-
-            // SETTINGS BOX END
-            EditorGUILayout.EndVertical();
-
-            DrawSettings();
-
-            EditorGUILayout.EndVertical();
-
-            if (EditorGUI.EndChangeCheck())
+	        if (EditorGUI.EndChangeCheck())
                 serializedObject.ApplyModifiedProperties();
         }
 

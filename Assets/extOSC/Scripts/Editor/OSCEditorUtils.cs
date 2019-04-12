@@ -71,7 +71,6 @@ namespace extOSC.Editor
 		#region Static Public Methods
 
 		// NEW
-
 		public static void FindObjectsForPopup<T>(Func<T, string> namingCallback, bool withNone, out GUIContent[] contents, out T[] objects) where T : Object
 		{
 			var sceneObjects = Object.FindObjectsOfType<T>();
@@ -103,8 +102,6 @@ namespace extOSC.Editor
 			}
 		}
 
-		// OLD
-
 		public static OSCReceiver FindReceiver(int localPort)
         {
             var receivers = GameObject.FindObjectsOfType<OSCReceiver>();
@@ -134,7 +131,7 @@ namespace extOSC.Editor
 
         public static Dictionary<string, OSCReceiver> GetReceivers()
         {
-            return GetOSC<OSCReceiver>((receiver) =>
+            return GetOSC<OSCReceiver>(receiver =>
             {
                 return string.Format("Receiver: {0}", receiver.LocalPort);
             });
