@@ -73,7 +73,7 @@ namespace extOSC.Editor.Panels
 
         #region Unity Methods
 
-        protected override void DrawContent(Rect contentRect)
+        protected override void DrawContent(ref Rect contentRect)
         {
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
@@ -128,7 +128,7 @@ namespace extOSC.Editor.Panels
 
         #region Public Methods
 
-        public OSCPanelPacketEditor(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
+        public OSCPanelPacketEditor(OSCWindow window, string panelId) : base(window, panelId)
         {
             _packetDrawer = new OSCPacketEditableDrawer();
         }

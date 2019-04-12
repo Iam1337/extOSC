@@ -1,7 +1,6 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
-using UnityEditor;
 
 using System.Collections.Generic;
 
@@ -43,6 +42,7 @@ namespace extOSC.Editor.Windows
             Instance.titleContent = new GUIContent("OSC Console", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(610, 200);
             Instance.Show();
+			Instance.Focus();
         }
 
         public static OSCConsolePacket[] GetConsoleBuffer(bool transmitted, bool received, string filter)
@@ -149,7 +149,7 @@ namespace extOSC.Editor.Windows
             base.OnEnable();
         }
 
-        protected override void Update()
+        protected void Update()
         {
             if (ConsoleBuffer == null)
             {

@@ -78,11 +78,13 @@ namespace extOSC.Editor
 
         public static void TransmitterSettings(SerializedProperty property, SerializedProperty addressProperty, bool drawBox = true)
         {
-	        if (drawBox) GUILayout.BeginVertical(OSCEditorStyles.Box);
-            EditorGUILayout.PropertyField(addressProperty, EditorGUIUtility.currentViewWidth > 410 ?
-                                          _transmitterAddressContent : _transmitterAddressContentSmall);
+			if (drawBox) GUILayout.BeginVertical(OSCEditorStyles.Box);
 
-			//TransmittersPopup(transmitterProperty, _transmitterContent);
+	        var addressContent = EditorGUIUtility.currentViewWidth > 410
+		        ? _transmitterAddressContent
+		        : _transmitterAddressContentSmall;
+
+            EditorGUILayout.PropertyField(addressProperty, addressContent);
 			EditorGUILayout.PropertyField(property, _transmitterContent);
 
 			if (drawBox) EditorGUILayout.EndVertical();
@@ -92,10 +94,11 @@ namespace extOSC.Editor
         {
 			if (drawBox) GUILayout.BeginVertical(OSCEditorStyles.Box);
 
-            EditorGUILayout.PropertyField(addressProperty, EditorGUIUtility.currentViewWidth > 380 ?
-                                          _receiverAddressContent : _receiverAddressContentSmall);
+	        var addressContent = EditorGUIUtility.currentViewWidth > 380
+		        ? _receiverAddressContent
+		        : _receiverAddressContentSmall;
 
-            //ReceiversPopup(property, _receiverContent);
+            EditorGUILayout.PropertyField(addressProperty, addressContent);
 	        EditorGUILayout.PropertyField(property, _receiverContent);
 
 			if (drawBox) EditorGUILayout.EndVertical();

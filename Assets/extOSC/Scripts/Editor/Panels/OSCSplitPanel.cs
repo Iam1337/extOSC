@@ -102,7 +102,7 @@ namespace extOSC.Editor.Panels
 
         #region Public Methods
 
-        public OSCSplitPanel(OSCWindow parentWindow, string panelId) : base(parentWindow, panelId)
+        public OSCSplitPanel(OSCWindow window, string panelId) : base(window, panelId)
         { }
 
         public OSCPanel[] GetChildPanels()
@@ -196,30 +196,11 @@ namespace extOSC.Editor.Panels
             return minimumSize;
         }
 
-        public override void Update()
-        {
-            foreach (var panelData in _storedPanelData)
-                panelData.Panel.Update();
-        }
-
-        public override void StopCoroutines()
-        {
-            foreach (var panelData in _storedPanelData)
-            {
-                panelData.Panel.StopCoroutines();
-            }
-
-            base.StopCoroutines();
-        }
-
         #endregion
 
         #region Protected Methods
 
-        protected override void PreDrawContent()
-        { }
-
-        protected override void DrawContent(Rect contentRect)
+        protected override void DrawContent(ref Rect contentRect)
         {
             if (_showSplitters)
             {
@@ -367,7 +348,7 @@ namespace extOSC.Editor.Panels
                             _selectedSplitter.FirstData.Size = firstSize;
                             _selectedSplitter.SecondData.Size = secondSize;
 
-                            _parentWindow.Repaint();
+                            Window.Repaint();
                         }
 
                         break;
@@ -390,11 +371,11 @@ namespace extOSC.Editor.Panels
 
         private void LoadData()
         {
-            if (_parentWindow == null) return;
+            if (Window == null) return;
 
             foreach (var storedData in _storedPanelData)
             {
-                var key = string.Format("osc.editor.splitPanel.{2}.{0}.{1}", PanelId, storedData.Panel.PanelId, _parentWindow.GetType());
+                var key = string.Format("osc.editor.splitPanel.{2}.{0}.{1}", PanelId, storedData.Panel.PanelId, Window.GetType());
 
                 storedData.Size = EditorPrefs.GetFloat(key, storedData.Size);
             }
@@ -402,11 +383,11 @@ namespace extOSC.Editor.Panels
 
         private void SaveData()
         {
-            if (_parentWindow == null) return;
+            if (Window == null) return;
 
             foreach (var storedData in _storedPanelData)
             {
-                var key = string.Format("osc.editor.splitPanel.{2}.{0}.{1}", PanelId, storedData.Panel.PanelId, _parentWindow.GetType());
+                var key = string.Format("osc.editor.splitPanel.{2}.{0}.{1}", PanelId, storedData.Panel.PanelId, Window.GetType());
 
                 EditorPrefs.SetFloat(key, storedData.Size);
             }

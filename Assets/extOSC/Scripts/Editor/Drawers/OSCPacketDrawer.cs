@@ -54,19 +54,18 @@ namespace extOSC.Editor.Drawers
                     foreach (var bundlePacket in bundle.Packets)
                     {
                         EditorGUILayout.LabelField(_bundleContent, EditorStyles.boldLabel);
-
-                        EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-
-                        DrawLayout(bundlePacket);
-
-                        EditorGUILayout.EndVertical();
+	                    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	                    {
+		                    DrawLayout(bundlePacket);
+	                    }
                     }
                 }
                 else
                 {
-                    EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-                    EditorGUILayout.LabelField(_bundleEmptyContent, OSCEditorStyles.CenterLabel);
-                    EditorGUILayout.EndVertical();
+	                using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	                {
+		                EditorGUILayout.LabelField(_bundleEmptyContent, OSCEditorStyles.CenterLabel);
+	                }
                 }
             }
         }
@@ -76,46 +75,44 @@ namespace extOSC.Editor.Drawers
             if (message != null)
             {
                 EditorGUILayout.LabelField(_addressContent, EditorStyles.boldLabel);
+	            using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	            {
+		            EditorGUILayout.SelectableLabel(message.Address, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+	            }
 
-                EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-                EditorGUILayout.SelectableLabel(message.Address, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                EditorGUILayout.EndVertical();
-
-                if (message.Values.Count > 0)
+	            if (message.Values.Count > 0)
                 {
                     EditorGUILayout.LabelField(string.Format("Values ({0}):", message.GetTags()), EditorStyles.boldLabel);
-
-                    EditorGUILayout.BeginVertical();
-
-                    foreach (var value in message.Values)
-                    {
-                        DrawValue(value);
-                    }
-
-                    EditorGUILayout.EndVertical();
+	                using (new GUILayout.VerticalScope())
+	                {
+						foreach (var value in message.Values)
+		                {
+			                DrawValue(value);
+		                }
+	                }
                 }
             }
         }
         
         private void DrawArray(OSCValue value)
         {
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+		        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+		        {
+			        EditorGUILayout.LabelField(_beginArrayContent, OSCEditorStyles.CenterBoldLabel);
+		        }
 
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-            EditorGUILayout.LabelField(_beginArrayContent, OSCEditorStyles.CenterBoldLabel);
-            EditorGUILayout.EndHorizontal();
+		        foreach (var arrayValues in value.ArrayValue)
+		        {
+			        DrawValue(arrayValues);
+		        }
 
-            foreach (var arrayValues in value.ArrayValue)
-            {
-
-                DrawValue(arrayValues);
-            }
-
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-            EditorGUILayout.LabelField(_endArrayContent, OSCEditorStyles.CenterBoldLabel);
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.EndVertical();
+		        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+		        {
+			        EditorGUILayout.LabelField(_endArrayContent, OSCEditorStyles.CenterBoldLabel);
+		        }
+	        }
         }
 
         private void DrawValue(OSCValue value)
@@ -129,49 +126,50 @@ namespace extOSC.Editor.Drawers
             var firstColumn = 40f;
             var secondColumn = 60f;
 
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
+			using (new GUILayout.HorizontalScope())
+	        {
+		        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		        {
+			        GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
+		        }
 
-            GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
+		        using (new GUILayout.HorizontalScope())
+		        {
+			        if (value.Type == OSCValueType.Blob ||
+			            value.Type == OSCValueType.Impulse ||
+			            value.Type == OSCValueType.Null)
+			        {
+				        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+				        {
+					        EditorGUILayout.LabelField(value.Type.ToString(), OSCEditorStyles.CenterLabel);
+				        }
+			        }
+			        else
+			        {
+				        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+				        {
+					        EditorGUILayout.LabelField(value.Type + ":", GUILayout.Width(secondColumn));
+				        }
 
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.BeginHorizontal();
-
-            if (value.Type == OSCValueType.Blob ||
-                value.Type == OSCValueType.Impulse ||
-                value.Type == OSCValueType.Null)
-            {
-                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-                EditorGUILayout.LabelField(value.Type.ToString(), OSCEditorStyles.CenterLabel);
-                EditorGUILayout.EndHorizontal();
-            }
-            else
-            {
-                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-                EditorGUILayout.LabelField(value.Type + ":", GUILayout.Width(secondColumn));
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-
-                switch (value.Type)
-                {
-                    case OSCValueType.Color:
-                        EditorGUILayout.ColorField(value.ColorValue);
-                        break;
-                    case OSCValueType.True:
-                    case OSCValueType.False:
-                        EditorGUILayout.Toggle(value.BoolValue);
-                        break;
-                    default:
-                        EditorGUILayout.SelectableLabel(value.Value.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                        break;
-                }
-
-                EditorGUILayout.EndHorizontal();
-            }
-
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndHorizontal();
+				        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+				        {
+					        switch (value.Type)
+					        {
+						        case OSCValueType.Color:
+							        EditorGUILayout.ColorField(value.ColorValue);
+							        break;
+						        case OSCValueType.True:
+						        case OSCValueType.False:
+							        EditorGUILayout.Toggle(value.BoolValue);
+							        break;
+						        default:
+							        EditorGUILayout.SelectableLabel(value.Value.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
+							        break;
+					        }
+				        }
+			        }
+		        }
+	        }
         }
 
         #endregion

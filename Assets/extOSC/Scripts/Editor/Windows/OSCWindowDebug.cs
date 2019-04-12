@@ -1,7 +1,6 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
-using UnityEditor;
 
 using extOSC.Core;
 using extOSC.Editor.Panels;
@@ -34,6 +33,7 @@ namespace extOSC.Editor.Windows
             Instance.titleContent = new GUIContent("OSC Debug", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(550, 200);
             Instance.Show();
+	        Instance.Focus();
         }
 
         public static void OpenPacket(OSCPacket packet)
@@ -41,7 +41,6 @@ namespace extOSC.Editor.Windows
             Open();
 
             Instance._packetEditorPanel.CurrentPacket = OSCEditorUtils.CopyPacket(packet);
-            Instance.Focus();
         }
 
         #endregion
@@ -52,7 +51,7 @@ namespace extOSC.Editor.Windows
 
 	    protected OSCPanelPacketEditor _packetEditorPanel;
 
-	    protected OSCPanelContollers _controllersPanel;
+	    protected OSCPanelControllers _controllersPanel;
 
 		#endregion
 
@@ -61,7 +60,7 @@ namespace extOSC.Editor.Windows
 		protected override void OnEnable()
         {
             _packetEditorPanel = new OSCPanelPacketEditor(this, "debugPacketEditor");
-            _controllersPanel = new OSCPanelContollers(this, "debugOSCControllers");
+            _controllersPanel = new OSCPanelControllers(this, "debugOSCControllers");
 
             rootPanel.AddPanel(_packetEditorPanel, 300);
             rootPanel.AddPanel(_controllersPanel, 250);

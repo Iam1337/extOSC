@@ -3,9 +3,7 @@
 using UnityEngine;
 using UnityEditor;
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 
 using extOSC.Editor.Windows;
 
@@ -13,168 +11,45 @@ namespace extOSC.Editor.Panels
 {
     public class OSCPanel
     {
-        #region Extensions
-
-        protected class PanelCoroutine
-        {
-            #region Static Public Methods
-
-            public static PanelCoroutine Create(IEnumerator routine)
-            {
-                var coroutine = new PanelCoroutine(routine);
-                coroutine.Start();
-
-                return coroutine;
-            }
-
-            #endregion
-
-            #region Private Vars
-
-            private readonly IEnumerator _routine;
-
-            #endregion
-
-            #region Public Method
-
-            public PanelCoroutine(IEnumerator routine)
-            {
-                _routine = routine;
-            }
-
-            public void Start()
-            {
-                EditorApplication.update += Process;
-            }
-
-            public void Stop()
-            {
-                EditorApplication.update -= Process;
-            }
-
-            #endregion
-
-            #region Private Methods
-
-            private void Process()
-            {
-                var process = _routine.MoveNext();
-                if (!process) Stop();
-
-            }
-
-            #endregion
-        }
-
-        #endregion
-
         #region Public Vars
 
-        public Rect Rect
-        {
-            get { return _rect; }
-            set { _rect = value; }
-        }
+        public Rect Rect { get; set; }
 
-        public OSCWindow ParentWindow
-        {
-            get { return _parentWindow; }
-        }
+        public OSCWindow Window { get; private set; }
 
-        public string PanelId
-        {
-            get { return _panelId; }
-            set { _panelId = value; }
-        }
-        #endregion
+	    public string PanelId { get; private set; }
 
-        #region Protected Vars
-
-        protected OSCWindow _parentWindow;
-
-        protected string _panelId;
-
-        #endregion
-
-        #region Private Vars
-
-        private Rect _rect;
-
-        private List<PanelCoroutine> _coroutines = new List<PanelCoroutine>();
-
-        #endregion
+	    #endregion
 
         #region Public Methods
 
-        public OSCPanel(OSCWindow parentWindow, string panelId)
+        public OSCPanel(OSCWindow window, string panelId)
         {
-            _panelId = panelId;
-            _parentWindow = parentWindow;
+            PanelId = panelId;
+	        Window = window;
         }
-
-        public virtual void Update()
-        { }
 
         public virtual void Draw()
         {
-            GUILayout.BeginArea(_rect);
-            // PRE DRAW
-            PreDrawContent();
+	        using (new GUILayout.AreaScope(Rect))
+	        {
+		        var contentRect = Rect;
+				contentRect.x = contentRect.y = 0;
 
-            _rect.x = _rect.y = 0;
-
-            DrawContent(_rect);
-
-            // POST DRAW
-            PostDrawContent();
-
-            GUILayout.EndArea();
-        }
-
-        public virtual void StopCoroutines()
-        {
-            StopAllCoroutines();
+		        DrawContent(ref contentRect);
+		        PostDrawContent();
+	        }
         }
 
         #endregion
 
         #region Protected Methods
 
-        protected virtual void PreDrawContent()
-        { }
-
-        protected virtual void DrawContent(Rect contentRect)
+        protected virtual void DrawContent(ref Rect contentRect)
         { }
 
         protected virtual void PostDrawContent()
         { }
-
-        protected PanelCoroutine StartCoroutine(IEnumerator routine)
-        {
-            var coroutine = PanelCoroutine.Create(routine);
-
-            _coroutines.Add(coroutine);
-
-            return coroutine;
-        }
-
-        protected void StopCoroutine(PanelCoroutine coroutine)
-        {
-            coroutine.Stop();
-
-            if (_coroutines.Contains(coroutine))
-                _coroutines.Remove(coroutine);
-        }
-
-        protected void StopAllCoroutines()
-        {
-            foreach (var coroutine in _coroutines)
-            {
-                coroutine.Stop();
-            }
-
-            _coroutines.Clear();
-        }
 
         #endregion
     }
