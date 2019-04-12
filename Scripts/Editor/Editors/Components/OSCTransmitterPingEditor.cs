@@ -36,6 +36,8 @@ namespace extOSC.Editor.Components
 
         private SerializedProperty _autoStartProperty;
 
+	    private Color _defaultColor;
+
         #endregion
 
         #region Unity Methods
@@ -50,79 +52,72 @@ namespace extOSC.Editor.Components
             _autoStartProperty = serializedObject.FindProperty("autoStart");
         }
 
-        protected override void DrawSettings()
-        {
-            // INTERVALL
+	    protected override void DrawSettings()
+	    {
+		    _defaultColor = GUI.color;
+
             EditorGUILayout.LabelField(_settingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+		    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		    {
+				EditorGUILayout.PropertyField(_intervalProperty, _intervalContent);
 
-            EditorGUILayout.PropertyField(_intervalProperty, _intervalContent);
+			    if (_intervalProperty.floatValue < 0)
+				    _intervalProperty.floatValue = 0;
 
-            if (_intervalProperty.floatValue < 0) _intervalProperty.floatValue = 0;
+			    EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
+		    }
 
-            EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
+		    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		    {
+			    GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
+			    if (GUILayout.Button(_autoStartContent))
+			    {
+				    _autoStartProperty.boolValue = !_autoStartProperty.boolValue;
+			    }
 
-            GUILayout.EndVertical();
+			    GUI.color = Color.white;
+		    }
 
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+		    GUI.enabled = Application.isPlaying;
 
-            GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
-            if (GUILayout.Button(_autoStartContent))
-            {
-                _autoStartProperty.boolValue = !_autoStartProperty.boolValue;
-            }
-            GUI.color = Color.white;
+		    EditorGUILayout.LabelField(_inGameContent, EditorStyles.boldLabel);
+		    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		    {
+				if ((!_ping.IsRunning && !Application.isPlaying && !_ping.AutoStart) ||
+			        (Application.isPlaying && !_ping.IsRunning))
+			    {
+				    GUI.color = Color.green;
+				    if (GUILayout.Button(_startContent))
+				    {
+					    _ping.StartPing();
+				    }
 
-            GUILayout.EndVertical();
+				    GUI.color = _defaultColor;
+			    }
+			    else
+			    {
+				    using (new GUILayout.HorizontalScope())
+				    {
+					    GUI.color = Color.yellow;
+					    if (GUILayout.Button(_pauseContent))
+					    {
+						    _ping.PausePing();
+					    }
 
-            GUI.enabled = Application.isPlaying;
+					    GUI.color = Color.red;
+					    if (GUILayout.Button(_stopContent))
+					    {
+						    _ping.StopPing();
+					    }
 
-            EditorGUILayout.LabelField(_inGameContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+					    GUI.color = _defaultColor;
+				    }
+			    }
+		    }
 
-            if ((!_ping.IsRunning && (!Application.isPlaying && !_ping.AutoStart)) ||
-                (Application.isPlaying && !_ping.IsRunning))
-            {
-                GUI.color = Color.green;
+		    GUI.enabled = true;
+	    }
 
-                var play = GUILayout.Button(_startContent);
-                if (play)
-                {
-                    _ping.StartPing();
-                }
-
-                GUI.color = Color.white;
-            }
-            else
-            {
-                GUILayout.BeginHorizontal();
-
-                GUI.color = Color.yellow;
-
-                var pause = GUILayout.Button(_pauseContent);
-                if (pause)
-                {
-                    _ping.PausePing();
-                }
-
-                GUI.color = Color.red;
-
-                var stop = GUILayout.Button(_stopContent);
-                if (stop)
-                {
-                    _ping.StopPing();
-                }
-
-                GUI.color = Color.white;
-
-                GUILayout.EndHorizontal();
-            }
-
-            GUILayout.EndVertical();
-
-            GUI.enabled = true;
-        }
-
-        #endregion
+	    #endregion
     }
 }

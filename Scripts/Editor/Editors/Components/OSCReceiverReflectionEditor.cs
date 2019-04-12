@@ -117,19 +117,19 @@ namespace extOSC.Editor.Components
         {
             var drawer = (OSCReflectionMemberDrawer) null;
 
-            if (_reflectionDrawers.Count <= index)
-            {
-                var property = _reflectionMembersProperty.GetArrayElementAtIndex(index);
+	        if (_reflectionDrawers.Count <= index)
+	        {
+		        var property = _reflectionMembersProperty.GetArrayElementAtIndex(index);
 
-                // Create drawer.
-                drawer = new OSCReflectionMemberDrawer(property,
-                    _receiverReflection.ReceiverType,
-                    OSCReflectionAccess.Write,
-                    OSCReflectionType.All);
+		        // Create drawer.
+		        drawer = new OSCReflectionMemberDrawer(property,
+		                                               _receiverReflection.ReceiverType,
+		                                               OSCReflectionAccess.Write,
+		                                               OSCReflectionType.All);
 
-                _reflectionDrawers.Add(drawer);
-            }
-            else
+		        _reflectionDrawers.Add(drawer);
+	        }
+	        else
             {
                 drawer = _reflectionDrawers[index];
             }

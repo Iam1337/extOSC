@@ -53,20 +53,17 @@ namespace extOSC.Editor.Components
 
         protected override void DrawSettings()
         {
-            // EVENT SETTINGS
             EditorGUILayout.LabelField(_eventsSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+				EditorGUILayout.PropertyField(_speedProperty, _lerpSpeedContent);
+		        EditorGUILayout.PropertyField(_modeProperty, _modeContent);
 
-            EditorGUILayout.PropertyField(_speedProperty, _lerpSpeedContent);
-            EditorGUILayout.PropertyField(_modeProperty, _modeContent);
-
-            if (GetGyroModeEnum(_modeProperty) == OSCReceiverGyro.GyroMode.TouchOSC)
-            {
-                EditorGUILayout.HelpBox("Use this mode only with TouchOSC app.", MessageType.Info);
-            }
-
-            // EVENT SETTINGS END
-            EditorGUILayout.EndVertical();
+		        if (GetGyroModeEnum(_modeProperty) == OSCReceiverGyro.GyroMode.TouchOSC)
+		        {
+			        EditorGUILayout.HelpBox("Use this mode only with TouchOSC app.", MessageType.Info);
+		        }
+	        }
         }
 
         #endregion

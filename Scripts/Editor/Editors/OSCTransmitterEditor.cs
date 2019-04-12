@@ -78,6 +78,8 @@ namespace extOSC.Editor
 
         private string _localHostCache;
 
+	    private Color _defaultColor;
+
         #endregion
 
         #region Unity Methods
@@ -119,152 +121,139 @@ namespace extOSC.Editor
 
         public override void OnInspectorGUI()
         {
+	        _defaultColor = GUI.color;
+
             serializedObject.Update();
 
+	        EditorGUI.BeginChangeCheck();
+
             // LOGO
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(5);
+            OSCEditorInterface.LogoLayout();
 
             EditorGUILayout.LabelField("Active: " + _transmitter.IsAvailable, EditorStyles.boldLabel);
-
-            // SETTINGS BLOCK
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
-
-            EditorGUILayout.LabelField(_transmitterSettingsContent, EditorStyles.boldLabel);
-
-            // SETTINGS BOX
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
-            EditorGUI.BeginChangeCheck();
-
-            // REMOTE HOST
-			EditorGUILayout.PropertyField(_remoteHostProperty, _hostContent);
-
-            // REMOTE PORT
-            EditorGUILayout.PropertyField(_remotePortProperty, _portContent);
-
-            // MAP BUNDLE
-            EditorGUILayout.PropertyField(_mapBundleProperty, _mapBundleContent);
-
-            // USE BUNDLE
-            GUI.color = _useBundleProperty.boolValue ? Color.green : Color.red;
-            if (GUILayout.Button(_useBundleContent))
-            {
-                _useBundleProperty.boolValue = !_useBundleProperty.boolValue;
-            }
-            GUI.color = Color.white;
-
-            // SETTINGS BOX END
-            EditorGUILayout.EndVertical();
-
-            // PARAMETETS BLOCK
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-
-            GUI.color = _autoConnectProperty.boolValue ? Color.green : Color.red;
-            if (GUILayout.Button(_autoConnectContent))
-            {
-                _autoConnectProperty.boolValue = !_autoConnectProperty.boolValue;
-            }
-            GUI.color = Color.white;
-
-            GUI.color = _closeOnPauseProperty.boolValue? Color.green : Color.red;
-            if (GUILayout.Button(_closeOnPauseContent))
-            {
-                _closeOnPauseProperty.boolValue = !_closeOnPauseProperty.boolValue;
-            }
-            GUI.color = Color.white;
-
-            // PARAMETERS BLOCK END
-            EditorGUILayout.EndHorizontal();
-
-			// ADVANCED SETTIGS BOX
-			EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
-			GUILayout.BeginVertical(OSCEditorStyles.Box);
-
-	        if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.WSA)
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 	        {
-		        GUI.color = Color.yellow;
-				EditorGUILayout.HelpBox(_advancedHelp, MessageType.Info);
-		        GUI.color = Color.white;
-	        }
+				// SETTINGS BLOCK
+				EditorGUILayout.LabelField(_transmitterSettingsContent, EditorStyles.boldLabel);
+		        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		        {
+			        EditorGUILayout.PropertyField(_remoteHostProperty, _hostContent);
+			        EditorGUILayout.PropertyField(_remotePortProperty, _portContent);
+			        EditorGUILayout.PropertyField(_mapBundleProperty, _mapBundleContent);
 
-            EditorGUILayout.PropertyField(_sourceReceiverProperty, _sourceReceiverContent);
+			        GUI.color = _useBundleProperty.boolValue ? Color.green : Color.red;
+			        if (GUILayout.Button(_useBundleContent))
+			        {
+				        _useBundleProperty.boolValue = !_useBundleProperty.boolValue;
+			        }
 
-            var sourceReceiver = _transmitter.SourceReceiver;
-            if (sourceReceiver != null)
-            {
-                var localHost = sourceReceiver.LocalHostMode == OSCLocalHostMode.Any ? _localHostCache : sourceReceiver.LocalHost;
-                var localPort = sourceReceiver.LocalPort.ToString();
+			        GUI.color = _defaultColor;
+		        }
 
-                GUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-                EditorGUILayout.SelectableLabel(localHost, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                GUILayout.EndHorizontal();
+				// PROPERTIES BLOCK
+		        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+		        {
+					GUI.color = _autoConnectProperty.boolValue ? Color.green : Color.red;
+			        if (GUILayout.Button(_autoConnectContent))
+			        {
+				        _autoConnectProperty.boolValue = !_autoConnectProperty.boolValue;
+			        }
 
-                GUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-                EditorGUILayout.SelectableLabel(localPort, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                GUILayout.EndHorizontal();
+			        GUI.color = _closeOnPauseProperty.boolValue ? Color.green : Color.red;
+			        if (GUILayout.Button(_closeOnPauseContent))
+			        {
+				        _closeOnPauseProperty.boolValue = !_closeOnPauseProperty.boolValue;
+			        }
+
+			        GUI.color = _defaultColor;
+		        }
+
+		        // ADVANCED BLOCK
+		        EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
+		        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		        {
+			        if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.WSA)
+			        {
+				        GUI.color = Color.yellow;
+				        EditorGUILayout.HelpBox(_advancedHelp, MessageType.Info);
+
+				        GUI.color = _defaultColor;
+			        }
+
+			        EditorGUILayout.PropertyField(_sourceReceiverProperty, _sourceReceiverContent);
+
+			        var sourceReceiver = _transmitter.SourceReceiver;
+			        if (sourceReceiver != null)
+			        {
+				        var localHost = sourceReceiver.LocalHostMode == OSCLocalHostMode.Any
+					        ? _localHostCache
+					        : sourceReceiver.LocalHost;
+				        var localPort = sourceReceiver.LocalPort.ToString();
+
+				        using (new GUILayout.HorizontalScope())
+				        {
+					        EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+					        EditorGUILayout.SelectableLabel(localHost, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+				        }
+
+				        using (new GUILayout.HorizontalScope())
+				        {
+					        EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+					        EditorGUILayout.SelectableLabel(localPort, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+				        }
+			        }
+			        else
+			        {
+				        EditorGUILayout.LabelField(_orContent, EditorStyles.boldLabel);
+
+				        // LOCAL HOST MODE
+				        EditorGUILayout.PropertyField(_localHostModeProperty, _localHostModeContent);
+						if (_transmitter.LocalHostMode == OSCLocalHostMode.Any)
+				        {
+					        using (new GUILayout.HorizontalScope())
+					        {
+						        EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+						        EditorGUILayout.SelectableLabel(_localHostCache, GUILayout.Height(EditorGUIUtility.singleLineHeight));
+					        }
+				        }
+				        else
+				        {
+					        EditorGUILayout.PropertyField(_localHostProperty, _localHostContent);
+				        }
+
+				        // LOCAL PORT MODE
+				        EditorGUILayout.PropertyField(_localPortModeProperty, _localPortModeContent);
+						if (_transmitter.LocalPortMode == OSCLocalPortMode.FromRemotePort)
+				        {
+                            // LOCAL FROM REMOTE PORT
+					        using (new GUILayout.HorizontalScope())
+					        {
+						        EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+						        EditorGUILayout.SelectableLabel(_transmitter.RemotePort.ToString(),  GUILayout.Height(EditorGUIUtility.singleLineHeight));
+					        }
+				        }
+				        else if (_transmitter.LocalPortMode == OSCLocalPortMode.FromReceiver)
+				        {
+					        GUI.color = Color.red;
+					        EditorGUILayout.HelpBox(_fromReceiverHelp, MessageType.Warning);
+
+					        GUI.color = _defaultColor;
+				        }
+				        else if (_transmitter.LocalPortMode == OSCLocalPortMode.Custom)
+				        {
+					        EditorGUILayout.PropertyField(_localPortProperty, _localPortContent);
+				        }
+			        }
+		        }
+
+				// CONTROLS
+		        EditorGUILayout.LabelField(Application.isPlaying ? _inGameContent : _inEditorContent, EditorStyles.boldLabel);
+		        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+		        {
+			        if (Application.isPlaying) InGameControls();
+			        else InEditorControls();
+		        }
             }
-            else
-            {
-                EditorGUILayout.LabelField(_orContent, EditorStyles.boldLabel);
-
-                // LOCAL HOST MODE
-                EditorGUILayout.PropertyField(_localHostModeProperty, _localHostModeContent);
-
-                if (_transmitter.LocalHostMode == OSCLocalHostMode.Any)
-                {
-                    GUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-                    EditorGUILayout.SelectableLabel(_localHostCache, 
-                        GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                    GUILayout.EndHorizontal();
-                }
-                else
-                {
-                    EditorGUILayout.PropertyField(_localHostProperty, _localHostContent);
-                }
-
-                // LOCAL PORT MODE
-                EditorGUILayout.PropertyField(_localPortModeProperty, _localPortModeContent);
-
-                // LOCAL PORT
-                if (_transmitter.LocalPortMode == OSCLocalPortMode.FromRemotePort)
-                {
-                    // LOCAL FROM REMOTE PORT
-                    GUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-                    EditorGUILayout.SelectableLabel(_transmitter.RemotePort.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                    GUILayout.EndHorizontal();
-                }
-                else if (_transmitter.LocalPortMode == OSCLocalPortMode.FromReceiver)
-                {
-	                GUI.color = Color.red;
-                    EditorGUILayout.HelpBox(_fromReceiverHelp, MessageType.Warning);
-	                GUI.color = Color.white;
-                }
-                else if (_transmitter.LocalPortMode == OSCLocalPortMode.Custom)
-                {
-                    // LOCAL PORT
-                    EditorGUILayout.PropertyField(_localPortProperty, _localPortContent);
-                }
-            }
-
-            EditorGUILayout.EndVertical();
-
-
-            // CONTROLS
-            EditorGUILayout.LabelField(Application.isPlaying ? _inGameContent : _inEditorContent, EditorStyles.boldLabel);
-
-            if (Application.isPlaying) DrawControlsInGame();
-            else DrawControlsInEditor();
-
-            // CONTROLS END
-            EditorGUILayout.EndVertical();
-
-            // EDITOR BUTTONS
-            GUI.color = Color.white;
 
             if (EditorGUI.EndChangeCheck())
                 serializedObject.ApplyModifiedProperties();
@@ -274,73 +263,68 @@ namespace extOSC.Editor
 
         #region Private Methods
 
-        protected void DrawControlsInGame()
+        protected void InGameControls()
         {
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
+			GUI.color = _transmitter.IsAvailable ? Color.green : Color.red;
+	        if (GUILayout.Button(_transmitter.IsAvailable ? "Connected" : "Disconnected"))
+	        {
+		        if (_transmitter.IsAvailable)
+			        _transmitter.Close();
 
-            GUI.color = _transmitter.IsAvailable ? Color.green : Color.red;
-            var connection = GUILayout.Button(_transmitter.IsAvailable ? "Connected" : "Disconnected");
-
+		        else _transmitter.Connect();
+	        }
+			
             GUI.color = Color.yellow;
-            EditorGUI.BeginDisabledGroup(!_transmitter.IsAvailable);
-            var reconnect = GUILayout.Button("Reconnect");
-            EditorGUI.EndDisabledGroup();
-
-            EditorGUILayout.EndHorizontal();
-
-            if (connection)
+	        GUI.enabled = !_transmitter.IsAvailable;
+            if (GUILayout.Button("Reconnect"))
             {
-                if (_transmitter.IsAvailable) _transmitter.Close();
-                else _transmitter.Connect();
-            }
-
-            if (reconnect)
-            {
-                if (_transmitter.IsAvailable) _transmitter.Close();
-                _transmitter.Connect();
-            }
-        }
-
-        protected void DrawControlsInEditor()
-        {
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-
-            GUI.color = _workInEditorProperty.boolValue ? Color.green : Color.red;
-            var connection = GUILayout.Button("Work In Editor");
-
-            GUI.color = Color.yellow;
-            EditorGUI.BeginDisabledGroup(!_workInEditorProperty.boolValue);
-            var reconect = GUILayout.Button("Reconnect");
-            EditorGUI.EndDisabledGroup();
-
-            EditorGUILayout.EndHorizontal();
-
-            if (connection)
-            {
-                _workInEditorProperty.boolValue = !_workInEditorProperty.boolValue;
-
-                if (_workInEditorProperty.boolValue)
-                {
-                    if (_transmitter.IsAvailable) _transmitter.Close();
-
-                    _transmitter.Connect();
-                }
-                else
-                {
-                    if (_transmitter.IsAvailable) _transmitter.Close();
-                }
-            }
-
-            if (reconect)
-            {
-                if (!_workInEditorProperty.boolValue) return;
-
-                if (_transmitter.IsAvailable) _transmitter.Close();
+                if (_transmitter.IsAvailable)
+	                _transmitter.Close();
 
                 _transmitter.Connect();
             }
+
+	        GUI.enabled = true;
         }
 
-        #endregion
+	    protected void InEditorControls()
+	    {
+		    GUI.color = _workInEditorProperty.boolValue ? Color.green : Color.red;
+		    if (GUILayout.Button("Work In Editor"))
+		    {
+			    _workInEditorProperty.boolValue = !_workInEditorProperty.boolValue;
+
+			    if (_workInEditorProperty.boolValue)
+			    {
+				    if (_transmitter.IsAvailable)
+					    _transmitter.Close();
+
+				    _transmitter.Connect();
+			    }
+			    else
+			    {
+				    if (_transmitter.IsAvailable)
+					    _transmitter.Close();
+			    }
+		    }
+
+		    GUI.color = Color.yellow;
+		    GUI.enabled = !_workInEditorProperty.boolValue;
+		    if (GUILayout.Button("Reconnect"))
+		    {
+			    if (_workInEditorProperty.boolValue)
+			    {
+
+				    if (_transmitter.IsAvailable)
+					    _transmitter.Close();
+
+				    _transmitter.Connect();
+			    }
+		    }
+
+		    GUI.enabled = true;
+	    }
+
+	    #endregion
     }
 }

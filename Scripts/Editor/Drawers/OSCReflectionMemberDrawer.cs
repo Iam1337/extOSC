@@ -12,8 +12,7 @@ namespace extOSC.Editor.Drawers
 {
     public class OSCReflectionMemberDrawer
     {
-
-        #region Static Public Methods
+		#region Static Public Methods
 
         private static GUIContent _memberNoneContent = new GUIContent("- None -");
 
@@ -141,9 +140,7 @@ namespace extOSC.Editor.Drawers
 
         public OSCReflectionMemberDrawer(SerializedProperty serializedProperty,Type memberType) :
             this(serializedProperty, memberType, OSCReflectionAccess.Any, OSCReflectionType.All)
-        {
-
-        }
+        { }
 
         public OSCReflectionMemberDrawer(
             SerializedProperty serializedProperty,
@@ -152,7 +149,6 @@ namespace extOSC.Editor.Drawers
             OSCReflectionType reflectionType)
         {
             // Setup.
-            //_serializedObject = serializedObject;
             _serializedProperty = serializedProperty;
             _memberType = memberType;
             _reflectionAccess = reflectionAccess;

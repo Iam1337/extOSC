@@ -44,6 +44,8 @@ namespace extOSC.Editor.Components
 
         private bool _drawedState;
 
+	    private Color _defaultColor;
+
         #endregion
 
         #region Unity Methods
@@ -74,86 +76,79 @@ namespace extOSC.Editor.Components
 
         protected override void DrawSettings()
         {
+	        _defaultColor = GUI.color;
+
             // PING SETTINGS
             EditorGUILayout.LabelField(_pingSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+				EditorGUILayout.PropertyField(_intervalProperty, _intervalContent);
+		        EditorGUILayout.PropertyField(_timeoutProperty, _timeoutContent);
+	        }
 
-            EditorGUILayout.PropertyField(_intervalProperty, _intervalContent);
-            EditorGUILayout.PropertyField(_timeoutProperty, _timeoutContent);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+		        GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
+		        if (GUILayout.Button(_autoStartContent))
+		        {
+			        _autoStartProperty.boolValue = !_autoStartProperty.boolValue;
+		        }
 
-            // PING SETTINGS END
-            EditorGUILayout.EndVertical();
+		        GUI.color = _defaultColor;
+	        }
 
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
-
-            GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
-            if (GUILayout.Button(_autoStartContent))
-            {
-                _autoStartProperty.boolValue = !_autoStartProperty.boolValue;
-            }
-            GUI.color = Color.white;
-
-            GUILayout.EndVertical();
-
-            GUI.enabled = Application.isPlaying;
+	        GUI.enabled = Application.isPlaying;
 
             EditorGUILayout.LabelField(_inGameContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+		        if ((!_ping.IsRunning && !Application.isPlaying && !_ping.AutoStart) ||
+		            (Application.isPlaying && !_ping.IsRunning))
+		        {
+			        GUI.color = Color.green;
+			        if (GUILayout.Button(_startContent))
+			        {
+				        _ping.StartPing();
+			        }
 
-            if ((!_ping.IsRunning && (!Application.isPlaying && !_ping.AutoStart)) ||
-                (Application.isPlaying && !_ping.IsRunning))
-            {
-                GUI.color = Color.green;
+			        GUI.color = _defaultColor;
+		        }
+		        else
+		        {
+			        using (new GUILayout.HorizontalScope())
+			        {
+				        GUI.color = Color.yellow;
+				        if (GUILayout.Button(_pauseContent))
+				        {
+					        _ping.PausePing();
+				        }
 
-                var play = GUILayout.Button(_startContent);
-                if (play)
-                {
-                    _ping.StartPing();
-                }
+				        GUI.color = Color.red;
+				        if (GUILayout.Button(_stopContent))
+				        {
+					        _ping.StopPing();
+				        }
 
-                GUI.color = Color.white;
-            }
-            else
-            {
-                GUILayout.BeginHorizontal();
+				        GUI.color = _defaultColor;
+			        }
+		        }
+	        }
 
-                GUI.color = Color.yellow;
-
-                var pause = GUILayout.Button(_pauseContent);
-                if (pause)
-                {
-                    _ping.PausePing();
-                }
-
-                GUI.color = Color.red;
-
-                var stop = GUILayout.Button(_stopContent);
-                if (stop)
-                {
-                    _ping.StopPing();
-                }
-
-                GUI.color = Color.white;
-
-                GUILayout.EndHorizontal();
-            }
-
-            GUILayout.EndVertical();
-
-            GUI.enabled = true;
+	        GUI.enabled = true;
 
             EditorGUILayout.LabelField(_pingStatusContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+				_drawedState = _ping.IsAvailable;
 
-            _drawedState = _ping.IsAvailable;
+		        GUI.color = _drawedState ? Color.green : Color.red;
+		        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+		        {
+			        EditorGUILayout.LabelField(_drawedState ? "Available" : "Not Available", OSCEditorStyles.CenterLabel);
+		        }
 
-            GUI.color = _drawedState ? Color.green : Color.red;
-            GUILayout.BeginVertical(EditorStyles.helpBox);
-            EditorGUILayout.LabelField(_drawedState ? "Avaible" : "Not Avaible", OSCEditorStyles.CenterLabel);
-            GUILayout.EndVertical();
-            GUI.color = Color.white;
-
-            GUILayout.EndVertical();
+		        GUI.color = _defaultColor;
+	        }
         }
 
         #endregion

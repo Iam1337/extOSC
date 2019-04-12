@@ -39,14 +39,12 @@ namespace extOSC.Editor.Components
 
         protected override void DrawSettings()
         {
-            // EVENT SETTINGS
             EditorGUILayout.LabelField(_eventsSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical();
+	        using (new GUILayout.VerticalScope())
+	        {
 
-            EditorGUILayout.PropertyField(_onReceiveProperty, _onReceiveContent);
-
-            // EVENT SETTINGS END
-            EditorGUILayout.EndVertical();
+		        EditorGUILayout.PropertyField(_onReceiveProperty, _onReceiveContent);
+	        }
         }
 
         #endregion

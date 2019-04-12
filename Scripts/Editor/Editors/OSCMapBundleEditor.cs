@@ -36,9 +36,7 @@ namespace extOSC.Editor
 
         public override void OnInspectorGUI()
         {
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(10);
+            OSCEditorInterface.LogoLayout();
 
             GUILayout.BeginVertical(OSCEditorStyles.Box);
 

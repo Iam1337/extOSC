@@ -38,9 +38,10 @@ namespace extOSC.Editor.Drawers
 
 				OSCEditorUtils.FindObjectsForPopup(TransmitterCallback, true, out content, out objects);
 
-				property.objectReferenceValue = PopupLayout(position, label,
-				                                            (OSCTransmitter) property.objectReferenceValue, content,
-				                                            objects);
+				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
+				                                                      (OSCTransmitter) property.objectReferenceValue,
+				                                                      content,
+				                                                      objects);
 			}
 			else if (fieldType == _receiverType)
 			{
@@ -49,8 +50,10 @@ namespace extOSC.Editor.Drawers
 
 				OSCEditorUtils.FindObjectsForPopup(ReceiverCallback, true, out content, out objects);
 
-				property.objectReferenceValue =
-					PopupLayout(position, label, (OSCReceiver) property.objectReferenceValue, content, objects);
+				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
+				                                                      (OSCReceiver) property.objectReferenceValue,
+				                                                      content,
+				                                                      objects);
 			}
 			else
 			{
@@ -62,11 +65,7 @@ namespace extOSC.Editor.Drawers
 
 		#region Private Methods
 
-		private TOSC PopupLayout<TOSC>(Rect position, GUIContent label, TOSC currentObject, GUIContent[] content,
-		                               TOSC[] objects) where TOSC : OSCBase
-		{
-			return objects[EditorGUI.Popup(position, label, Mathf.Max(objects.IndexOf(currentObject), 0), content)];
-		}
+
 
 		private string TransmitterCallback(OSCTransmitter transmitter)
 		{

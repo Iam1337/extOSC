@@ -118,9 +118,7 @@ namespace extOSC.Editor.Panels
 
             GUILayout.BeginArea(contentRect);
 
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(5);
+			OSCEditorInterface.LogoLayout();
 
             GUILayout.Label(_controlSettingsContent, EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
@@ -141,8 +139,16 @@ namespace extOSC.Editor.Panels
                 GUILayout.Label(_informerSettingsContent, EditorStyles.boldLabel);
                 EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
+	            var content = (GUIContent[])null;
+	            var objects = (OSCTransmitter[])null;
+
+	            OSCEditorUtils.FindObjectsForPopup(TransmitterCallback, true, out content, out objects);
+
                 _informerAddress = EditorGUILayout.TextField(_oscAddressContent, _informerAddress);
-                _informerTransmitter = OSCEditorLayout.TransmittersPopup(_informerTransmitter, _oscTransmitterContent);
+	            _informerTransmitter = OSCEditorInterface.PopupLayout(_oscTransmitterContent,
+	                                                               _informerTransmitter,
+	                                                               content,
+	                                                               objects);
 
                 GUI.color = _informOnChanged ? Color.green : Color.red;
                 if (GUILayout.Button(_informOnChangedContent))
@@ -180,6 +186,15 @@ namespace extOSC.Editor.Panels
 
             GUILayout.EndArea();
         }
+
+        #endregion
+
+        #region Private Methods
+
+	    private string TransmitterCallback(OSCTransmitter transmitter)
+	    {
+		    return string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);
+	    }
 
         #endregion
     }

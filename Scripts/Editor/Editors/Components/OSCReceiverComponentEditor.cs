@@ -53,32 +53,27 @@ namespace extOSC.Editor.Components
             EditorGUI.BeginChangeCheck();
 
             // LOGO
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(5);
+            OSCEditorInterface.LogoLayout();
 
-            GUILayout.BeginVertical(OSCEditorStyles.Box);
-
-            // SETTINGS BLOCK
-            EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
-
-	        GUILayout.BeginVertical(OSCEditorStyles.Box);
-			OSCEditorLayout.ReceiverSettings(_receiverProperty, _addressProperty, false);
-	        EditorGUILayout.PropertyField(_mapBundleProperty, _mapBundleContent);
-
-	        if (_receiverComponent.Receiver != null && _receiverComponent.Receiver.MapBundle != null &&
-	            _receiverComponent.MapBundle != null)
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 	        {
-				EditorGUILayout.HelpBox("OSCReceiver already has MapBundle.", MessageType.Info);
+		        EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
+				using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		        {
+			        OSCEditorInterface.ReceiverSettings(_receiverProperty, _addressProperty, false);
+			        EditorGUILayout.PropertyField(_mapBundleProperty, _mapBundleContent);
+
+			        if (_receiverComponent.Receiver != null && _receiverComponent.Receiver.MapBundle != null &&
+			            _receiverComponent.MapBundle != null)
+			        {
+				        EditorGUILayout.HelpBox("OSCReceiver already has MapBundle.", MessageType.Info);
+			        }
+		        }
+
+		        DrawSettings();
 	        }
 
-			EditorGUILayout.EndVertical();
-
-			DrawSettings();
-
-            EditorGUILayout.EndVertical();
-
-            if (EditorGUI.EndChangeCheck())
+	        if (EditorGUI.EndChangeCheck())
                 serializedObject.ApplyModifiedProperties();
         }
 
@@ -92,7 +87,7 @@ namespace extOSC.Editor.Components
             EditorGUILayout.LabelField(_otherSettingsContent, EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
-            OSCEditorLayout.DrawProperties(serializedObject, _addressProperty.name, _receiverProperty.name, _mapBundleProperty.name);
+            OSCEditorInterface.DrawProperties(serializedObject, _addressProperty.name, _receiverProperty.name, _mapBundleProperty.name);
 
             EditorGUILayout.EndVertical();
         }

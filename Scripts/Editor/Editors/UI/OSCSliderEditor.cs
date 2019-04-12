@@ -75,9 +75,7 @@ namespace extOSC.Editor.Components.UI
 
         public override void OnInspectorGUI()
         {
-            GUILayout.Space(10);
-            OSCEditorLayout.DrawLogo();
-            GUILayout.Space(5);
+            OSCEditorInterface.LogoLayout();
 
             GUILayout.Label(string.Format("Value: {0}", _valueProperty.floatValue), EditorStyles.boldLabel);
             GUILayout.BeginVertical(OSCEditorStyles.Box);
