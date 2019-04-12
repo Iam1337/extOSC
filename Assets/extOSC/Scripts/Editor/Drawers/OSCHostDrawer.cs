@@ -22,7 +22,7 @@ namespace extOSC.Editor.Drawers
 
 			// REMOTE HOST
 			GUI.color = IPAddress.TryParse(property.stringValue, out _tempAddress) ? defaultColor : Color.red;
-			EditorGUILayout.PropertyField(property, label);
+			EditorGUI.PropertyField(position, property, label);
 			GUI.color = Color.white;
 		}
 
