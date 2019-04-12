@@ -61,7 +61,7 @@ namespace extOSC.Editor.Components
 
 
             EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             // TRANSMITTER SETTINGS BLOCK
             EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
@@ -89,7 +89,7 @@ namespace extOSC.Editor.Components
         {
             // CUSTOM SETTINGS
             EditorGUILayout.LabelField(_otherSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             OSCEditorLayout.DrawProperties(serializedObject, _transmitterAddressProperty.name,
                                            _transmitterProperty.name, _receiverAddressProperty.name,

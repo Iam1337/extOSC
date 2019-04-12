@@ -64,11 +64,12 @@ namespace extOSC.Components
             }
         }
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Protected Vars
 
-        [SerializeField]
+		[OSCSelector]
+		[SerializeField]
         protected OSCReceiver receiver;
 
         [SerializeField]

@@ -123,7 +123,7 @@ namespace extOSC.Editor.Panels
             GUILayout.Space(5);
 
             GUILayout.Label(_controlSettingsContent, EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
             _controlColor = EditorGUILayout.ColorField(_controlColorContent, _controlColor);
 
@@ -139,7 +139,7 @@ namespace extOSC.Editor.Panels
             if (_addInformer)
             {
                 GUILayout.Label(_informerSettingsContent, EditorStyles.boldLabel);
-                EditorGUILayout.BeginVertical("box");
+                EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
                 _informerAddress = EditorGUILayout.TextField(_oscAddressContent, _informerAddress);
                 _informerTransmitter = OSCEditorLayout.TransmittersPopup(_informerTransmitter, _oscTransmitterContent);
@@ -174,7 +174,7 @@ namespace extOSC.Editor.Panels
                 data.InformOnChanged = _informOnChanged;
                 data.InformerTransmitter = _informerTransmitter;
 
-                OSCWindowControlCreator.Invoke(data);
+                OSCWindowControlCreator.CreateControl(data);
             }
             GUI.color = Color.white;
 

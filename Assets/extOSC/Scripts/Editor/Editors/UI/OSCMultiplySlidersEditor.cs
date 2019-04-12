@@ -59,15 +59,15 @@ namespace extOSC.Editor.Components.UI
             GUILayout.Space(5);
 
             GUILayout.Label(string.Format("Sliders: {0}", _slidersProperty.arraySize), EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUILayout.Label("Settings:", EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             base.OnInspectorGUI();
             GUILayout.EndVertical();
 
             GUILayout.Label("Multiply Sliders Settings:", EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.PropertyField(_layoutGroupProperty);
 
             if (_layoutGroupProperty.objectReferenceValue != null)
@@ -75,22 +75,23 @@ namespace extOSC.Editor.Components.UI
                 GUILayout.EndVertical();
 
                 GUILayout.Label("Sliders Settings:", EditorStyles.boldLabel);
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.PropertyField(_defaultColorProperty);
                 EditorGUILayout.PropertyField(_addressProperty);
-                OSCEditorLayout.TransmittersPopup(_transmitterProperty, new GUIContent("Transmitter"));
-                GUILayout.EndVertical();
+                //OSCEditorLayout.TransmittersPopup(_transmitterProperty, new GUIContent("Transmitter"));
+	            EditorGUILayout.PropertyField(_transmitterProperty, new GUIContent("Transmitter"));
+				GUILayout.EndVertical();
 
-                GUILayout.BeginHorizontal("box");
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginHorizontal(OSCEditorStyles.Box);
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 GUI.color = Color.red;
                 var removeButton = GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20));
                 GUI.color = Color.white;
                 GUILayout.EndVertical();
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.LabelField(_slidersProperty.arraySize.ToString(), OSCEditorStyles.CenterLabel, GUILayout.Height(20));
                 GUILayout.EndVertical();
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 GUI.color = Color.green;
                 var createButton = GUILayout.Button("+", GUILayout.Width(20), GUILayout.Height(20));
                 GUI.color = Color.white;
@@ -98,7 +99,7 @@ namespace extOSC.Editor.Components.UI
                 GUILayout.EndHorizontal();
 
                 GUILayout.Label("Value Settings:", EditorStyles.boldLabel);
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.PropertyField(_minValueProperty);
                 EditorGUILayout.PropertyField(_maxValueProperty);
                 EditorGUILayout.PropertyField(_wholeNumbersProperty);

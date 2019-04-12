@@ -74,24 +74,24 @@ namespace extOSC.Editor.Components.UI
             GUILayout.Space(5);
 
             GUILayout.Label(string.Format("Value: {0}", _valueProperty.floatValue), EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUILayout.Label(_settingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             base.OnInspectorGUI();
             GUILayout.EndVertical();
 
             serializedObject.Update();
 
             GUILayout.Label(_rotartySettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.PropertyField(_handleImageProperty);
             EditorGUILayout.PropertyField(_reverseProperty);
 
             GUILayout.EndVertical();
 
             GUILayout.Label(_valueSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.Space();
 
@@ -109,7 +109,7 @@ namespace extOSC.Editor.Components.UI
             GUILayout.EndVertical();
 
             GUILayout.Label(_resetValueContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.PropertyField(_resetValueProperty);
             EditorGUILayout.PropertyField(_resetValueTimeProperty);
             EditorGUILayout.PropertyField(_callbackOnResetProperty);

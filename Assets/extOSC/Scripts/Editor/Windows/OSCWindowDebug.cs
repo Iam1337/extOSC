@@ -16,8 +16,10 @@ namespace extOSC.Editor.Windows
         {
             get
             {
-                if (Instance != null && Instance.packetEditorPanel != null && Instance.packetEditorPanel.CurrentPacket != null)
-                    return Instance.packetEditorPanel.CurrentPacket;
+                if (Instance != null && 
+                    Instance._packetEditorPanel != null && 
+                    Instance._packetEditorPanel.CurrentPacket != null)
+                    return Instance._packetEditorPanel.CurrentPacket;
 
                 return null;
             }
@@ -27,8 +29,7 @@ namespace extOSC.Editor.Windows
 
         #region Static Public Methods
 
-        [MenuItem("Window/extOSC/Debug Window", false, 1002)]
-        public static void ShowWindow()
+        public static void Open()
         {
             Instance.titleContent = new GUIContent("OSC Debug", OSCEditorTextures.IronWallSmall);
             Instance.minSize = new Vector2(550, 200);
@@ -37,45 +38,41 @@ namespace extOSC.Editor.Windows
 
         public static void OpenPacket(OSCPacket packet)
         {
-            ShowWindow();
+            Open();
 
-            Instance.packetEditorPanel.CurrentPacket = OSCEditorUtils.CopyPacket(packet);
+            Instance._packetEditorPanel.CurrentPacket = OSCEditorUtils.CopyPacket(packet);
             Instance.Focus();
         }
 
         #endregion
 
-        #region Protected Vars
-
-        protected OSCPanelPacketEditor packetEditorPanel;
-
-        protected OSCPanelContollers controllersPanel;
-
-        #endregion
-
         #region Private Vars
 
-        private readonly string _lastFileSettings = OSCEditorSettings.Debug + "lastfile";
+		private readonly string _lastFileSettings = OSCEditorSettings.Debug + "lastfile";
 
-        #endregion
+	    protected OSCPanelPacketEditor _packetEditorPanel;
 
-        #region Unity Methods
+	    protected OSCPanelContollers _controllersPanel;
 
-        protected override void OnEnable()
+		#endregion
+
+		#region Unity Methods
+
+		protected override void OnEnable()
         {
-            packetEditorPanel = new OSCPanelPacketEditor(this, "debugPacketEditor");
-            controllersPanel = new OSCPanelContollers(this, "debugOSCControllers");
+            _packetEditorPanel = new OSCPanelPacketEditor(this, "debugPacketEditor");
+            _controllersPanel = new OSCPanelContollers(this, "debugOSCControllers");
 
-            rootPanel.AddPanel(packetEditorPanel, 300);
-            rootPanel.AddPanel(controllersPanel, 250);
+            rootPanel.AddPanel(_packetEditorPanel, 300);
+            rootPanel.AddPanel(_controllersPanel, 250);
 
             base.OnEnable();
         }
 
         protected void OnInspectorUpdate()
         {
-            if (controllersPanel != null)
-                controllersPanel.Refresh();
+            if (_controllersPanel != null)
+                _controllersPanel.Refresh();
 
             Repaint();
         }
@@ -86,18 +83,18 @@ namespace extOSC.Editor.Windows
 
         protected override void SaveWindowSettings()
         {
-            if (packetEditorPanel == null) return;
+            if (_packetEditorPanel == null) return;
 
-            var debugPacket = packetEditorPanel.CurrentPacket;
+            var debugPacket = _packetEditorPanel.CurrentPacket;
             if (debugPacket != null)
             {
-                if (string.IsNullOrEmpty(packetEditorPanel.FilePath))
+                if (string.IsNullOrEmpty(_packetEditorPanel.FilePath))
                 {
-                    packetEditorPanel.FilePath = OSCEditorUtils.BackupFolder + "unsaved.eod";
+                    _packetEditorPanel.FilePath = OSCEditorUtils.BackupFolder + "unsaved.eod";
                 }
 
-                OSCEditorUtils.SavePacket(packetEditorPanel.FilePath, debugPacket);
-                OSCEditorSettings.SetString(_lastFileSettings, packetEditorPanel.FilePath);
+                OSCEditorUtils.SavePacket(_packetEditorPanel.FilePath, debugPacket);
+                OSCEditorSettings.SetString(_lastFileSettings, _packetEditorPanel.FilePath);
 
                 return;
             }
@@ -107,7 +104,7 @@ namespace extOSC.Editor.Windows
 
         protected override void LoadWindowSettings()
         {
-            if (packetEditorPanel == null) return;
+            if (_packetEditorPanel == null) return;
 
             var lastOpenedFile = OSCEditorSettings.GetString(_lastFileSettings, "");
 
@@ -116,8 +113,8 @@ namespace extOSC.Editor.Windows
                 var debugPacket = OSCEditorUtils.LoadPacket(lastOpenedFile);
                 if (debugPacket != null)
                 {
-                    packetEditorPanel.CurrentPacket = debugPacket;
-                    packetEditorPanel.FilePath = lastOpenedFile;
+                    _packetEditorPanel.CurrentPacket = debugPacket;
+                    _packetEditorPanel.FilePath = lastOpenedFile;
                 }
             }
         }

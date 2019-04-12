@@ -13,11 +13,11 @@ namespace extOSC.Editor
 
         private static readonly GUIContent _transmitterAddressContent = new GUIContent("OSC Transmitter Address:");
 
-        private static readonly GUIContent _transmitterAddressContentSmall = new GUIContent("Transmitter Address:");
+        private static readonly GUIContent _transmitterAddressContentSmall = new GUIContent("OSC Address:");
 
         private static readonly GUIContent _receiverAddressContent = new GUIContent("OSC Receiver Address:");
 
-        private static readonly GUIContent _receiverAddressContentSmall = new GUIContent("Receiver Address:");
+        private static readonly GUIContent _receiverAddressContentSmall = new GUIContent("OSC Address:");
 
         private static readonly GUIContent _transmitterContent = new GUIContent("OSC Transmitter:");
 
@@ -72,25 +72,27 @@ namespace extOSC.Editor
                 EditorGUILayout.LabelField(_emptyContent, OSCEditorStyles.CenterLabel);
         }
 
-        public static void TransmitterSettings(SerializedProperty transmitterProperty, SerializedProperty addressProperty, bool drawBox = true)
+        public static void TransmitterSettings(SerializedProperty property, SerializedProperty addressProperty, bool drawBox = true)
         {
-	        if (drawBox) GUILayout.BeginVertical("box");
+	        if (drawBox) GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.PropertyField(addressProperty, EditorGUIUtility.currentViewWidth > 410 ?
                                           _transmitterAddressContent : _transmitterAddressContentSmall);
 
-            TransmittersPopup(transmitterProperty, _transmitterContent);
+			//TransmittersPopup(transmitterProperty, _transmitterContent);
+			EditorGUILayout.PropertyField(property, _transmitterContent);
 
-	        if (drawBox) EditorGUILayout.EndVertical();
+			if (drawBox) EditorGUILayout.EndVertical();
         }
 
-        public static void ReceiverSettings(SerializedProperty transmitterProperty, SerializedProperty addressProperty, bool drawBox = true)
+        public static void ReceiverSettings(SerializedProperty property, SerializedProperty addressProperty, bool drawBox = true)
         {
-			if (drawBox) GUILayout.BeginVertical("box");
+			if (drawBox) GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.PropertyField(addressProperty, EditorGUIUtility.currentViewWidth > 380 ?
                                           _receiverAddressContent : _receiverAddressContentSmall);
 
-            ReceiversPopup(transmitterProperty, _receiverContent);
+            //ReceiversPopup(property, _receiverContent);
+	        EditorGUILayout.PropertyField(property, _receiverContent);
 
 			if (drawBox) EditorGUILayout.EndVertical();
         }

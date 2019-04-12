@@ -55,7 +55,7 @@ namespace extOSC.Editor.Components
         {
             // EVENT SETTINGS
             EditorGUILayout.LabelField(_eventsSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.PropertyField(_speedProperty, _lerpSpeedContent);
             EditorGUILayout.PropertyField(_modeProperty, _modeContent);

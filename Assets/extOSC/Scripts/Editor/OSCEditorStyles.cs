@@ -11,6 +11,8 @@ namespace extOSC.Editor
 
         private static GUIStyle _windowTitle;
 
+	    private static GUIStyle _box;
+
         private static GUIStyle _segmentTitle;
 
         private static GUIStyle _splitter;
@@ -50,6 +52,19 @@ namespace extOSC.Editor
                 return _windowTitle;
             }
         }
+
+	    public static GUIStyle Box
+	    {
+		    get
+		    {
+			    if (_box == null)
+			    {
+					_box = new GUIStyle(OSCEditorStyles.Box);
+			    }
+
+			    return _box;
+		    }
+	    }
 
         public static GUIStyle CenterLabel
         {

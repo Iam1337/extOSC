@@ -52,14 +52,16 @@ namespace extOSC.Components
             set { transmitterAddress = value; }
         }
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Protected Vars
 
-        [SerializeField]
+		[OSCSelector]
+		[SerializeField]
         protected OSCReceiver receiver;
 
-        [SerializeField]
+	    [OSCSelector]
+		[SerializeField]
         protected OSCTransmitter transmitter;
 
         [SerializeField]

@@ -3,8 +3,6 @@
 using UnityEditor;
 using UnityEngine;
 
-using System.Net;
-
 namespace extOSC.Editor
 {
     [CustomEditor(typeof(OSCTransmitter))]
@@ -33,6 +31,16 @@ namespace extOSC.Editor
         private static readonly GUIContent _inGameContent = new GUIContent("In Game Controls:");
 
         private static readonly GUIContent _inEditorContent = new GUIContent("In Editor Controls:");
+
+		private static readonly GUIContent _transmitterSettingsContent = new GUIContent("Transmitter Settings:");
+
+		private static readonly GUIContent _useBundleContent = new GUIContent("Use Bundle");
+
+		private static readonly GUIContent _autoConnectContent = new GUIContent("Auto Connect");
+
+		private static readonly GUIContent _closeOnPauseContent = new GUIContent("Close On Pause");
+
+		private static readonly GUIContent _orContent = new GUIContent("Or...");
 
         private static string _advancedHelp = "Currently \"Advanced settings\" are not available for UWP (WSA).";
 
@@ -121,22 +129,16 @@ namespace extOSC.Editor
             EditorGUILayout.LabelField("Active: " + _transmitter.IsAvailable, EditorStyles.boldLabel);
 
             // SETTINGS BLOCK
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
-            EditorGUILayout.LabelField("Transmitter Settings:", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(_transmitterSettingsContent, EditorStyles.boldLabel);
 
             // SETTINGS BOX
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUI.BeginChangeCheck();
 
-            IPAddress tempAddress;
-
-            var remoteFieldColor = IPAddress.TryParse(_remoteHostProperty.stringValue, out tempAddress) ? Color.white : Color.red;
-
             // REMOTE HOST
-            GUI.color = remoteFieldColor;
-            EditorGUILayout.PropertyField(_remoteHostProperty, _hostContent);
-            GUI.color = Color.white;
+			EditorGUILayout.PropertyField(_remoteHostProperty, _hostContent);
 
             // REMOTE PORT
             EditorGUILayout.PropertyField(_remotePortProperty, _portContent);
@@ -146,7 +148,7 @@ namespace extOSC.Editor
 
             // USE BUNDLE
             GUI.color = _useBundleProperty.boolValue ? Color.green : Color.red;
-            if (GUILayout.Button("Use Bundle"))
+            if (GUILayout.Button(_useBundleContent))
             {
                 _useBundleProperty.boolValue = !_useBundleProperty.boolValue;
             }
@@ -156,17 +158,17 @@ namespace extOSC.Editor
             EditorGUILayout.EndVertical();
 
             // PARAMETETS BLOCK
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             GUI.color = _autoConnectProperty.boolValue ? Color.green : Color.red;
-            if (GUILayout.Button("Auto Connect"))
+            if (GUILayout.Button(_autoConnectContent))
             {
                 _autoConnectProperty.boolValue = !_autoConnectProperty.boolValue;
             }
             GUI.color = Color.white;
 
             GUI.color = _closeOnPauseProperty.boolValue? Color.green : Color.red;
-            if (GUILayout.Button("Close On Pause"))
+            if (GUILayout.Button(_closeOnPauseContent))
             {
                 _closeOnPauseProperty.boolValue = !_closeOnPauseProperty.boolValue;
             }
@@ -177,7 +179,7 @@ namespace extOSC.Editor
 
 			// ADVANCED SETTIGS BOX
 			EditorGUILayout.LabelField(_advancedContent, EditorStyles.boldLabel);
-			GUILayout.BeginVertical("box");
+			GUILayout.BeginVertical(OSCEditorStyles.Box);
 
 	        if (EditorUserBuildSettings.selectedBuildTargetGroup == BuildTargetGroup.WSA)
 	        {
@@ -206,7 +208,7 @@ namespace extOSC.Editor
             }
             else
             {
-                EditorGUILayout.LabelField("Or...", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField(_orContent, EditorStyles.boldLabel);
 
                 // LOCAL HOST MODE
                 EditorGUILayout.PropertyField(_localHostModeProperty, _localHostModeContent);
@@ -215,7 +217,7 @@ namespace extOSC.Editor
                 {
                     GUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-                    EditorGUILayout.SelectableLabel(_localHostCache,
+                    EditorGUILayout.SelectableLabel(_localHostCache, 
                         GUILayout.Height(EditorGUIUtility.singleLineHeight));
                     GUILayout.EndHorizontal();
                 }
@@ -233,13 +235,14 @@ namespace extOSC.Editor
                     // LOCAL FROM REMOTE PORT
                     GUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField(_localPortContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-                    EditorGUILayout.SelectableLabel(_transmitter.RemotePort.ToString(),
-                        GUILayout.Height(EditorGUIUtility.singleLineHeight));
+                    EditorGUILayout.SelectableLabel(_transmitter.RemotePort.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
                     GUILayout.EndHorizontal();
                 }
                 else if (_transmitter.LocalPortMode == OSCLocalPortMode.FromReceiver)
                 {
+	                GUI.color = Color.red;
                     EditorGUILayout.HelpBox(_fromReceiverHelp, MessageType.Warning);
+	                GUI.color = Color.white;
                 }
                 else if (_transmitter.LocalPortMode == OSCLocalPortMode.Custom)
                 {
@@ -273,7 +276,7 @@ namespace extOSC.Editor
 
         protected void DrawControlsInGame()
         {
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             GUI.color = _transmitter.IsAvailable ? Color.green : Color.red;
             var connection = GUILayout.Button(_transmitter.IsAvailable ? "Connected" : "Disconnected");
@@ -300,7 +303,7 @@ namespace extOSC.Editor
 
         protected void DrawControlsInEditor()
         {
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             GUI.color = _workInEditorProperty.boolValue ? Color.green : Color.red;
             var connection = GUILayout.Button("Work In Editor");

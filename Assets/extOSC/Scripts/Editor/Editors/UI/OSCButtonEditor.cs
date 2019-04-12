@@ -56,17 +56,17 @@ namespace extOSC.Editor.Components.UI
             GUILayout.Space(5);
 
             GUILayout.Label(string.Format("Value: {0}", _valueProperty.boolValue), EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUILayout.Label(_settingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             base.OnInspectorGUI();
             GUILayout.EndVertical();
 
             serializedObject.Update();
 
             GUILayout.Label(_buttonSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.PropertyField(_graphicProperty);
             EditorGUILayout.PropertyField(_graphicTransitionProperty);
             EditorGUILayout.PropertyField(_buttonTypeProperty);
@@ -75,7 +75,7 @@ namespace extOSC.Editor.Components.UI
             if ((OSCButton.Type)_buttonTypeProperty.enumValueIndex == OSCButton.Type.Toggle)
             {
                 GUILayout.Label(_valueSettingsContent, EditorStyles.boldLabel);
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.PropertyField(_valueProperty);
                 GUILayout.EndVertical();
             }

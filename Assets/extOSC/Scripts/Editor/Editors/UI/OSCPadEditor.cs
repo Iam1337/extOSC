@@ -91,15 +91,15 @@ namespace extOSC.Editor.Components.UI
             GUILayout.Space(5);
 
             GUILayout.Label(string.Format("Value: {0}", _valueProperty.vector2Value), EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUILayout.Label(_settingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             base.OnInspectorGUI();
             GUILayout.EndVertical();
 
             GUILayout.Label(_padSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.PropertyField(_handleRectProperty);
 
             if (_handleRectProperty.objectReferenceValue != null)
@@ -113,7 +113,7 @@ namespace extOSC.Editor.Components.UI
                 var maxY = _maxValueProperty.FindPropertyRelative("y");
 
                 GUILayout.Label(_valueSettingsContent, EditorStyles.boldLabel);
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.PropertyField(_xAxisRectProperty);
                 EditorGUILayout.PropertyField(_yAxisRectProperty);
 
@@ -148,7 +148,7 @@ namespace extOSC.Editor.Components.UI
                 GUILayout.EndVertical();
 
                 GUILayout.Label(_resetValueContent, EditorStyles.boldLabel);
-                GUILayout.BeginVertical("box");
+                GUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.PropertyField(_resetValueProperty);
                 EditorGUILayout.PropertyField(_resetValueTimeProperty);
                 EditorGUILayout.PropertyField(_callbackOnResetProperty);

@@ -40,7 +40,7 @@ namespace extOSC.Editor
             OSCEditorLayout.DrawLogo();
             GUILayout.Space(10);
 
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             var openButton = GUILayout.Button(_openButton, GUILayout.Height(40));
             if (openButton)
@@ -56,9 +56,9 @@ namespace extOSC.Editor
             {
                 foreach (var message in _bundle.Messages)
                 {
-                    GUILayout.BeginVertical("box");
+                    GUILayout.BeginVertical(OSCEditorStyles.Box);
 
-                    GUILayout.BeginVertical("box");
+                    GUILayout.BeginVertical(OSCEditorStyles.Box);
                     EditorGUILayout.LabelField("Address: " + message.Address, EditorStyles.boldLabel);
                     GUILayout.EndVertical();
 
@@ -72,7 +72,7 @@ namespace extOSC.Editor
             }
             else
             {
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
                 GUILayout.Label(_emptyBundleContent, OSCEditorStyles.CenterLabel, GUILayout.Height(40));
                 EditorGUILayout.EndHorizontal();
             }
@@ -87,17 +87,17 @@ namespace extOSC.Editor
         private void DrawValue(OSCMapValue value)
         {
             GUILayout.BeginVertical();
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.BeginHorizontal();
 
             GUI.color = Color.yellow;
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             GUILayout.Label(_typeContents, GUILayout.Width(50));
             EditorGUILayout.EndHorizontal();
             GUI.color = Color.white;
 
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             GUILayout.Label(value.Type.ToString());
             EditorGUILayout.EndHorizontal();
 

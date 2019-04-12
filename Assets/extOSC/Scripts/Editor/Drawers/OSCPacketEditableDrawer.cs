@@ -76,7 +76,7 @@ namespace extOSC.Editor.Drawers
 
                     EditorGUILayout.EndHorizontal();
 
-                    EditorGUILayout.BeginVertical("box");
+                    EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
                     DrawLayout(bundlePacket);
                     EditorGUILayout.EndVertical();
@@ -94,13 +94,13 @@ namespace extOSC.Editor.Drawers
             }
             else
             {
-                EditorGUILayout.BeginVertical("box");
+                EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.LabelField(_bundleEmptyContent, OSCEditorStyles.CenterLabel);
                 EditorGUILayout.EndVertical();
             }
 
             // ADD PACKET
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             GUI.color = Color.green;
 
             if (GUILayout.Button(_addBundleContent))
@@ -121,7 +121,7 @@ namespace extOSC.Editor.Drawers
         {
             EditorGUILayout.LabelField(_addressContent, EditorStyles.boldLabel);
 
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
             message.Address = EditorGUILayout.TextField(message.Address, GUILayout.MaxHeight(EditorGUIUtility.singleLineHeight));
             EditorGUILayout.EndVertical();
 
@@ -155,15 +155,15 @@ namespace extOSC.Editor.Drawers
         {
             OSCValue removeArrayValue = null;
 
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             EditorGUILayout.LabelField(_arrayContent, OSCEditorStyles.CenterBoldLabel);
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
             GUI.color = Color.red;
 
             var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
@@ -184,7 +184,7 @@ namespace extOSC.Editor.Drawers
 
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
             EditorGUILayout.LabelField(_addToArrayContent, GUILayout.Width(40));
             EditorGUILayout.EndVertical();
 
@@ -218,7 +218,7 @@ namespace extOSC.Editor.Drawers
 
             // FIRST COLUMN
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
 
@@ -230,17 +230,17 @@ namespace extOSC.Editor.Drawers
                 value.Type == OSCValueType.Impulse ||
                 value.Type == OSCValueType.Null)
             {
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
                 EditorGUILayout.LabelField(value.Type.ToString(), OSCEditorStyles.CenterLabel);
                 EditorGUILayout.EndHorizontal();
             }
             else
             {
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
                 EditorGUILayout.LabelField(value.Type + ":", GUILayout.Width(secondColumn));
                 EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
                 switch (value.Type)
                 {
@@ -288,7 +288,7 @@ namespace extOSC.Editor.Drawers
 
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
             GUI.color = Color.red;
 
             var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
@@ -305,7 +305,7 @@ namespace extOSC.Editor.Drawers
 
         private OSCValue CreateValueButton(object sender)
         {
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
             if (!_valueTypeTemp.ContainsKey(sender))
             {

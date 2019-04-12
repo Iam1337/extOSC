@@ -55,7 +55,7 @@ namespace extOSC.Editor.Drawers
                     {
                         EditorGUILayout.LabelField(_bundleContent, EditorStyles.boldLabel);
 
-                        EditorGUILayout.BeginVertical("box");
+                        EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
                         DrawLayout(bundlePacket);
 
@@ -64,7 +64,7 @@ namespace extOSC.Editor.Drawers
                 }
                 else
                 {
-                    EditorGUILayout.BeginVertical("box");
+                    EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
                     EditorGUILayout.LabelField(_bundleEmptyContent, OSCEditorStyles.CenterLabel);
                     EditorGUILayout.EndVertical();
                 }
@@ -77,7 +77,7 @@ namespace extOSC.Editor.Drawers
             {
                 EditorGUILayout.LabelField(_addressContent, EditorStyles.boldLabel);
 
-                EditorGUILayout.BeginVertical("box");
+                EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
                 EditorGUILayout.SelectableLabel(message.Address, GUILayout.Height(EditorGUIUtility.singleLineHeight));
                 EditorGUILayout.EndVertical();
 
@@ -99,9 +99,9 @@ namespace extOSC.Editor.Drawers
         
         private void DrawArray(OSCValue value)
         {
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             EditorGUILayout.LabelField(_beginArrayContent, OSCEditorStyles.CenterBoldLabel);
             EditorGUILayout.EndHorizontal();
 
@@ -111,7 +111,7 @@ namespace extOSC.Editor.Drawers
                 DrawValue(arrayValues);
             }
 
-            EditorGUILayout.BeginHorizontal("box");
+            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             EditorGUILayout.LabelField(_endArrayContent, OSCEditorStyles.CenterBoldLabel);
             EditorGUILayout.EndHorizontal();
 
@@ -130,7 +130,7 @@ namespace extOSC.Editor.Drawers
             var secondColumn = 60f;
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
 
@@ -141,17 +141,17 @@ namespace extOSC.Editor.Drawers
                 value.Type == OSCValueType.Impulse ||
                 value.Type == OSCValueType.Null)
             {
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
                 EditorGUILayout.LabelField(value.Type.ToString(), OSCEditorStyles.CenterLabel);
                 EditorGUILayout.EndHorizontal();
             }
             else
             {
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
                 EditorGUILayout.LabelField(value.Type + ":", GUILayout.Width(secondColumn));
                 EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal("box");
+                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
                 switch (value.Type)
                 {

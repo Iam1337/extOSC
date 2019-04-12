@@ -76,7 +76,7 @@ namespace extOSC.Editor.Components
         {
             // PING SETTINGS
             EditorGUILayout.LabelField(_pingSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             EditorGUILayout.PropertyField(_intervalProperty, _intervalContent);
             EditorGUILayout.PropertyField(_timeoutProperty, _timeoutContent);
@@ -84,7 +84,7 @@ namespace extOSC.Editor.Components
             // PING SETTINGS END
             EditorGUILayout.EndVertical();
 
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
             if (GUILayout.Button(_autoStartContent))
@@ -98,7 +98,7 @@ namespace extOSC.Editor.Components
             GUI.enabled = Application.isPlaying;
 
             EditorGUILayout.LabelField(_inGameContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             if ((!_ping.IsRunning && (!Application.isPlaying && !_ping.AutoStart)) ||
                 (Application.isPlaying && !_ping.IsRunning))
@@ -143,7 +143,7 @@ namespace extOSC.Editor.Components
             GUI.enabled = true;
 
             EditorGUILayout.LabelField(_pingStatusContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             _drawedState = _ping.IsAvailable;
 

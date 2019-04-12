@@ -62,7 +62,7 @@ namespace extOSC.Editor.Components
             GUILayout.Space(5);
 
             EditorGUILayout.LabelField(string.Format("{0} Settings:", target.GetType().Name), EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
             // RECEIVER SETTINGS BLOCK
             EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
@@ -70,9 +70,10 @@ namespace extOSC.Editor.Components
 
             // TRANSMITTER SETTINGS BLOCK
             EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
-            GUILayout.BeginVertical("box");
+            GUILayout.BeginVertical(OSCEditorStyles.Box);
 
-            OSCEditorLayout.TransmittersPopup(_transmitterProperty, _transmitterContent);
+            //OSCEditorLayout.TransmittersPopup(_transmitterProperty, _transmitterContent);
+	        EditorGUILayout.PropertyField(_transmitterProperty, _transmitterContent);
 
             var transmitterAddress = "- None -";
 

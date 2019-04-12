@@ -1,8 +1,8 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using System;
 using UnityEngine;
 
+using System;
 using System.Collections.Generic;
 
 using extOSC.Core;
@@ -174,16 +174,19 @@ namespace extOSC
         [SerializeField]
 		protected OSCLocalPortMode localPortMode = OSCLocalPortMode.Random;
 
+		[OSCSelector]
 		[SerializeField]
 		protected OSCReceiver localReceiver;
 
-        [SerializeField]
+	    [OSCHost]
+		[SerializeField]
         protected string localHost;
 
 		[SerializeField]
 		protected int localPort = 7000;
 
-        [SerializeField]
+		[OSCHost]
+		[SerializeField]
         protected string remoteHost = "127.0.0.1";
 
         [SerializeField]
@@ -330,7 +333,7 @@ namespace extOSC
                 return 0;
 
             if (localPortMode == OSCLocalPortMode.FromReceiver)
-                throw new Exception(); //TODO: Error.
+                throw new Exception("[OSCTransmitter] Local Port Mode does not support \"FromReceiver\" option.");
 
             if (localPortMode == OSCLocalPortMode.Custom)
                 return localPort;
