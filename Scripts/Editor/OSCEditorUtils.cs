@@ -1,7 +1,6 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
-using UnityEditor;
 
 using System;
 using System.IO;
@@ -252,6 +251,7 @@ namespace extOSC.Editor
             return _defaultResources;
         }
 
+        //TODO: To OSCValue class?
         public static OSCValue CreateOSCValue(OSCValueType valueType)
         {
             switch (valueType)

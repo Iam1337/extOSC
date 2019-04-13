@@ -53,9 +53,7 @@ namespace extOSC.Core.Console
 
 		private string _info;
 
-#if UNITY_EDITOR
 		private string _description;
-#endif
 
 		#endregion
 

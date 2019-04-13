@@ -41,7 +41,6 @@ namespace extOSC.Editor.Windows
 
         protected void Update()
 	    {
-			//TODO: Replace
 		    if (!EditorApplication.isPlaying)
 		    {
 			    _frameCounter++;
