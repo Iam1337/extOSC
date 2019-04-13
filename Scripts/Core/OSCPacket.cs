@@ -58,7 +58,16 @@ namespace extOSC.Core
 
 		#region Public Methods
 
-		public bool IsBundle() { return OSCUtilities.IsSubclassOf(GetType(), typeof(OSCBundle)); }
+		public bool IsBundle()
+		{
+			return  OSCUtilities.IsSubclassOf(GetType(), typeof(OSCBundle));
+		}
+
+		public OSCPacket Copy()
+		{
+			var size = 0;
+			return OSCConverter.Unpack(OSCConverter.Pack(this, out size), size);
+		}
 
 		#endregion
 	}

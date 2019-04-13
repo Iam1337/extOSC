@@ -33,12 +33,11 @@ namespace extOSC.Core.Packers
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(_data);
 
-            return BitConverter.ToSingle(_data, 0);
+			return BitConverter.ToSingle(_data, 0);
         }
 
         protected override void ValueToBytes(byte[] buffer, ref int index, float value)
         {
-            // TODO: To marshall structure
             var data = BitConverter.GetBytes(value);
 
             if (BitConverter.IsLittleEndian)

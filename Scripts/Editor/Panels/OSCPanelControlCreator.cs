@@ -142,7 +142,7 @@ namespace extOSC.Editor.Panels
 	            var content = (GUIContent[])null;
 	            var objects = (OSCTransmitter[])null;
 
-	            OSCEditorUtils.FindObjectsForPopup(TransmitterCallback, true, out content, out objects);
+	            OSCEditorUtils.FindObjects(TransmitterCallback, true, out content, out objects);
 
                 _informerAddress = EditorGUILayout.TextField(_oscAddressContent, _informerAddress);
 	            _informerTransmitter = OSCEditorInterface.PopupLayout(_oscTransmitterContent,

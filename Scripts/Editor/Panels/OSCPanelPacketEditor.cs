@@ -34,26 +34,18 @@ namespace extOSC.Editor.Panels
 
         #region Public Vars
 
-        public OSCPacket CurrentPacket
-        {
-            get { return _currentPacket; }
-            set { _currentPacket = value; }
-        }
+        public OSCPacket CurrentPacket { get; set; }
 
-        public string FilePath
-        {
-            get { return _filePath; }
-            set { _filePath = value; }
-        }
+	    public string FilePath { get; set; }
 
-        public string PacketName
+	    public string PacketName
         {
             get
             {
-                if (string.IsNullOrEmpty(_filePath))
+                if (string.IsNullOrEmpty(FilePath))
                     return "unnamed";
 
-                return Path.GetFileNameWithoutExtension(_filePath);
+                return Path.GetFileNameWithoutExtension(FilePath);
             }
         }
 
@@ -65,63 +57,68 @@ namespace extOSC.Editor.Panels
 
         private OSCPacketEditableDrawer _packetDrawer;
 
-        private OSCPacket _currentPacket;
+	    private Color _defaultColor;
 
-        private string _filePath;
-
-        #endregion
+	    #endregion
 
         #region Unity Methods
 
         protected override void DrawContent(ref Rect contentRect)
         {
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+	        _defaultColor = GUI.color;
 
-            if (GUILayout.Button(_createContent, EditorStyles.toolbarDropDown))
-            {
-                var customMenuRect = new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 0, 0);
+	        using (new GUILayout.VerticalScope())
+	        {
+				// TOOLBAR
+				using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
+		        {
+			        if (GUILayout.Button(_createContent, EditorStyles.toolbarDropDown))
+			        {
+				        var customMenuRect =
+					        new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 0, 0);
+				        EditorUtility.DisplayCustomMenu(customMenuRect, _createPoputItems, -1, CreatePacket, null);
+			        }
 
-                EditorUtility.DisplayCustomMenu(customMenuRect, _createPoputItems, -1, CreatePacket, null);
-            }
+			        GUILayout.Space(5);
 
-            GUILayout.Space(5);
+			        if (GUILayout.Button(_openContent, EditorStyles.toolbarButton))
+			        {
+				        OpenPacket();
+			        }
 
-            var openButton = GUILayout.Button(_openContent, EditorStyles.toolbarButton);
-            var saveButton = GUILayout.Button(_saveContent, EditorStyles.toolbarButton);
-            var generateButton = false;
+			        if (GUILayout.Button(_saveContent, EditorStyles.toolbarButton))
+			        {
+				        SavePacket();
+			        }
 
-            if (_currentPacket != null)
-            {
-                GUILayout.Space(5);
+			        if (CurrentPacket != null)
+			        {
+				        GUILayout.Space(5);
 
-                generateButton = GUILayout.Button(_generateCodeContent, EditorStyles.toolbarButton);
-            }
+				        if (GUILayout.Button(_generateCodeContent, EditorStyles.toolbarButton))
+				        {
+					        GenerateSharpCode();
+				        }
+			        }
 
-            GUILayout.FlexibleSpace();
+			        GUILayout.FlexibleSpace();
 
-            if (_currentPacket != null)
-                GUILayout.Label(string.Format("Name: {0}", PacketName));
+			        if (CurrentPacket != null)
+				        GUILayout.Label(string.Format("Name: {0}", PacketName));
+		        }
 
-            EditorGUILayout.EndHorizontal();
+		        if (CurrentPacket != null && CurrentPacket != null)
+		        {
+			        _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+			        _packetDrawer.DrawLayout(CurrentPacket);
 
-            if (_currentPacket != null && _currentPacket != null)
-            {
-                _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-                _packetDrawer.DrawLayout(_currentPacket);
-
-                EditorGUILayout.EndScrollView();
-            }
-            else
-            {
-                EditorGUILayout.LabelField(_infoContent, OSCEditorStyles.CenterLabel, GUILayout.Height(contentRect.height));
-            }
-
-            EditorGUILayout.EndVertical();
-
-            if (openButton) OpenCurrentDebugPacket();
-            if (saveButton) SaveCurrentDebugPacket();
-            if (generateButton) GenerateCurrendDebugCode();
+			        EditorGUILayout.EndScrollView();
+		        }
+		        else
+		        {
+			        EditorGUILayout.LabelField(_infoContent, OSCEditorStyles.CenterLabel, GUILayout.Height(contentRect.height));
+		        }
+	        }
         }
 
         #endregion
@@ -137,48 +134,51 @@ namespace extOSC.Editor.Panels
 
         #region Private Methods
 
-        private void SaveCurrentDebugPacket()
+	    private void CreatePacket(object userData, string[] options, int selected)
+	    {
+		    if (selected == 0)
+		    {
+			    CurrentPacket = new OSCMessage("/address");
+		    }
+		    else
+		    {
+			    CurrentPacket = new OSCBundle();
+		    }
+
+		    FilePath = string.Empty;
+	    }
+
+        private void SavePacket()
         {
-            if (_currentPacket == null) return;
+            if (CurrentPacket == null) return;
 
-            var filePath = EditorUtility.SaveFilePanel("Save Packet", OSCEditorUtils.DebugFolder, "New Debug Packet", "eod");
-            if (!string.IsNullOrEmpty(filePath))
+            var file = EditorUtility.SaveFilePanel("Save Packet", OSCEditorUtils.DebugFolder, "New Debug Packet", "eod");
+            if (!string.IsNullOrEmpty(file))
             {
-                FilePath = filePath;
-
-                OSCEditorUtils.SavePacket(filePath, _currentPacket);
+                FilePath = file;
+				OSCEditorUtils.SavePacket(file, CurrentPacket);
             }
         }
 
-        private void OpenCurrentDebugPacket()
+        private void OpenPacket()
         {
-            var filePath = EditorUtility.OpenFilePanel("Open Packet", OSCEditorUtils.DebugFolder, "eod");
-            if (!string.IsNullOrEmpty(filePath))
+            var file = EditorUtility.OpenFilePanel("Open Packet", OSCEditorUtils.DebugFolder, "eod");
+            if (!string.IsNullOrEmpty(file))
             {
-                _currentPacket = OSCEditorUtils.LoadPacket(filePath);
-                _filePath = filePath;
+	            FilePath = file;
+                CurrentPacket = OSCEditorUtils.LoadPacket(file);
             }
         }
 
-        private void GenerateCurrendDebugCode()
+        private void GenerateSharpCode()
         {
-            if (_currentPacket == null)
+            if (CurrentPacket == null)
                 return;
 
-            EditorGUIUtility.systemCopyBuffer = OSCSharpCode.GeneratePacket(_currentPacket);
-
-            Debug.LogFormat("[OSCDebug] CSharp code generated and stored in copy buffer!");
+            EditorGUIUtility.systemCopyBuffer = OSCSharpCode.GeneratePacket(CurrentPacket);
+			Debug.LogFormat("[extOSC] CSharp code generated and stored in copy buffer!");
         }
 
-        private void CreatePacket(object userData, string[] options, int selected)
-        {
-            if (selected == 0)
-                _currentPacket = new OSCMessage("/address");
-            else
-                _currentPacket = new OSCBundle();
-
-            _filePath = string.Empty;
-        }
 
         #endregion
     }

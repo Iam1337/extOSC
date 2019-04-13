@@ -109,8 +109,7 @@ namespace extOSC.Editor.Windows
             if (ConsoleBuffer != null)
             {
                 ConsoleBuffer.Clear();
-
-                OSCEditorUtils.SaveConsoleMessages(OSCEditorUtils.LogsFilePath, ConsoleBuffer);
+				OSCEditorUtils.SaveConsoleMessages(OSCEditorUtils.LogsFilePath, ConsoleBuffer);
             }
         }
 
@@ -154,8 +153,7 @@ namespace extOSC.Editor.Windows
             if (ConsoleBuffer == null)
             {
                 ConsoleBuffer = OSCEditorUtils.LoadConsoleMessages(OSCEditorUtils.LogsFilePath);
-
-                Repaint();
+				Repaint();
             }
 
             if (OSCConsole.ConsoleBuffer.Count > 0)
@@ -170,15 +168,13 @@ namespace extOSC.Editor.Windows
 
                 OSCEditorUtils.SaveConsoleMessages(OSCEditorUtils.LogsFilePath, ConsoleBuffer);
                 OSCConsole.ConsoleBuffer.Clear();
-
-                Repaint();
+				Repaint();
             }
 
             if (packetPanel.SelecedMessage != logPanel.SelectedMessage)
             {
                 packetPanel.SelecedMessage = logPanel.SelectedMessage;
-
-                Repaint();
+				Repaint();
             }
         }
 

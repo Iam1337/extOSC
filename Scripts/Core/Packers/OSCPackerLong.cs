@@ -48,7 +48,7 @@ namespace extOSC.Core.Packers
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(data);
 
-            buffer[index++] = data[0];
+			buffer[index++] = data[0];
             buffer[index++] = data[1];
             buffer[index++] = data[2];
             buffer[index++] = data[3];

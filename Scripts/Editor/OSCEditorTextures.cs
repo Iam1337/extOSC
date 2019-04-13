@@ -185,21 +185,6 @@ namespace extOSC.Editor
             return Resources.Load<Texture2D>(_defaultFolder + fileName);
         }
 
-        /*
-        private static void UnloadTextures()
-        {
-            Resources.UnloadAsset(_iwIcon);
-            Resources.UnloadAsset(_iwIconSmall);
-            Resources.UnloadAsset(_iwIconSmall);
-            Resources.UnloadAsset(_unityOSCTexture);
-            Resources.UnloadAsset(_splitterTexture);
-            Resources.UnloadAsset(_receiverTexture);
-            Resources.UnloadAsset(_transmitterTexture);
-            Resources.UnloadAsset(_messageTexture);
-            Resources.UnloadAsset(_bundleTexture);
-        }
-        */
-
         #endregion
     }
 }

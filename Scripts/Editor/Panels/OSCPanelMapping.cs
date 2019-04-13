@@ -105,75 +105,84 @@ namespace extOSC.Editor.Panels
 
         protected override void DrawContent(ref Rect contentRect)
         {
-            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+	        var defaultColor = GUI.color;
+	        var createMapButton = false;
+	        var createMessageButton = false;
 
-            var createMapButton = GUILayout.Button(_createContent, EditorStyles.toolbarButton);
 
-            GUILayout.Space(5);
+            using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
+	        {
+				createMapButton = GUILayout.Button(_createContent, EditorStyles.toolbarButton);
 
-            if (GUILayout.Button(_openContent, EditorStyles.toolbarDropDown))
-            {
-                GUIContent[] popupItems;
-                string[] patches;
+		        GUILayout.Space(5);
 
-                GetMappingAssets(out popupItems, out patches);
+		        if (GUILayout.Button(_openContent, EditorStyles.toolbarDropDown))
+		        {
+			        GUIContent[] popupItems;
+			        string[] patches;
 
-                var customMenuRect = new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 0, 0);
+			        GetMappingAssets(out popupItems, out patches);
 
-                EditorUtility.DisplayCustomMenu(customMenuRect, popupItems, -1, OpenMapBundle, patches);
-            }
+			        var customMenuRect = new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 0, 0);
 
-            GUILayout.FlexibleSpace();
+			        EditorUtility.DisplayCustomMenu(customMenuRect, popupItems, -1, OpenMapBundle, patches);
+		        }
 
-            if (_currentMapBundle != null) GUILayout.Label(string.Format("Name: {0}", _currentMapBundle.name));
+		        GUILayout.FlexibleSpace();
 
-            EditorGUILayout.EndHorizontal();
-
+		        if (_currentMapBundle != null)
+			        GUILayout.Label(string.Format("Name: {0}", _currentMapBundle.name));
+	        }
+			
             var expand = contentRect.width > 810;
-
-            if (_currentMapBundle != null)
+			if (_currentMapBundle != null)
             {
-                _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+	            using (var scroll = new GUILayout.ScrollViewScope(_scrollPosition))
+	            {
+					GUILayout.Label(string.Format("Path: {0}", AssetDatabase.GetAssetPath(_currentMapBundle)));
 
-                GUILayout.Label(string.Format("Path: {0}", AssetDatabase.GetAssetPath(_currentMapBundle)));
+		            if (_currentMapBundle.Messages.Count > 0)
+		            {
+			            _deleteMessage = null;
 
-                if (_currentMapBundle.Messages.Count > 0)
-                {
-                    _deleteMessage = null;
+			            foreach (var mapMessage in _currentMapBundle.Messages)
+			            {
+				            DrawMapMessage(mapMessage, expand);
+			            }
 
-                    foreach (var mapMessage in _currentMapBundle.Messages)
-                    {
-                        DrawMapMessage(mapMessage, expand);
-                    }
+			            if (_deleteMessage != null) _currentMapBundle.Messages.Remove(_deleteMessage);
+		            }
+		            else
+		            {
+			            using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+			            {
+				            GUILayout.Label(_emptyContent, OSCEditorStyles.CenterLabel);
+			            }
+		            }
 
-                    if (_deleteMessage != null) _currentMapBundle.Messages.Remove(_deleteMessage);
-                }
-                else
-                {
-                    EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-                    GUILayout.Label(_emptyContent, OSCEditorStyles.CenterLabel);
-                    EditorGUILayout.EndHorizontal();
-                }
+		            using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+		            {
+			            GUI.color = Color.green;
+			            createMessageButton = GUILayout.Button(_addAddressContent);
+			            GUI.color = defaultColor;
+		            }
 
-                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-                GUI.color = Color.green;
-                var createMessageButton = GUILayout.Button(_addAddressContent);
-                GUI.color = Color.white;
-                EditorGUILayout.EndHorizontal();
+					// ACTIONS
+		            if (createMessageButton)
+		            {
+			            _currentMapBundle.Messages.Add(new OSCMapMessage
+			            {
+				            Address = "/address/" + _currentMapBundle.Messages.Count
+			            });
+		            }
 
-                if (createMessageButton)
-                {
-                    _currentMapBundle.Messages.Add(new OSCMapMessage()
-                    {
-                        Address = "/address/" + _currentMapBundle.Messages.Count
-                    });
-                }
-                if (_deleteMessage != null)
-                {
-                    _currentMapBundle.Messages.Remove(_deleteMessage);
-                }
+		            if (_deleteMessage != null)
+		            {
+			            _currentMapBundle.Messages.Remove(_deleteMessage);
+		            }
 
-                EditorGUILayout.EndScrollView();
+		            _scrollPosition = scroll.scrollPosition;
+	            }
             }
             else
             {
@@ -187,69 +196,79 @@ namespace extOSC.Editor.Panels
 
         #region Private Methods
 
-        private void DrawMapMessage(OSCMapMessage mapMessage, bool expand)
-        {
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
+	    private void DrawMapMessage(OSCMapMessage mapMessage, bool expand)
+	    {
+		    var defaultColor = GUI.color;
 
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label(_addressContent);
-            GUI.color = Color.red;
-            var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
-            if (deleteButton) _deleteMessage = mapMessage;
-            GUI.color = Color.white;
-            EditorGUILayout.EndHorizontal();
+		    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+		    {
+				using (new GUILayout.HorizontalScope())
+			    {
+				    GUILayout.Label(_addressContent);
 
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-            mapMessage.Address = EditorGUILayout.TextField(mapMessage.Address);
-            EditorGUILayout.EndHorizontal();
+				    GUI.color = Color.red;
+				    if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20)))
+					    _deleteMessage = mapMessage;
 
-            if (mapMessage.Values.Count > 0)
-            {
-                GUILayout.Label(_valuesContent);
+				    GUI.color = defaultColor;
+			    }
 
-                _deleteValue = null;
+			    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+			    {
+				    mapMessage.Address = EditorGUILayout.TextField(mapMessage.Address);
+			    }
 
-                foreach (var mapValue in mapMessage.Values)
-                {
-                    DrawMapValue(mapValue, expand);
-                }
+			    if (mapMessage.Values.Count > 0)
+			    {
+				    GUILayout.Label(_valuesContent);
 
-                if (_deleteValue != null) mapMessage.Values.Remove(_deleteValue);
-            }
-            else
-            {
-                GUILayout.Label(_valuesContent);
-                EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-                EditorGUILayout.LabelField("- Empty -", OSCEditorStyles.CenterLabel);
-                EditorGUILayout.EndVertical();
-            }
+				    _deleteValue = null;
 
-            if (!_mapTypeTemp.ContainsKey(mapMessage))
-                _mapTypeTemp.Add(mapMessage, OSCMapType.Float);
+				    foreach (var mapValue in mapMessage.Values)
+				    {
+					    DrawMapValue(mapValue, expand);
+				    }
 
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
+				    if (_deleteValue != null) mapMessage.Values.Remove(_deleteValue);
+			    }
+			    else
+			    {
+				    GUILayout.Label(_valuesContent);
+				    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+				    {
+					    EditorGUILayout.LabelField("- Empty -", OSCEditorStyles.CenterLabel);
+				    }
+			    }
 
-            _mapTypeTemp[mapMessage] = (OSCMapType)EditorGUILayout.EnumPopup(_mapTypeTemp[mapMessage]);
+			    if (!_mapTypeTemp.ContainsKey(mapMessage))
+				    _mapTypeTemp.Add(mapMessage, OSCMapType.Float);
 
-            GUI.color = Color.green;
-            var addButton = GUILayout.Button(_addMapValueContent, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-            if (addButton) CreateMapValue(mapMessage, _mapTypeTemp[mapMessage]);
-            GUI.color = Color.white;
-            EditorGUILayout.EndHorizontal();
+			    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+			    {
+				    _mapTypeTemp[mapMessage] = (OSCMapType) EditorGUILayout.EnumPopup(_mapTypeTemp[mapMessage]);
 
-            EditorGUILayout.EndVertical();
-        }
+				    GUI.color = Color.green;
+				    if (GUILayout.Button(_addMapValueContent, GUILayout.Height(EditorGUIUtility.singleLineHeight)))
+					    CreateMapValue(mapMessage, _mapTypeTemp[mapMessage]);
 
-        private void DrawMapValue(OSCMapValue mapValue, bool expand)
-        {
+				    GUI.color = defaultColor;
+			    }
+		    }
+	    }
+
+	    private void DrawMapValue(OSCMapValue mapValue, bool expand)
+	    {
+		    var defaultColor = GUI.color;
+
             if (expand) EditorGUILayout.BeginHorizontal();
             else EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
 
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(80));
-            GUILayout.Label(mapValue.Type + ":");
-            EditorGUILayout.EndHorizontal();
+	        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box, GUILayout.Width(80)))
+	        {
+				GUILayout.Label(mapValue.Type + ":");
+	        }
 
-            if (mapValue.Type == OSCMapType.Float)
+	        if (mapValue.Type == OSCMapType.Float)
             {
                 DrawMapValueFloat(mapValue, expand);
             }
@@ -274,23 +293,27 @@ namespace extOSC.Editor.Panels
                 DrawMapValueBoolToInt(mapValue, expand);
             }
 
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-            GUI.color = Color.red;
-            var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
-            if (deleteButton) _deleteValue = mapValue;
-            GUI.color = Color.white;
-            EditorGUILayout.EndHorizontal();
+		    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box, GUILayout.Width(80)))
+		    {
+			    GUI.color = Color.red;
+			    if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20)))
+				    _deleteValue = mapValue;
 
-            EditorGUILayout.EndHorizontal();
+			    GUI.color = defaultColor;
+		    }
+
+		    EditorGUILayout.EndHorizontal();
         }
 
         private void DrawMapValueFloat(OSCMapValue mapValue, bool expand)
         {
+	        var defaultColor = GUI.color;
+
             GUI.color = Color.yellow;
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_inputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -310,7 +333,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_outputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -330,7 +353,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_clampContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             mapValue.Clamp = EditorGUILayout.Toggle(mapValue.Clamp, GUILayout.Width(15));
@@ -339,11 +362,13 @@ namespace extOSC.Editor.Panels
 
         private void DrawMapValueInt(OSCMapValue mapValue, bool expand)
         {
+	        var defaultColor = GUI.color;
+
             GUI.color = Color.yellow;
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_inputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -363,7 +388,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_outputContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             if (!expand) EditorGUILayout.BeginVertical();
 
@@ -383,7 +408,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_clampContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             mapValue.Clamp = EditorGUILayout.Toggle(mapValue.Clamp, GUILayout.Width(15));
@@ -392,11 +417,13 @@ namespace extOSC.Editor.Panels
 
         private void DrawMapValueFloatToBool(OSCMapValue mapValue, bool expand)
         {
+	        var defaultColor = GUI.color;
+
             GUI.color = Color.yellow;
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_toBoolContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box,GUILayout.Width(120));
             mapValue.Logic = (OSCMapLogic)EditorGUILayout.EnumPopup(mapValue.Logic);
@@ -410,11 +437,13 @@ namespace extOSC.Editor.Panels
 
         private void DrawMapValueIntToBool(OSCMapValue mapValue, bool expand)
         {
+	        var defaultColor = GUI.color;
+
             GUI.color = Color.yellow;
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_toBoolContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(120));
             mapValue.Logic = (OSCMapLogic)EditorGUILayout.EnumPopup(mapValue.Logic);
@@ -428,6 +457,8 @@ namespace extOSC.Editor.Panels
 
         private void DrawMapValueBoolToFloat(OSCMapValue mapValue, bool expand)
         {
+	        var defaultColor = GUI.color;
+
             if (!expand)
             {
                 EditorGUILayout.BeginVertical();
@@ -438,7 +469,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_trueContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             GUILayout.Label(_valueContent);
@@ -455,7 +486,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_falseContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             GUILayout.Label(_valueContent);
@@ -471,6 +502,8 @@ namespace extOSC.Editor.Panels
 
         private void DrawMapValueBoolToInt(OSCMapValue mapValue, bool expand)
         {
+	        var defaultColor = GUI.color;
+
             if (!expand)
             {
                 EditorGUILayout.BeginVertical();
@@ -481,7 +514,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_trueContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             GUILayout.Label(_valueContent);
@@ -498,7 +531,7 @@ namespace extOSC.Editor.Panels
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box, GUILayout.Width(50));
             GUILayout.Label(_falseContent);
             EditorGUILayout.EndHorizontal();
-            GUI.color = Color.white;
+            GUI.color = defaultColor;
 
             EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
             GUILayout.Label(_valueContent);

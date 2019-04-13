@@ -36,10 +36,10 @@ namespace extOSC.Editor
         {
             get
             {
-                if (!Directory.Exists(_backupFoder))
-                    Directory.CreateDirectory(_backupFoder);
+                if (!Directory.Exists(_backupFolder))
+                    Directory.CreateDirectory(_backupFolder);
 
-                return _backupFoder;
+                return _backupFolder;
             }
         }
 
@@ -60,7 +60,7 @@ namespace extOSC.Editor
 
         private static string _debugFolder = "./extOSC/Debug/";
 
-        private static string _backupFoder = "./extOSC/";
+        private static string _backupFolder = "./extOSC/";
 
         private static string _logsFilePath = "./extOSC/logs.xml";
 
@@ -70,8 +70,7 @@ namespace extOSC.Editor
 
 		#region Static Public Methods
 
-		// NEW
-		public static void FindObjectsForPopup<T>(Func<T, string> namingCallback, bool withNone, out GUIContent[] contents, out T[] objects) where T : Object
+		public static void FindObjects<T>(Func<T, string> namingCallback, bool withNone, out GUIContent[] contents, out T[] objects) where T : Object
 		{
 			var sceneObjects = Object.FindObjectsOfType<T>();
 			var offset = 0;
@@ -127,22 +126,6 @@ namespace extOSC.Editor
             }
 
             return null;
-        }
-
-        public static Dictionary<string, OSCReceiver> GetReceivers()
-        {
-            return GetOSC<OSCReceiver>(receiver =>
-            {
-                return string.Format("Receiver: {0}", receiver.LocalPort);
-            });
-        }
-
-        public static Dictionary<string, OSCTransmitter> GetTransmitters()
-        {
-            return GetOSC<OSCTransmitter>((transmitter) =>
-            {
-                return string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);
-            });
         }
 
 		public static List<OSCConsolePacket> LoadConsoleMessages(string filePath)
@@ -269,14 +252,6 @@ namespace extOSC.Editor
             return _defaultResources;
         }
 
-        public static void PingObject(UnityEngine.Object @object, bool selectObject = true)
-        {
-            EditorGUIUtility.PingObject(@object);
-
-            if (selectObject)
-                Selection.activeObject = @object;
-        }
-
         public static OSCValue CreateOSCValue(OSCValueType valueType)
         {
             switch (valueType)
@@ -318,27 +293,6 @@ namespace extOSC.Editor
             }
         }
 
-        public static OSCPacket CopyPacket(OSCPacket packet)
-        {
-            var size = 0;
-            var buffer = OSCConverter.Pack(packet, out size);
-
-            return OSCConverter.Unpack(buffer, size);
-        }
-
-        public static string NicifyName(string name, bool removePrefix = true)
-        {
-            name = ObjectNames.NicifyVariableName(name);
-
-            if (removePrefix)
-            {
-                if (name.StartsWith("OSC", StringComparison.Ordinal))
-                    name = name.Remove(0, 3);
-            }
-
-            return name.Trim();
-        }
-
         public static string MemberName(MemberInfo memberInfo)
         {
             var prefix = string.Empty;
@@ -374,38 +328,6 @@ namespace extOSC.Editor
             }
 
             return string.Format("{0} \t{1}{2}", prefix, memberInfo.Name, postfix);
-        }
-
-        public static Rect ToScreenPosition(Rect position)
-        {
-            var screenPosition = GUIUtility.GUIToScreenPoint(new Vector2(position.x, position.y));
-            position.x = screenPosition.x;
-            position.y = screenPosition.y;
-
-            return position;
-        }
-
-        #endregion
-
-        #region Static Private Methods
-
-        private static Dictionary<string, T> GetOSC<T>(Func<T, string> namingCallback) where T : OSCBase
-        {
-            var dictionary = new Dictionary<string, T>();
-            var objects = GameObject.FindObjectsOfType<T>();
-
-            foreach (var osc in objects)
-            {
-                var name = osc.gameObject.name;
-
-                if (namingCallback != null)
-                    name = namingCallback(osc);
-
-                if (!dictionary.ContainsKey(name))
-                    dictionary.Add(name, osc);
-            }
-
-            return dictionary;
         }
 
         #endregion

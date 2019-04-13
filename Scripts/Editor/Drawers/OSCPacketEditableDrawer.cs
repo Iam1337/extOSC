@@ -55,33 +55,33 @@ namespace extOSC.Editor.Drawers
 
         private void DrawBundle(OSCBundle bundle)
         {
+	        var defaultColor = GUI.color;
+
             if (bundle.Packets.Count > 0)
             {
-                OSCPacket removePacket = null;
+	            var removePacket = (OSCPacket) null;
 
                 foreach (var bundlePacket in bundle.Packets)
                 {
-                    EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField(bundlePacket.GetType().Name + ":", EditorStyles.boldLabel);
+	                using (new GUILayout.HorizontalScope())
+	                {
+		                EditorGUILayout.LabelField(bundlePacket.GetType().Name + ":", EditorStyles.boldLabel);
 
-                    GUI.color = Color.red;
+		                GUI.color = Color.red;
+		                if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight),GUILayout.Width(20)))
+		                {
+			                removePacket = bundlePacket;
+		                }
 
-                    var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
-                    if (deleteButton)
-                    {
-                        removePacket = bundlePacket;
-                    }
+		                GUI.color = defaultColor;
+	                }
 
-                    GUI.color = Color.white;
+					using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	                {
+		                DrawLayout(bundlePacket);
+	                }
 
-                    EditorGUILayout.EndHorizontal();
-
-                    EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-
-                    DrawLayout(bundlePacket);
-                    EditorGUILayout.EndVertical();
-
-                    GUILayout.Space(10);
+	                GUILayout.Space(10);
                 }
 
                 if (removePacket != null)
@@ -94,52 +94,52 @@ namespace extOSC.Editor.Drawers
             }
             else
             {
-                EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-                EditorGUILayout.LabelField(_bundleEmptyContent, OSCEditorStyles.CenterLabel);
-                EditorGUILayout.EndVertical();
+	            using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	            {
+		            EditorGUILayout.LabelField(_bundleEmptyContent, OSCEditorStyles.CenterLabel);
+	            }
             }
 
             // ADD PACKET
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-            GUI.color = Color.green;
+			using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+	        {
+				GUI.color = Color.green;
+		        if (GUILayout.Button(_addBundleContent))
+		        {
+			        bundle.AddPacket(new OSCBundle());
+		        }
 
-            if (GUILayout.Button(_addBundleContent))
-            {
-                bundle.AddPacket(new OSCBundle());
-            }
+		        if (GUILayout.Button(_addMessageContent))
+		        {
+			        bundle.AddPacket(new OSCMessage("/address"));
+		        }
 
-            if (GUILayout.Button(_addMessageContent))
-            {
-                bundle.AddPacket(new OSCMessage("/address"));
-            }
-
-            GUI.color = Color.white;
-            EditorGUILayout.EndHorizontal();
+		        GUI.color = defaultColor;
+	        }
         }
 
         private void DrawMessage(OSCMessage message)
         {
+	        var removeValue = (OSCValue)null;
+
             EditorGUILayout.LabelField(_addressContent, EditorStyles.boldLabel);
-
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-            message.Address = EditorGUILayout.TextField(message.Address, GUILayout.MaxHeight(EditorGUIUtility.singleLineHeight));
-            EditorGUILayout.EndVertical();
-
-            OSCValue removeValue = null;
-
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+		        message.Address = EditorGUILayout.TextField(message.Address, GUILayout.MaxHeight(EditorGUIUtility.singleLineHeight));
+	        }
+			
             EditorGUILayout.LabelField(string.Format("Values ({0}):", message.GetTags()), EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope())
+	        {
+		        foreach (var value in message.Values)
+		        {
+			        DrawValue(value, ref removeValue);
+		        }
+	        }
 
-            EditorGUILayout.BeginVertical();
-
-            foreach (var value in message.Values)
-            {
-                DrawValue(value, ref removeValue);
-            }
-
-            EditorGUILayout.EndVertical();
-
-            var includeValue = CreateValueButton(message);
-
+	        var includeValue = CreateValueButton(message);
+			
+			// ACTIONS
             if (removeValue != null)
             {
                 message.Values.Remove(removeValue);
@@ -153,48 +153,49 @@ namespace extOSC.Editor.Drawers
 
         private void DrawArray(OSCValue value, ref OSCValue removeValue)
         {
-            OSCValue removeArrayValue = null;
+	        var defaultColor = GUI.color;
+	        var removeArrayValue = (OSCValue) null;
+	        var includeArrayValue = (OSCValue)null;
 
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
+	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+	        {
+		        using (new GUILayout.HorizontalScope())
+		        {
+			        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+			        {
+				        EditorGUILayout.LabelField(_arrayContent, OSCEditorStyles.CenterBoldLabel);
+			        }
 
-            EditorGUILayout.BeginHorizontal();
+			        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			        {
+				        GUI.color = Color.red;
+				        if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight),
+				                             GUILayout.Width(20)))
+				        {
+					        removeValue = value;
+				        }
 
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-            EditorGUILayout.LabelField(_arrayContent, OSCEditorStyles.CenterBoldLabel);
-            EditorGUILayout.EndHorizontal();
+				        GUI.color = defaultColor;
+			        }
+		        }
 
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-            GUI.color = Color.red;
+		        foreach (var arrayValues in value.ArrayValue)
+		        {
+			        DrawValue(arrayValues, ref removeArrayValue);
+		        }
 
-            var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
-            if (deleteButton)
-            {
-                removeValue = value;
-            }
+				using (new GUILayout.HorizontalScope())
+		        {
+			        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			        {
+				        EditorGUILayout.LabelField(_addToArrayContent, GUILayout.Width(40));
+			        }
 
-            GUI.color = Color.white;
-            EditorGUILayout.EndVertical();
+			        includeArrayValue = CreateValueButton(value);
+		        }
+	        }
 
-            EditorGUILayout.EndHorizontal();
-
-            foreach (var arrayValues in value.ArrayValue)
-            {
-                DrawValue(arrayValues, ref removeArrayValue);
-            }
-
-            EditorGUILayout.BeginHorizontal();
-
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-            EditorGUILayout.LabelField(_addToArrayContent, GUILayout.Width(40));
-            EditorGUILayout.EndVertical();
-
-            var includeArrayValue = CreateValueButton(value);
-
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.EndVertical();
-
-            if (includeArrayValue != null)
+	        if (includeArrayValue != null)
             {
                 value.ArrayValue.Add(includeArrayValue);
             }
@@ -205,135 +206,135 @@ namespace extOSC.Editor.Drawers
             }
         }
 
-        private void DrawValue(OSCValue value, ref OSCValue removeValue)
-        {
-            if (value.Type == OSCValueType.Array)
-            {
-                DrawArray(value, ref removeValue);
-                return;
-            }
+	    private void DrawValue(OSCValue value, ref OSCValue removeValue)
+	    {
+		    var firstColumn = 40f;
+		    var secondColumn = 60f;
+		    var defaultValue = GUI.color;
 
-            var firstColumn = 40f;
-            var secondColumn = 60f;
+		    if (value.Type == OSCValueType.Array)
+		    {
+			    DrawArray(value, ref removeValue);
+			    return;
+		    }
 
-            // FIRST COLUMN
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
+		    using (new GUILayout.HorizontalScope())
+		    {
+			    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+			    {
+				    GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel,
+				                    GUILayout.Width(firstColumn));
+			    }
 
-            GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
+			    using (new GUILayout.HorizontalScope())
+			    {
+				    if (value.Type == OSCValueType.Blob ||
+				        value.Type == OSCValueType.Impulse ||
+				        value.Type == OSCValueType.Null)
+				    {
+					    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+					    {
+						    EditorGUILayout.LabelField(value.Type.ToString(), OSCEditorStyles.CenterLabel);
+					    }
+				    }
+				    else
+				    {
+					    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+					    {
+						    EditorGUILayout.LabelField(value.Type + ":", GUILayout.Width(secondColumn));
+					    }
 
-            EditorGUILayout.EndVertical();
+					    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+					    {
+						    switch (value.Type)
+						    {
+							    case OSCValueType.Color:
+								    value.ColorValue = EditorGUILayout.ColorField(value.ColorValue);
+								    break;
+							    case OSCValueType.True:
+							    case OSCValueType.False:
+								    value.BoolValue = EditorGUILayout.Toggle(value.BoolValue);
+								    break;
+							    case OSCValueType.Char:
+								    var rawString = EditorGUILayout.TextField(value.CharValue.ToString());
+								    value.CharValue = rawString.Length > 0 ? rawString[0] : ' ';
+								    break;
+							    case OSCValueType.Int:
+								    value.IntValue = EditorGUILayout.IntField(value.IntValue);
+								    break;
+							    case OSCValueType.Double:
+								    value.DoubleValue = EditorGUILayout.DoubleField(value.DoubleValue);
+								    break;
+							    case OSCValueType.Long:
+								    value.LongValue = EditorGUILayout.LongField(value.LongValue);
+								    break;
+							    case OSCValueType.Float:
+								    value.FloatValue = EditorGUILayout.FloatField(value.FloatValue);
+								    break;
+							    case OSCValueType.String:
+								    value.StringValue = EditorGUILayout.TextField(value.StringValue);
+								    break;
+							    case OSCValueType.Midi:
+								    var midi = value.MidiValue;
+								    midi.Channel = (byte) Mathf.Clamp(EditorGUILayout.IntField(midi.Channel), 0, 255);
+								    midi.Status = (byte) Mathf.Clamp(EditorGUILayout.IntField(midi.Status), 0, 255);
+								    midi.Data1 = (byte) Mathf.Clamp(EditorGUILayout.IntField(midi.Data1), 0, 255);
+								    midi.Data2 = (byte) Mathf.Clamp(EditorGUILayout.IntField(midi.Data2), 0, 255);
+								    value.MidiValue = midi;
+								    break;
+							    default:
+								    EditorGUILayout.SelectableLabel(value.Value.ToString(),
+								                                    GUILayout.Height(
+									                                    EditorGUIUtility.singleLineHeight));
+								    break;
+						    }
+					    }
+				    }
+			    }
 
-            EditorGUILayout.BeginHorizontal();
+			    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			    {
+				    GUI.color = Color.red;
+				    if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight),
+				                         GUILayout.Width(20)))
+				    {
+					    removeValue = value;
+				    }
 
-            if (value.Type == OSCValueType.Blob ||
-                value.Type == OSCValueType.Impulse ||
-                value.Type == OSCValueType.Null)
-            {
-                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-                EditorGUILayout.LabelField(value.Type.ToString(), OSCEditorStyles.CenterLabel);
-                EditorGUILayout.EndHorizontal();
-            }
-            else
-            {
-                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-                EditorGUILayout.LabelField(value.Type + ":", GUILayout.Width(secondColumn));
-                EditorGUILayout.EndHorizontal();
+				    GUI.color = defaultValue;
+			    }
+		    }
+	    }
 
-                EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
+	    private OSCValue CreateValueButton(object sender)
+	    {
+		    var defaultColor = GUI.color;
 
-                switch (value.Type)
-                {
-                    case OSCValueType.Color:
-                        value.ColorValue = EditorGUILayout.ColorField(value.ColorValue);
-                        break;
-                    case OSCValueType.True:
-                    case OSCValueType.False:
-                        value.BoolValue = EditorGUILayout.Toggle(value.BoolValue);
-                        break;
-                    case OSCValueType.Char:
-                        var rawString = EditorGUILayout.TextField(value.CharValue.ToString());
-                        value.CharValue = rawString.Length > 0 ? rawString[0] : ' ';
-                        break;
-                    case OSCValueType.Int:
-                        value.IntValue = EditorGUILayout.IntField(value.IntValue);
-                        break;
-                    case OSCValueType.Double:
-                        value.DoubleValue = EditorGUILayout.DoubleField(value.DoubleValue);
-                        break;
-                    case OSCValueType.Long:
-                        value.LongValue = EditorGUILayout.LongField(value.LongValue);
-                        break;
-                    case OSCValueType.Float:
-                        value.FloatValue = EditorGUILayout.FloatField(value.FloatValue);
-                        break;
-                    case OSCValueType.String:
-                        value.StringValue = EditorGUILayout.TextField(value.StringValue);
-                        break;
-                    case OSCValueType.Midi:
-                        var midi = value.MidiValue;
-                        midi.Channel = (byte)Mathf.Clamp(EditorGUILayout.IntField(midi.Channel), 0, 255);
-                        midi.Status = (byte)Mathf.Clamp(EditorGUILayout.IntField(midi.Status), 0, 255);
-                        midi.Data1 = (byte)Mathf.Clamp(EditorGUILayout.IntField(midi.Data1), 0, 255);
-                        midi.Data2 = (byte)Mathf.Clamp(EditorGUILayout.IntField(midi.Data2), 0, 255);
-                        value.MidiValue = midi;
-                        break;
-                    default:
-                        EditorGUILayout.SelectableLabel(value.Value.ToString(), GUILayout.Height(EditorGUIUtility.singleLineHeight));
-                        break;
-                }
+		    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+		    {
+				if (!_valueTypeTemp.ContainsKey(sender))
+			    {
+				    _valueTypeTemp.Add(sender, OSCValueType.Float);
+			    }
 
-                EditorGUILayout.EndHorizontal();
-            }
+			    _valueTypeTemp[sender] = (OSCValueType) EditorGUILayout.EnumPopup(_valueTypeTemp[sender]);
 
-            EditorGUILayout.EndHorizontal();
+			    GUI.color = Color.green;
+			    if (GUILayout.Button(_addValueContent, GUILayout.Height(EditorGUIUtility.singleLineHeight)))
+			    {
+				    var value = OSCEditorUtils.CreateOSCValue(_valueTypeTemp[sender]);
+				    if (value != null)
+				    {
+					    return value;
+				    }
 
-            EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-            GUI.color = Color.red;
+				    Debug.LogErrorFormat("[extOSC] You can't add this ({0}) value type!", _valueTypeTemp[sender]);
+			    }
 
-            var deleteButton = GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20));
-            if (deleteButton)
-            {
-                removeValue = value;
-            }
+			    GUI.color = defaultColor;
+		    }
 
-            GUI.color = Color.white;
-            EditorGUILayout.EndVertical();
-
-            EditorGUILayout.EndHorizontal();
-        }
-
-        private OSCValue CreateValueButton(object sender)
-        {
-            EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-
-            if (!_valueTypeTemp.ContainsKey(sender))
-            {
-                _valueTypeTemp.Add(sender, OSCValueType.Float);
-            }
-
-            _valueTypeTemp[sender] = (OSCValueType)EditorGUILayout.EnumPopup(_valueTypeTemp[sender]);
-
-            GUI.color = Color.green;
-
-            var addButton = GUILayout.Button(_addValueContent, GUILayout.Height(EditorGUIUtility.singleLineHeight));
-            if (addButton)
-            {
-                var value = OSCEditorUtils.CreateOSCValue(_valueTypeTemp[sender]);
-                if (value != null)
-                {
-                    return value;
-                }
-                else
-                {
-                    Debug.LogFormat("[extOSC] You can't add this ({0}) value type!", _valueTypeTemp[sender]);
-                }
-            }
-
-            GUI.color = Color.white;
-            EditorGUILayout.EndHorizontal();
-
-            return null;
+		    return null;
         }
 
         #endregion

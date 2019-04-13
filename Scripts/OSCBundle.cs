@@ -17,9 +17,8 @@ namespace extOSC
         }
 
         #endregion
-
-
-        #region Constants
+		
+	    #region Constants
 
         public const string KBundle = "#bundle";
 
@@ -94,8 +93,8 @@ namespace extOSC
                 packets.Add(packet);
             }
         }
-
-        public override string ToString()
+		
+	    public override string ToString()
         {
             var stringValues = string.Empty;
 
