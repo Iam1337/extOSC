@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
+
+using UnityEditor;
 using UnityEngine;
 
 using System.Net;
@@ -23,12 +25,8 @@ namespace extOSC.Editor.Drawers
 			// REMOTE HOST
 			GUI.color = IPAddress.TryParse(property.stringValue, out _tempAddress) ? defaultColor : Color.red;
 			EditorGUI.PropertyField(position, property, label);
-			GUI.color = Color.white;
+			GUI.color = defaultColor;
 		}
-
-		#endregion
-
-		#region Private Methods
 
 		#endregion
 	}

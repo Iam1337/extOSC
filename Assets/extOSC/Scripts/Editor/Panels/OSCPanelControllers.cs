@@ -4,11 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 using System.Reflection;
-using System.Collections.Generic;
 
 using extOSC.Core;
 using extOSC.Editor.Windows;
-
 
 namespace extOSC.Editor.Panels
 {
@@ -32,9 +30,9 @@ namespace extOSC.Editor.Panels
 
         #region Private Vars
 
-        private Dictionary<string, OSCTransmitter> _transmitters = new Dictionary<string, OSCTransmitter>();
+	    private OSCTransmitter[] _transmitters;
 
-        private Dictionary<string, OSCReceiver> _receivers = new Dictionary<string, OSCReceiver>();
+	    private OSCReceiver[] _receivers;
 
         private Vector2 _scrollPosition;
 
@@ -68,11 +66,11 @@ namespace extOSC.Editor.Panels
 			    {
 				    GUILayout.Label(_transmittersContent, OSCEditorStyles.ConsoleBoldLabel);
 
-				    if (_transmitters.Count > 0)
+				    if (_transmitters.Length > 0)
 				    {
-					    foreach (var transmitter in _transmitters)
+						for (var i = 0; i < _transmitters.Length; ++i)
 					    {
-						    DrawElement(transmitter.Value);
+						    DrawElement(_transmitters[i]);
 					    }
 				    }
 				    else
@@ -85,11 +83,11 @@ namespace extOSC.Editor.Panels
 			    {
 				    GUILayout.Label(_receiversContent, OSCEditorStyles.ConsoleBoldLabel);
 
-				    if (_receivers.Count > 0)
+				    if (_receivers.Length > 0)
 				    {
-					    foreach (var receiver in _receivers)
+					    for (var i = 0; i < _receivers.Length; ++i)
 					    {
-						    DrawElement(receiver.Value);
+						    DrawElement(_receivers[i]);
 					    }
 				    }
 				    else
@@ -109,17 +107,15 @@ namespace extOSC.Editor.Panels
 
         #region Public Methods
 
-        public OSCPanelControllers(OSCWindow window, string panelId) : base(window, panelId) 
-        { }
+	    public OSCPanelControllers(OSCWindow window, string panelId) : base(window, panelId)
+	    {
+		    Refresh();
+        }
 
         public void Refresh()
         {
-			// TODO: Replace Get methods.
-            _transmitters.Clear();
-            _transmitters = OSCEditorUtils.GetTransmitters();
-
-            _receivers.Clear();
-            _receivers = OSCEditorUtils.GetReceivers();
+	        _transmitters = Object.FindObjectsOfType<OSCTransmitter>();
+	        _receivers = Object.FindObjectsOfType<OSCReceiver>();
         }
 
         #endregion
@@ -175,7 +171,7 @@ namespace extOSC.Editor.Panels
 			        var debugPacket = OSCWindowDebug.CurrentPacket;
 			        if (debugPacket != null)
 			        {
-				        transmitter.Send(OSCEditorUtils.CopyPacket(debugPacket));
+				        transmitter.Send(debugPacket.Copy());
 			        }
 		        }
             }
@@ -191,7 +187,7 @@ namespace extOSC.Editor.Panels
 				        if (_receiveMethod == null)
 					        _receiveMethod = typeof(OSCReceiver).GetMethod("PacketReceived", BindingFlags.Instance | BindingFlags.NonPublic);
 
-				        _receiveMethod.Invoke(receiver, new object[] { OSCEditorUtils.CopyPacket(debugPacket) });
+				        _receiveMethod.Invoke(receiver, new object[] {debugPacket.Copy() });
 			        }
 		        }
             }
@@ -200,7 +196,11 @@ namespace extOSC.Editor.Panels
             GUI.color = _defaultColor;
 
             var selectButton = GUILayout.Button(_selectActionContent, GUILayout.MaxWidth(60));
-            if (selectButton) OSCEditorUtils.PingObject(osc);
+	        if (selectButton)
+	        {
+		        EditorGUIUtility.PingObject(osc);
+		        Selection.activeObject = osc;
+	        }
         }
 
         #endregion

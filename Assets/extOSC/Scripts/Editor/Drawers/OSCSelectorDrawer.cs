@@ -36,7 +36,7 @@ namespace extOSC.Editor.Drawers
 				var content = (GUIContent[]) null;
 				var objects = (OSCTransmitter[]) null;
 
-				OSCEditorUtils.FindObjectsForPopup(TransmitterCallback, true, out content, out objects);
+				OSCEditorUtils.FindObjects(TransmitterCallback, true, out content, out objects);
 
 				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
 				                                                      (OSCTransmitter) property.objectReferenceValue,
@@ -48,7 +48,7 @@ namespace extOSC.Editor.Drawers
 				var content = (GUIContent[]) null;
 				var objects = (OSCReceiver[]) null;
 
-				OSCEditorUtils.FindObjectsForPopup(ReceiverCallback, true, out content, out objects);
+				OSCEditorUtils.FindObjects(ReceiverCallback, true, out content, out objects);
 
 				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
 				                                                      (OSCReceiver) property.objectReferenceValue,

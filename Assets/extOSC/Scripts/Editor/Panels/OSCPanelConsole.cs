@@ -3,7 +3,6 @@
 using UnityEditor;
 using UnityEngine;
 
-using extOSC.Core;
 using extOSC.Core.Console;
 using extOSC.Editor.Drawers;
 using extOSC.Editor.Windows;
@@ -29,86 +28,6 @@ namespace extOSC.Editor.Panels
         #endregion
 
         #region Static Private Methods
-
-        private static void DrawItem(Rect itemRect, int index, OSCConsolePacket consoleContainer, bool selected)
-        {
-            var dataRect = new Rect(0, 0, itemRect.width, itemRect.height);
-            var backStyle = index % 2 != 0 ? OSCEditorStyles.ConsoleItemBackEven : OSCEditorStyles.ConsoleItemBackOdd;
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                backStyle.Draw(itemRect, false, false, selected, false);
-            }
-
-            GUI.BeginGroup(itemRect);
-
-            DrawIcons(consoleContainer, ref dataRect);
-
-            GUI.Label(dataRect, ItemToString(consoleContainer), OSCEditorStyles.ConsoleLabel);
-
-            GUI.EndGroup();
-        }
-
-        private static Rect PaddingRect(Rect sourceRect, float padding)
-        {
-            return new Rect(sourceRect.x + padding, sourceRect.y + padding, sourceRect.height - padding * 2f, sourceRect.height - padding * 2f);
-        }
-
-        private static void DrawIcons(OSCConsolePacket consoleMessage, ref Rect dataRect)
-        {
-            Texture2D consoleTexture = null;
-
-            if (consoleMessage.PacketType == OSCConsolePacketType.Received)
-            {
-                consoleTexture = OSCEditorTextures.Receiver;
-            }
-            else if (consoleMessage.PacketType == OSCConsolePacketType.Transmitted)
-            {
-                consoleTexture = OSCEditorTextures.Transmitter;
-            }
-
-            GUI.DrawTexture(PaddingRect(dataRect, 4), consoleTexture);
-
-            dataRect.x += dataRect.height;
-            dataRect.width -= dataRect.height;
-
-            if (consoleMessage.Packet != null)
-            {
-                var packetTypeTextire = consoleMessage.Packet.IsBundle() ? OSCEditorTextures.Bundle : OSCEditorTextures.Message;
-
-                GUI.DrawTexture(PaddingRect(dataRect, 4), packetTypeTextire);
-            }
-
-            dataRect.x += dataRect.height;
-            dataRect.width -= dataRect.height;
-        }
-
-        private static string ItemToString(OSCConsolePacket consoleMessage)
-        {
-            if (consoleMessage == null)
-                return string.Empty;
-
-            var stringMessage = PacketToString(consoleMessage.Packet);
-            stringMessage += "\n" + consoleMessage.Info;
-
-            return stringMessage;
-        }
-
-        private static string PacketToString(OSCPacket packet)
-        {
-            if (!packet.IsBundle())
-            {
-                return string.Format("<color=orange>Message:</color> {0}", packet.Address);
-            }
-
-            var bundle = packet as OSCBundle;
-            if (bundle != null)
-            {
-                return string.Format("<color=yellow>Bundle:</color> (Packets: {0})", bundle.Packets.Count);
-            }
-
-            return string.Empty;
-        }
 
         private static void ShowMessageGenericMenu(OSCConsolePacket consoleMessage)
         {
@@ -140,37 +59,15 @@ namespace extOSC.Editor.Panels
 
         #region Public Vars
 
-        public bool ShowTransmitted
-        {
-            get { return _showTransmitted; }
-            set { _showTransmitted = value; }
-        }
+        public bool ShowTransmitted { get; set; }
 
-        public bool ShowReceived
-        {
-            get { return _showReceived; }
-            set { _showReceived = value; }
-        }
+	    public bool ShowReceived { get; set; }
 
-        public bool TrackLast
-        {
-            get { return _trackLast; }
-            set { _trackLast = value; }
-        }
+	    public bool TrackLast { get; set; }
 
-        public OSCConsolePacket SelectedMessage
-        {
-            get { return _selectedMessage; }
-            set { _selectedMessage = value; }
-        }
+	    public OSCConsolePacket SelectedMessage { get; set; }
 
-        public int SelectedMessageId
-        {
-            get { return GetItemIndex(_selectedMessage); }
-            set { if (_consoleBuffer != null && _consoleBuffer.Length > 0) _selectedMessage = _consoleBuffer[Mathf.Clamp(value, 0, _consoleBuffer.Length - 1)]; }
-        }
-
-        public string Filter
+	    public string Filter
         {
             get { return _filterDrawer.FilterValue; }
             set { _filterDrawer.FilterValue = value; }
@@ -183,13 +80,8 @@ namespace extOSC.Editor.Panels
         private Rect _contentRect;
 
         // TOOLBAR
-        private bool _showReceived;
 
-        private bool _showTransmitted;
-
-        protected bool _trackLast;
-
-        // UI
+	    // UI
         private Rect _lastContentRect;
 
         private Vector2 _scrollPosition;
@@ -198,9 +90,7 @@ namespace extOSC.Editor.Panels
 
         private float _lineHeight = 30f;
 
-        private OSCConsolePacket _selectedMessage;
-
-        private OSCConsolePacket _rightClickMessage;
+	    private OSCConsolePacket _rightClickMessage;
 
         private OSCConsolePacket[] _consoleBuffer;
 
@@ -221,49 +111,49 @@ namespace extOSC.Editor.Panels
         {
             if (_consoleBuffer.Length <= 0) return;
 
-            _selectedMessage = _consoleBuffer[0];
-            ScrollToItem(_selectedMessage);
+            SelectedMessage = _consoleBuffer[0];
+            ScrollToItem(SelectedMessage);
         }
 
         public void SelectNextItem()
         {
             if (_consoleBuffer.Length <= 0) return;
 
-            var currentIndex = GetItemIndex(_selectedMessage);
+	        var currentIndex = _consoleBuffer.IndexOf(SelectedMessage);
 
-            _selectedMessage = _consoleBuffer[Mathf.Clamp(currentIndex + 1, 0, _consoleBuffer.Length - 1)];
-            ScrollToItem(_selectedMessage);
+            SelectedMessage = _consoleBuffer[Mathf.Clamp(currentIndex + 1, 0, _consoleBuffer.Length - 1)];
+            ScrollToItem(SelectedMessage);
         }
 
         public void SelectPreviousItem()
         {
             if (_consoleBuffer.Length <= 0) return;
 
-            var currentIndex = GetItemIndex(_selectedMessage);
+            var currentIndex = _consoleBuffer.IndexOf(SelectedMessage);
 
-            _selectedMessage = _consoleBuffer[Mathf.Clamp(currentIndex - 1, 0, _consoleBuffer.Length - 1)];
-            ScrollToItem(_selectedMessage);
+            SelectedMessage = _consoleBuffer[Mathf.Clamp(currentIndex - 1, 0, _consoleBuffer.Length - 1)];
+            ScrollToItem(SelectedMessage);
         }
 
         public void SelectLastItem()
         {
             if (_consoleBuffer.Length <= 0) return;
 
-            _selectedMessage = _consoleBuffer[_consoleBuffer.Length - 1];
-            ScrollToItem(_selectedMessage);
+            SelectedMessage = _consoleBuffer[_consoleBuffer.Length - 1];
+            ScrollToItem(SelectedMessage);
         }
 
-        public void ScrollToItem(OSCConsolePacket consoleMessage)
+        public void ScrollToItem(OSCConsolePacket consolePacket)
         {
-            if (consoleMessage == null) return;
+            if (consolePacket == null)
+	            return;
 
-            var messageItem = GetItemIndex(consoleMessage);
+            var packetIndex = _consoleBuffer.IndexOf(SelectedMessage);
+			if (packetIndex < 0)
+	            return;
 
-            if (messageItem < 0) return;
-
-            var itemY = _lineHeight * messageItem;
-
-            if (itemY < _scrollPosition.y)
+            var itemY = _lineHeight * packetIndex;
+			if (itemY < _scrollPosition.y)
             {
                 _scrollPosition.y = itemY;
             }
@@ -286,18 +176,11 @@ namespace extOSC.Editor.Panels
             contentRect.height -= 18;
 
             _lastContentRect = new Rect(contentRect);
-            _consoleBuffer = OSCWindowConsole.GetConsoleBuffer(_showTransmitted, _showReceived, _filterDrawer.FilterValue);
+            _consoleBuffer = OSCWindowConsole.GetConsoleBuffer(ShowTransmitted, ShowReceived, _filterDrawer.FilterValue);
 
-            if (_trackLast)
+            if (TrackLast)
             {
-                if (_consoleBuffer.Length > 0)
-                {
-                    _selectedMessage = _consoleBuffer[0];
-                }
-                else
-                {
-                    _selectedMessage = null;
-                }
+	            SelectedMessage = _consoleBuffer.Length > 0 ? _consoleBuffer[0] : null;
             }
 
             var viewRect = new Rect(contentRect);
@@ -307,61 +190,60 @@ namespace extOSC.Editor.Panels
                 viewRect.width -= 15f;
 
             var itemRect = new Rect(0, viewRect.y, viewRect.width, _lineHeight);
-            _scrollPosition = GUI.BeginScrollView(contentRect, _scrollPosition, viewRect);
 
-            var drawed = false;
+	        using (var scroll = new GUI.ScrollViewScope(contentRect, _scrollPosition, viewRect))
+	        {
+				var drawed = false;
 
-            for (var index = 0; index < _consoleBuffer.Length; index++)
-            {
-                var drawItem = !((itemRect.y + itemRect.height < _scrollPosition.y) ||
-                                 (itemRect.y > _scrollPosition.y + contentRect.height + itemRect.height));
+		        for (var index = 0; index < _consoleBuffer.Length; index++)
+		        {
+					if (itemRect.y + itemRect.height > _scrollPosition.y &&
+					    itemRect.y < _scrollPosition.y + contentRect.height + itemRect.height)
+			        {
+				        drawed = true;
 
-                if (drawItem)
-                {
-                    drawed = true;
+				        var consoleMessage = _consoleBuffer[index];
+				        var selected = SelectedMessage == consoleMessage;
+				        var color = GUI.color;
 
-                    var consoleMessage = _consoleBuffer[index];
-                    var selected = _selectedMessage == consoleMessage;
-                    var color = GUI.color;
+				        DrawItem(ref itemRect, index, consoleMessage, selected);
 
-                    DrawItem(itemRect, index, consoleMessage, selected);
+				        GUI.color = color;
 
-                    GUI.color = color;
+				        if (Event.current.type == EventType.MouseDown && itemRect.Contains(Event.current.mousePosition))
+				        {
+					        GUIUtility.keyboardControl = 0;
 
-                    if (Event.current.type == EventType.MouseDown && itemRect.Contains(Event.current.mousePosition))
-                    {
-                        GUIUtility.keyboardControl = 0;
+					        if (Event.current.button == 0)
+					        {
+						        TrackLast = false;
 
-                        if (Event.current.button == 0)
-                        {
-                            _trackLast = false;
+						        if (SelectedMessage != consoleMessage)
+						        {
+							        SelectedMessage = consoleMessage;
+							        Window.Repaint();
+						        }
 
-                            if (_selectedMessage != consoleMessage)
-                            {
-                                _selectedMessage = consoleMessage;
-                                Window.Repaint();
-                            }
+						        Event.current.Use();
+					        }
+					        else if (Event.current.button == 1)
+					        {
+						        ShowMessageGenericMenu(consoleMessage);
 
-                            Event.current.Use();
-                        }
-                        else if (Event.current.button == 1)
-                        {
-                            ShowMessageGenericMenu(consoleMessage);
+						        Event.current.Use();
+					        }
+				        }
+			        }
+			        else if (drawed)
+			        {
+				        break;
+			        }
 
-                            Event.current.Use();
-                        }
-                    }
-                }
-                else if (drawed)
-                {
-                    break;
-                }
+			        itemRect.y += itemRect.height;
+		        }
 
-                itemRect.y += itemRect.height;
-            }
-
-            GUI.EndScrollView(true);
-
+		        _scrollPosition = scroll.scrollPosition;
+	        }
         }
 
         protected override void PostDrawContent()
@@ -407,18 +289,17 @@ namespace extOSC.Editor.Panels
 
             GUILayout.Space(5f);
 
-            _showReceived = GUILayout.Toggle(_showReceived, _recevedContent, EditorStyles.toolbarButton);
-            _showTransmitted = GUILayout.Toggle(_showTransmitted, _transmittedContent, EditorStyles.toolbarButton);
+            ShowReceived = GUILayout.Toggle(ShowReceived, _recevedContent, EditorStyles.toolbarButton);
+            ShowTransmitted = GUILayout.Toggle(ShowTransmitted, _transmittedContent, EditorStyles.toolbarButton);
 
             GUILayout.FlexibleSpace();
             GUILayout.Space(5f);
 
-            //GUILayout.Label(_filterContent);
             _filterDrawer.Draw();
 
             GUILayout.Space(5f);
             
-            _trackLast = GUILayout.Toggle(_trackLast, _trackLastContent, EditorStyles.toolbarButton);
+            TrackLast = GUILayout.Toggle(TrackLast, _trackLastContent, EditorStyles.toolbarButton);
 
             GUILayout.Space(5f);
 
@@ -431,19 +312,63 @@ namespace extOSC.Editor.Panels
             {
                 OSCWindowConsole.Clear();
 
-                _selectedMessage = null;
+                SelectedMessage = null;
             }
             
         }
 
-        private int GetItemIndex(OSCConsolePacket consoleMessage)
+        private void DrawItem(ref Rect itemRect, int index, OSCConsolePacket consolePacket, bool selected)
         {
-            for (var index = 0; index < _consoleBuffer.Length; index++)
+            using (new GUI.GroupScope(itemRect))
             {
-                if (_consoleBuffer[index] == consoleMessage) return index;
+                var localRect = itemRect;
+                localRect.x = localRect.y = 0;
+
+                if (Event.current.type == EventType.Repaint)
+                {
+                    var backStyle = index % 2 != 0 ? OSCEditorStyles.ConsoleItemBackEven : OSCEditorStyles.ConsoleItemBackOdd;
+                    backStyle.Draw(localRect, false, false, selected, false);
+                }
+
+                DrawIcons(ref localRect, consolePacket);
+
+	            GUI.Label(localRect, consolePacket.ToString(), OSCEditorStyles.ConsoleLabel);
+            }
+        }
+
+        private void DrawIcons(ref Rect iconsRect, OSCConsolePacket consolePacket)
+        {
+            var padding = 4;
+            var consoleTexture = (Texture2D)null;
+
+            if (consolePacket.PacketType == OSCConsolePacketType.Received)
+            {
+                consoleTexture = OSCEditorTextures.Receiver;
+            }
+            else if (consolePacket.PacketType == OSCConsolePacketType.Transmitted)
+            {
+                consoleTexture = OSCEditorTextures.Transmitter;
             }
 
-            return -1;
+            GUI.DrawTexture(new Rect(iconsRect.x + padding,
+                                     iconsRect.y + padding,
+                                     iconsRect.height - padding * 2f,
+                                     iconsRect.height - padding * 2f),
+                            consoleTexture);
+
+            iconsRect.x += iconsRect.height;
+            iconsRect.width -= iconsRect.height;
+
+            GUI.DrawTexture(new Rect(iconsRect.x + padding,
+                                     iconsRect.y + padding,
+                                     iconsRect.height - padding * 2f,
+                                     iconsRect.height - padding * 2f),
+                            consolePacket.Packet.IsBundle()
+                                ? OSCEditorTextures.Bundle
+                                : OSCEditorTextures.Message);
+
+            iconsRect.x += iconsRect.height;
+            iconsRect.width -= iconsRect.height;
         }
 
         #endregion

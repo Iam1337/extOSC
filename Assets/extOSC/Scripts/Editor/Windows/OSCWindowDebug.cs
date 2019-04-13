@@ -40,7 +40,7 @@ namespace extOSC.Editor.Windows
         {
             Open();
 
-            Instance._packetEditorPanel.CurrentPacket = OSCEditorUtils.CopyPacket(packet);
+	        Instance._packetEditorPanel.CurrentPacket = packet.Copy(); //OSCEditorUtils.CopyPacket(packet);
         }
 
         #endregion

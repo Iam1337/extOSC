@@ -2,23 +2,90 @@
 
 namespace extOSC.Core.Console
 {
-    public enum OSCConsolePacketType
-    {
-        Received,
+	public enum OSCConsolePacketType
+	{
+		Received,
 
-        Transmitted
-    }
+		Transmitted
+	}
 
-    public class OSCConsolePacket
-    {
-        #region Public Vars
+	public class OSCConsolePacket
+	{
+		#region Public Vars
 
-        public OSCPacket Packet;
+		public OSCPacket Packet
+		{
+			get { return _packet; }
+			set
+			{
+				_packet = value;
+				_description = null;
+			}
+		}
 
-        public OSCConsolePacketType PacketType;
+		public OSCConsolePacketType PacketType
+		{
+			get { return _packetType; }
+			set
+			{
+				_packetType = value;
+				_description = null;
+			}
+		}
 
-        public string Info;
+		public string Info
+		{
+			get { return _info; }
+			set
+			{
+				_info = value;
+				_description = null;
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+
+		#region Private Vars
+
+		private OSCPacket _packet;
+
+		private OSCConsolePacketType _packetType;
+
+		private string _info;
+
+#if UNITY_EDITOR
+		private string _description;
+#endif
+
+		#endregion
+
+		#region Public Methods
+
+#if UNITY_EDITOR
+		public override string ToString()
+		{
+			if (_description == null && _packet != null)
+			{
+				var packetDescription = string.Empty;
+				if (!_packet.IsBundle())
+				{
+					packetDescription = string.Format("<color=orange>Message:</color> {0}", _packet.Address);
+				}
+
+				var bundle = _packet as OSCBundle;
+				if (bundle != null)
+				{
+					packetDescription =
+						string.Format("<color=yellow>Bundle:</color> (Packets: {0})", bundle.Packets.Count);
+				}
+
+				_description = packetDescription + "\n" + _info;
+			}
+
+			return _description;
+		}
+#endif
+
+		#endregion
+	}
 }

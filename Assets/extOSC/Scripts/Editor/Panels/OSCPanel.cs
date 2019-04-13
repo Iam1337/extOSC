@@ -1,9 +1,6 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
-using UnityEditor;
-
-using System.Collections;
 
 using extOSC.Editor.Windows;
 

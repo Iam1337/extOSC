@@ -15,8 +15,6 @@ namespace extOSC.Editor
 
         private static GUIStyle _segmentTitle;
 
-        private static GUIStyle _splitter;
-
         private static GUIStyle _consoleItemBackEven;
 
         private static GUIStyle _consoleItemBackOdd;
@@ -37,6 +35,7 @@ namespace extOSC.Editor
 
         #region Static Public Vars
 
+		/*
         public static GUIStyle OSCTitle
         {
             get
@@ -52,6 +51,7 @@ namespace extOSC.Editor
                 return _windowTitle;
             }
         }
+		*/
 
 	    public static GUIStyle Box
 	    {
@@ -99,6 +99,7 @@ namespace extOSC.Editor
             }
         }
 
+		/*
         public static GUIStyle SegmentTitle
         {
             get
@@ -115,6 +116,7 @@ namespace extOSC.Editor
                 return _segmentTitle;
             }
         }
+		*/
 
         public static GUIStyle ConsoleItemBackEven
         {

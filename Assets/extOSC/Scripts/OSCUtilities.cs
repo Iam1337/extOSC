@@ -488,12 +488,12 @@ namespace extOSC
             return false;
         }
 
-        public static bool IsSubclassOf(Type subType, Type baseType)
+        public static bool IsSubclassOf(Type targetType, Type sourceType)
         {
 #if !NETFX_CORE
-            return (subType.IsSubclassOf(baseType) || subType == baseType);
+            return (targetType.IsSubclassOf(sourceType) || targetType == sourceType);
 #else
-            return (subType.GetTypeInfo().IsSubclassOf(baseType) || subType == baseType);
+            return (targetType.GetTypeInfo().IsSubclassOf(sourceType) || targetType == sourceType);
 #endif
         }
 

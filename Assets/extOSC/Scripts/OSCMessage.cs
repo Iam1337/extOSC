@@ -102,7 +102,7 @@ namespace extOSC
             return tags;
         }
 
-        public override string ToString()
+	    public override string ToString()
         {
             var stringValues = string.Empty;
 

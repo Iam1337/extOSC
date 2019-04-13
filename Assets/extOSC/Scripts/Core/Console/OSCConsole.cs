@@ -1,7 +1,5 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using UnityEngine;
-
 using System.Collections.Generic;
 
 namespace extOSC.Core.Console
@@ -38,42 +36,39 @@ namespace extOSC.Core.Console
         {
 			var ip = packet.Ip != null ? string.Format("{0}:{1}", packet.Ip, packet.Port) : "Debug";
 
-			var message = new OSCConsolePacket();
-            message.Info = string.Format("Receiver: {0}. From: {1}", receiver.LocalPort, ip);
-            message.PacketType = OSCConsolePacketType.Received;
-            message.Packet = packet;
+			var consolePacket = new OSCConsolePacket();
+            consolePacket.Info = string.Format("Receiver: {0}. From: {1}", receiver.LocalPort, ip);
+            consolePacket.PacketType = OSCConsolePacketType.Received;
+            consolePacket.Packet = packet;
 
-            Log(message);
+            Log(consolePacket);
         }
 
         public static void Transmitted(OSCTransmitter transmitter, OSCPacket packet)
         {
-            var message = new OSCConsolePacket();
-            message.Info = string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);
-            message.PacketType = OSCConsolePacketType.Transmitted;
-            message.Packet = packet;
+            var consolePacket = new OSCConsolePacket();
+            consolePacket.Info = string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);
+            consolePacket.PacketType = OSCConsolePacketType.Transmitted;
+            consolePacket.Packet = packet;
 
-            Log(message);
+            Log(consolePacket);
         }
 
         #endregion
 
         #region Private Methods
 
-        private static void Log(OSCConsolePacket message)
+        private static void Log(OSCConsolePacket consolePacket)
         {
 #if UNITY_EDITOR
             // COPY PACKET
-            var size = 0;
-            var buffer = OSCConverter.Pack(message.Packet, out size);
-
-            message.Packet = OSCConverter.Unpack(buffer, size);
+	        consolePacket.Packet = consolePacket.Packet.Copy();
             
-            _consoleBuffer.Add(message);
+            _consoleBuffer.Add(consolePacket);
 #else
             if (_logConsole)
             {
-                Debug.LogFormat("[OSCConsole] Packed {0}: {1}", message.PacketType, message.Packet);
+                UnityEngine.Debug.LogFormat("[OSCConsole] Packed {0}: {1}", consolePacket.PacketType, consolePacket.Packet);
             }
 #endif
         }
