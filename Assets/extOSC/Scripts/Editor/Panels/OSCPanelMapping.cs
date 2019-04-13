@@ -293,7 +293,7 @@ namespace extOSC.Editor.Panels
                 DrawMapValueBoolToInt(mapValue, expand);
             }
 
-		    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box, GUILayout.Width(80)))
+		    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box, GUILayout.Width(25)))
 		    {
 			    GUI.color = Color.red;
 			    if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20)))
