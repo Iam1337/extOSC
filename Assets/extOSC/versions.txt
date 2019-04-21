@@ -202,3 +202,4 @@ v1.15
 - Added LocalHostMode property in OSCTransmitter.
 - Removed FromReceiver option in LocalPortMode property in OSCTransmitter.
 - Update network backend.
+- Cleanup editor code.
