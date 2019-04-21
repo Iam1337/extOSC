@@ -57,16 +57,12 @@ namespace extOSC.Editor.Panels
 
         private OSCPacketEditableDrawer _packetDrawer;
 
-	    private Color _defaultColor;
-
 	    #endregion
 
         #region Unity Methods
 
         protected override void DrawContent(ref Rect contentRect)
         {
-	        _defaultColor = GUI.color;
-
 	        using (new GUILayout.VerticalScope())
 	        {
 				// TOOLBAR
