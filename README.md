@@ -99,6 +99,23 @@ protected void MessageReceived(OSCMessage message)
 ```
 Or you can use any *extOSC/Receiver* components.<br>
 
+**Get value from OSCMessage**<br>
+You have two ways to get the value from the message:
+```c#
+var value = message.Values[0].FloatValue; 
+```
+or
+```c#
+var value = 0f;
+
+if (message.ToFloat(out value))  
+{
+    Debug.Log(value);
+ 
+    // TODO: code.
+}
+```
+
 **Other examples you can find in [Examples](Assets/extOSC/Examples) folder.**
 
 ### Installation:
