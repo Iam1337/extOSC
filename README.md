@@ -102,7 +102,9 @@ Or you can use any *extOSC/Receiver* components.<br>
 **Get value from OSCMessage**<br>
 You have two ways to get the value from the message:
 ```c#
-var value = message.Values[0].FloatValue; 
+var value = message.Values[0].FloatValue;
+// Any code...
+Debug.Log(valye);
 ```
 or
 ```c#
@@ -110,9 +112,8 @@ var value = 0f;
 
 if (message.ToFloat(out value))  
 {
-    Debug.Log(value);
- 
-    // TODO: code.
+	// Any code...
+	Debug.Log(valye);
 }
 ```
 
