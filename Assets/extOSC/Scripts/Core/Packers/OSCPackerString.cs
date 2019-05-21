@@ -7,7 +7,6 @@ namespace extOSC.Core.Packers
 {
     internal class OSCPackerString : OSCPacker<string>
     {
-
         #region Public Methods
 
         public override OSCValueType GetPackerType()
@@ -43,9 +42,9 @@ namespace extOSC.Core.Packers
             
             Array.Copy(data, 0, buffer, index, data.Length);
 
-            index += value.Length;
+            index += data.Length;
 
-            IncludeZeroBytes(buffer, value.Length, ref index);
+            IncludeZeroBytes(buffer, data.Length, ref index);
         }
 
         #endregion
