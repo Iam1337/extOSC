@@ -21,20 +21,20 @@ Massive implementation of methods, utils, and other for simple operations with O
 With extOSC components you can easily implement basic program logic in your application without coding. Components for basic functions: sending, receiving, mapping.
 - **OSC Console**<br>
 New separated console for tracking sending and receiving OSC packages:
-[Video](https://www.youtube.com/watch?v=ihVw6v2Meto)
+[Video](https://www.youtube.com/watch?v=ihVw6v2Meto).
 - **OSC Debug**<br>
 New easy to use tool for debugging sending and receiving OSC packages:
-[Video](https://www.youtube.com/watch?v=PU2oSwbbliE)
+[Video](https://www.youtube.com/watch?v=PU2oSwbbliE).
 - **Map OSC packages**<br>
 OSCMapping allows you to map float values:
-[Video](https://www.youtube.com/watch?v=73Hjglgx6ss)
+[Video](https://www.youtube.com/watch?v=73Hjglgx6ss).
 - **UI**<br>
 Four new UI-components for easy creation of remote control apps with OSC-protocols:
-[Video](https://www.youtube.com/watch?v=phV4Y8Go0_U)
+[Video](https://www.youtube.com/watch?v=phV4Y8Go0_U).
 - **Addresses with masks support**<br>
-You can bind addresses with mask (for instance: *"/lights/\*/value"*)
+You can bind addresses with mask (for instance: *"/lights/\*/value"*).
 - **Auto pack bundle**<br>
-extOSC will bundle your packages for optimisation purposes
+extOSC will bundle your packages for optimisation purposes.
 
 **And also:**
 
@@ -98,6 +98,24 @@ protected void MessageReceived(OSCMessage message)
 }     
 ```
 Or you can use any *extOSC/Receiver* components.<br>
+
+**Get value from OSCMessage**<br>
+You have two ways to get the value from the message.
+```c#
+var value = message.Values[0].FloatValue;
+// Any code...
+Debug.Log(valye);
+```
+or
+```c#
+var value = 0f;
+
+if (message.ToFloat(out value))  
+{
+	// Any code...
+	Debug.Log(valye);
+}
+```
 
 **Other examples you can find in [Examples](Assets/extOSC/Examples) folder.**
 

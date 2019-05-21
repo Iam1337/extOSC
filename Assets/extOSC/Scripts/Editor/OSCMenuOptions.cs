@@ -170,10 +170,10 @@ namespace extOSC.Editor
 			if (data.UseInformer)
 			{
 				AddInformer<K>(element.GetComponent<T>(),
-														 data.InformerTransmitter,
-														 data.InformAddress,
-														 data.InformOnChanged,
-														 data.InformInterval);
+				               data.InformerTransmitter,
+				               data.InformAddress,
+				               data.InformOnChanged,
+				               data.InformInterval);
 			}
 		}
 
