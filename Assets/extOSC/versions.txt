@@ -203,3 +203,11 @@ v1.15
 - Removed FromReceiver option in LocalPortMode property in OSCTransmitter.
 - Update network backend.
 - Cleanup editor code.
+
+-----
+v1.16
+-----
+
+- Added OSCValue.String encoding: ASCII and UTF8.
+- Fixed OSCPackerString bug.
+- Cleanup some code.
