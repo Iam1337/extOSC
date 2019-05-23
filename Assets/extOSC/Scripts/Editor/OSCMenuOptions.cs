@@ -29,9 +29,21 @@ namespace extOSC.Editor
 
 		private const int _windowsIndex = 0;
 
+	    private const string _settingsRoot = _toolsRoot + "Settings/";
+
+	    private const string _settingsEncoding = _settingsRoot + "OSCValue.String Encoding/";
+
+	    private const string _settingsASCII = _settingsEncoding + "ASCII";
+
+	    private const string _settingsUTF8 = _settingsEncoding + "UTF8";
+
+	    private const string _encodingDefine = "EXTOSC_UTF8";
+
+	    private const int _settingsIndex = _windowsIndex + 100;
+
 		private const string _linksRoot = _toolsRoot + "Links/";
 
-		private const int _linksIndex = _windowsIndex + 20;
+		private const int _linksIndex = _settingsIndex + 100;
 
 		private const string _objectRoot = "GameObject/extOSC/";
 
@@ -62,8 +74,35 @@ namespace extOSC.Editor
 			OSCWindowMapping.Open();
 		}
 
-		// LINKS
-		[MenuItem(_linksRoot + "GitHub: Repository", false, _linksIndex + 0)]
+        // SETTINGS
+	    [MenuItem(_settingsASCII, false, _settingsIndex + 0)]
+	    public static void SettingsSwitchASCII()
+	    {
+	        OSCDefinesManager.SetDefine(_encodingDefine, false);
+        }
+
+	    [MenuItem(_settingsASCII, true)]
+	    public static bool SettingsSwitchASCIIValidate()
+	    {
+	        Menu.SetChecked(_settingsASCII, !OSCDefinesManager.HasDefine(_encodingDefine));
+            return true;
+	    }
+
+	    [MenuItem(_settingsUTF8, false, _settingsIndex + 1)]
+	    public static void SettingsSwitchUTF8()
+	    {
+	        OSCDefinesManager.SetDefine(_encodingDefine, true);
+        }
+
+	    [MenuItem(_settingsUTF8, true)]
+	    public static bool SettingsSwitchUTF8Validate()
+	    {
+	        Menu.SetChecked(_settingsUTF8, OSCDefinesManager.HasDefine(_encodingDefine));
+	        return true;
+	    }
+
+	    // LINKS
+        [MenuItem(_linksRoot + "GitHub: Repository", false, _linksIndex + 0)]
 		public static void ShowRepository(MenuCommand menuCommand)
 		{
 			Application.OpenURL("https://github.com/iam1337/extOSC");
