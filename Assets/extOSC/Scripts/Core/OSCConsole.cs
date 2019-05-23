@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace extOSC.Core.Console
+namespace extOSC.Core
 {
     public static class OSCConsole
     {

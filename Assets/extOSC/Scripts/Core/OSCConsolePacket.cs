@@ -1,6 +1,6 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-namespace extOSC.Core.Console
+namespace extOSC.Core
 {
 	public enum OSCConsolePacketType
 	{
