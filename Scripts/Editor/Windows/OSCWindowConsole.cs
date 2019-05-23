@@ -4,7 +4,7 @@ using UnityEngine;
 
 using System.Collections.Generic;
 
-using extOSC.Core.Console;
+using extOSC.Core;
 using extOSC.Editor.Panels;
 
 namespace extOSC.Editor.Windows

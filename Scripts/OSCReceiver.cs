@@ -6,7 +6,6 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 
 using extOSC.Core;
-using extOSC.Core.Console;
 using extOSC.Core.Network;
 
 namespace extOSC

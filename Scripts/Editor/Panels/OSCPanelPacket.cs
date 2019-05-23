@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-using extOSC.Core.Console;
+using extOSC.Core;
 using extOSC.Editor.Drawers;
 using extOSC.Editor.Windows;
 

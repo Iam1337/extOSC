@@ -10,7 +10,6 @@ using System.Collections.Generic;
 
 using extOSC.UI;
 using extOSC.Core;
-using extOSC.Core.Console;
 
 using Object = UnityEngine.Object;
 
