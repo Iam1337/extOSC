@@ -29,8 +29,11 @@ namespace extOSC.Core.Packers
                 length++;
             }
 
+#if !EXTOSC_UTF8
             var value = Encoding.ASCII.GetString(buffer, index, length);
-
+#else
+            var value = Encoding.UTF8.GetString(buffer, index, length);
+#endif
             index += length + (4 - length % 4);
 
             return value;
@@ -38,8 +41,12 @@ namespace extOSC.Core.Packers
 
         protected override void ValueToBytes(byte[] buffer, ref int index, string value)
         {
+#if !EXTOSC_UTF8
             var data = Encoding.ASCII.GetBytes(value);
-            
+#else
+            var data = Encoding.UTF8.GetBytes(value);
+#endif
+
             Array.Copy(data, 0, buffer, index, data.Length);
 
             index += data.Length;
@@ -47,6 +54,6 @@ namespace extOSC.Core.Packers
             IncludeZeroBytes(buffer, data.Length, ref index);
         }
 
-        #endregion
+#endregion
     }
 }
