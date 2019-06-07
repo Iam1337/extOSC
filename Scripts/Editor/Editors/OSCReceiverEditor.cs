@@ -26,7 +26,7 @@ namespace extOSC.Editor
 
         private static readonly GUIContent _inEditorContent = new GUIContent("In Editor Controls:");
 
-	    private static readonly GUIContent _receiverSettingsContent = new GUIContent("Transmitter Settings:");
+	    private static readonly GUIContent _receiverSettingsContent = new GUIContent("Receiver Settings:");
 
         private static readonly GUIContent _autoConnectContent = new GUIContent("Auto Connect");
 
