@@ -71,6 +71,11 @@ namespace extOSC.Components.ReceiverReflections
             UpdateCachedReferences();
         }
 
+        public void UpdateMembers()
+        {
+            UpdateCachedReferences();
+        }
+
         #endregion
 
         #region Private Methods
@@ -118,10 +123,8 @@ namespace extOSC.Components.ReceiverReflections
             {
                 foreach (var property in cachedProperties.Values)
                 {
-                    if (property == null)
-                        continue;
-
-                    property.SetValue(value);
+                    if (property != null)
+                        property.SetValue(value);
                 }
             }
         }
