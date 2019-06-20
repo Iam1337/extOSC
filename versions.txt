@@ -211,3 +211,9 @@ v1.16
 - Added OSCValue.String encoding: ASCII and UTF8.
 - Fixed OSCPackerString bug.
 - Cleanup some code.
+
+-----
+v1.17
+-----
+
+- OSCConverter bug fix.
