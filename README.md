@@ -104,7 +104,7 @@ You have two ways to get the value from the message.
 ```c#
 var value = message.Values[0].FloatValue;
 // Any code...
-Debug.Log(valye);
+Debug.Log(value);
 ```
 or
 ```c#
@@ -113,7 +113,7 @@ var value = 0f;
 if (message.ToFloat(out value))  
 {
 	// Any code...
-	Debug.Log(valye);
+	Debug.Log(value);
 }
 ```
 
