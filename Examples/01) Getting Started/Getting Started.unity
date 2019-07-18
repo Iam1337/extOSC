@@ -355,7 +355,7 @@ MonoBehaviour:
 
     You can see how these scripts work in "OSC Console":
 
-    <color=grey>> Window > extOSC > Console Window</color>.'
+    <color=grey>> Tools > extOSC > Console Window</color>.'
 --- !u!222 &454683356
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -941,8 +941,10 @@ MonoBehaviour:
   closeOnPause: 0
   mapBundle: {fileID: 0}
   workInEditor: 0
+  localHostMode: 0
   localPortMode: 2
   localReceiver: {fileID: 0}
+  localHost: 10.0.1.32
   localPort: 7000
   remoteHost: 127.0.0.1
   remotePort: 7000
@@ -962,6 +964,8 @@ MonoBehaviour:
   closeOnPause: 0
   mapBundle: {fileID: 0}
   workInEditor: 0
+  localHostMode: 0
+  localHost: 10.0.1.32
   localPort: 7000
 --- !u!4 &2103238948
 Transform:
