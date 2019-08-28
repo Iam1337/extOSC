@@ -222,8 +222,7 @@ namespace extOSC.Editor.Drawers
 		    {
 			    using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
 			    {
-				    GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel,
-				                    GUILayout.Width(firstColumn));
+				    EditorGUILayout.LabelField(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
 			    }
 
 			    using (new GUILayout.HorizontalScope())

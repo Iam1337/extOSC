@@ -170,10 +170,7 @@ namespace extOSC.Editor.Panels
         protected override void DrawContent(ref Rect contentRect)
         {
             // TOOLBAR
-            DrawToolbar(contentRect);
-            
-            contentRect.y += 18;
-            contentRect.height -= 18;
+            DrawToolbar(ref contentRect);
 
             _lastContentRect = new Rect(contentRect);
             _consoleBuffer = OSCWindowConsole.GetConsoleBuffer(ShowTransmitted, ShowReceived, _filterDrawer.FilterValue);
@@ -278,9 +275,18 @@ namespace extOSC.Editor.Panels
 
         #region Private Methods
 
-        private void DrawToolbar(Rect contentRect)
+        private void DrawToolbar(ref Rect contentRect)
         {
-            GUILayout.BeginArea(new Rect(0, 0, contentRect.width, 18));
+#if UNITY_2019_3_OR_NEWER
+            var toolbarSize = 22;
+#else
+			var toolbarSize = 18;
+#endif
+
+            contentRect.y += toolbarSize;
+	        contentRect.height -= toolbarSize;
+
+            GUILayout.BeginArea(new Rect(0, 0, contentRect.width, toolbarSize));
 
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
@@ -371,6 +377,6 @@ namespace extOSC.Editor.Panels
             iconsRect.width -= iconsRect.height;
         }
 
-        #endregion
+#endregion
     }
 }
