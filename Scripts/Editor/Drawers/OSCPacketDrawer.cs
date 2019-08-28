@@ -130,12 +130,14 @@ namespace extOSC.Editor.Drawers
 	        {
 		        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 		        {
-			        GUILayout.Label(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
+			        EditorGUILayout.LabelField(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
 		        }
 
-		        using (new GUILayout.HorizontalScope())
+                using (new GUILayout.HorizontalScope())
 		        {
-			        if (value.Type == OSCValueType.Blob ||
+			        
+
+                    if (value.Type == OSCValueType.Blob ||
 			            value.Type == OSCValueType.Impulse ||
 			            value.Type == OSCValueType.Null)
 			        {
