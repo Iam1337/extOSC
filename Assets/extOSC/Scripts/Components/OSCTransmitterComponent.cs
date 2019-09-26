@@ -1,58 +1,56 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using extOSC.Mapping;
 using UnityEngine;
+
+using extOSC.Mapping;
 
 namespace extOSC.Components
 {
-	public abstract class OSCTransmitterComponent : MonoBehaviour, IOSCTransmitterComponent
+    public abstract class OSCTransmitterComponent : MonoBehaviour, IOSCTransmitterComponent
     {
         #region Public Vars
 
-        public OSCTransmitter Transmitter
-        {
+        public OSCTransmitter Transmitter {
             get { return transmitter; }
             set { transmitter = value; }
         }
 
-		public virtual string TransmitterAddress
-        {
+        public virtual string TransmitterAddress {
             get { return address; }
             set { address = value; }
         }
 
-		public OSCMapBundle MapBundle
-	    {
-		    get { return mapBundle; }
-		    set { mapBundle = value; }
-	    }
+        public OSCMapBundle MapBundle {
+            get { return mapBundle; }
+            set { mapBundle = value; }
+        }
 
-		#endregion
+        #endregion
 
-		#region Protected Vars
+        #region Protected Vars
 
-	    [OSCSelector]
-		[SerializeField]
-		protected OSCTransmitter transmitter;
+        [OSCSelector]
+        [SerializeField]
+        protected OSCTransmitter transmitter;
 
         [SerializeField]
         protected string address = "/address";
 
-	    [SerializeField]
-	    protected OSCMapBundle mapBundle;
+        [SerializeField]
+        protected OSCMapBundle mapBundle;
 
-		#endregion
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public void Send()
+        public void Send()
         {
             var message = new OSCMessage(address);
 
             if (FillMessage(message))
             {
-				if (mapBundle != null)
-					mapBundle.Map(message);
+                if (mapBundle != null)
+                    mapBundle.Map(message);
 
                 if (transmitter != null)
                     transmitter.Send(message);

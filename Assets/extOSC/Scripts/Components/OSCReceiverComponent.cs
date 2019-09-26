@@ -12,11 +12,9 @@ namespace extOSC.Components
     {
         #region Public Vars
 
-        public OSCReceiver Receiver
-        {
+        public OSCReceiver Receiver {
             get { return receiver; }
-            set
-            {
+            set {
                 if (receiver == value)
                     return;
 
@@ -28,11 +26,9 @@ namespace extOSC.Components
             }
         }
 
-        public string ReceiverAddress
-        {
+        public string ReceiverAddress {
             get { return address; }
-            set
-            {
+            set {
                 if (address == value)
                     return;
 
@@ -44,16 +40,13 @@ namespace extOSC.Components
             }
         }
 
-	    public OSCMapBundle MapBundle
-	    {
-		    get { return mapBundle; }
-		    set { mapBundle = value; }
-	    }
+        public OSCMapBundle MapBundle {
+            get { return mapBundle; }
+            set { mapBundle = value; }
+        }
 
-        public OSCEventMessage Callback
-        {
-            get
-            {
+        public OSCEventMessage Callback {
+            get {
                 if (callback == null)
                 {
                     callback = new OSCEventMessage();
@@ -64,19 +57,19 @@ namespace extOSC.Components
             }
         }
 
-		#endregion
+        #endregion
 
-		#region Protected Vars
+        #region Protected Vars
 
-		[OSCSelector]
-		[SerializeField]
+        [OSCSelector]
+        [SerializeField]
         protected OSCReceiver receiver;
 
         [SerializeField]
         protected string address = "/address";
 
-		[SerializeField]
-	    protected OSCMapBundle mapBundle;
+        [SerializeField]
+        protected OSCMapBundle mapBundle;
 
         protected OSCEventMessage callback;
 
@@ -141,8 +134,8 @@ namespace extOSC.Components
         {
             if (!enabled) return;
 
-			if (mapBundle != null)
-				mapBundle.Map(message);
+            if (mapBundle != null)
+                mapBundle.Map(message);
 
             Invoke(message);
         }
