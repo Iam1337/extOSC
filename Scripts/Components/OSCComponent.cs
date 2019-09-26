@@ -8,11 +8,9 @@ namespace extOSC.Components
     {
         #region Public Vars
 
-        public OSCReceiver Receiver
-        {
+        public OSCReceiver Receiver {
             get { return receiver; }
-            set
-            {
+            set {
                 if (receiver == value)
                     return;
 
@@ -24,11 +22,9 @@ namespace extOSC.Components
             }
         }
 
-        public virtual string ReceiverAddress
-        {
+        public virtual string ReceiverAddress {
             get { return receiverAddress; }
-            set
-            {
+            set {
                 if (receiverAddress == value)
                     return;
 
@@ -40,28 +36,26 @@ namespace extOSC.Components
             }
         }
 
-        public OSCTransmitter Transmitter
-        {
+        public OSCTransmitter Transmitter {
             get { return transmitter; }
             set { transmitter = value; }
         }
 
-        public virtual string TransmitterAddress
-        {
+        public virtual string TransmitterAddress {
             get { return transmitterAddress; }
             set { transmitterAddress = value; }
         }
 
-		#endregion
+        #endregion
 
-		#region Protected Vars
+        #region Protected Vars
 
-		[OSCSelector]
-		[SerializeField]
+        [OSCSelector]
+        [SerializeField]
         protected OSCReceiver receiver;
 
-	    [OSCSelector]
-		[SerializeField]
+        [OSCSelector]
+        [SerializeField]
         protected OSCTransmitter transmitter;
 
         [SerializeField]
