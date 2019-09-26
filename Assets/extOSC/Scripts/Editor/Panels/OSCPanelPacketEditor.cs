@@ -17,13 +17,13 @@ namespace extOSC.Editor.Panels
 
         private static readonly GUIContent _createContent = new GUIContent("Create");
 
-        private static readonly GUIContent _openContent = new GUIContent("Open Packet");
+        private static readonly GUIContent _openContent = new GUIContent("Open IoscPacket");
 
-        private static readonly GUIContent _saveContent = new GUIContent("Save Packet");
+        private static readonly GUIContent _saveContent = new GUIContent("Save IoscPacket");
 
         private static readonly GUIContent _generateCodeContent = new GUIContent("Generate Sharp Code");
 
-        private static readonly GUIContent _infoContent = new GUIContent("Create or load debug packet!");
+        private static readonly GUIContent _infoContent = new GUIContent("Create or load debug ioscPacket!");
 
         private static readonly GUIContent[] _createPoputItems = new GUIContent[] {
             new GUIContent("Message"),
@@ -34,7 +34,7 @@ namespace extOSC.Editor.Panels
 
         #region Public Vars
 
-        public OSCPacket CurrentPacket { get; set; }
+        public IOSCPacket CurrentIoscPacket { get; set; }
 
 	    public string FilePath { get; set; }
 
@@ -87,7 +87,7 @@ namespace extOSC.Editor.Panels
 				        SavePacket();
 			        }
 
-			        if (CurrentPacket != null)
+			        if (CurrentIoscPacket != null)
 			        {
 				        GUILayout.Space(5);
 
@@ -99,14 +99,14 @@ namespace extOSC.Editor.Panels
 
 			        GUILayout.FlexibleSpace();
 
-			        if (CurrentPacket != null)
+			        if (CurrentIoscPacket != null)
 				        GUILayout.Label(string.Format("Name: {0}", PacketName));
 		        }
 
-		        if (CurrentPacket != null && CurrentPacket != null)
+		        if (CurrentIoscPacket != null && CurrentIoscPacket != null)
 		        {
 			        _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-			        _packetDrawer.DrawLayout(CurrentPacket);
+			        _packetDrawer.DrawLayout(CurrentIoscPacket);
 
 			        EditorGUILayout.EndScrollView();
 		        }
@@ -134,11 +134,11 @@ namespace extOSC.Editor.Panels
 	    {
 		    if (selected == 0)
 		    {
-			    CurrentPacket = new OSCMessage("/address");
+			    CurrentIoscPacket = new OSCMessage("/address");
 		    }
 		    else
 		    {
-			    CurrentPacket = new OSCBundle();
+			    CurrentIoscPacket = new OSCBundle();
 		    }
 
 		    FilePath = string.Empty;
@@ -146,32 +146,32 @@ namespace extOSC.Editor.Panels
 
         private void SavePacket()
         {
-            if (CurrentPacket == null) return;
+            if (CurrentIoscPacket == null) return;
 
-            var file = EditorUtility.SaveFilePanel("Save Packet", OSCEditorUtils.DebugFolder, "New Debug Packet", "eod");
+            var file = EditorUtility.SaveFilePanel("Save IoscPacket", OSCEditorUtils.DebugFolder, "New Debug IoscPacket", "eod");
             if (!string.IsNullOrEmpty(file))
             {
                 FilePath = file;
-				OSCEditorUtils.SavePacket(file, CurrentPacket);
+				OSCEditorUtils.SavePacket(file, CurrentIoscPacket);
             }
         }
 
         private void OpenPacket()
         {
-            var file = EditorUtility.OpenFilePanel("Open Packet", OSCEditorUtils.DebugFolder, "eod");
+            var file = EditorUtility.OpenFilePanel("Open IoscPacket", OSCEditorUtils.DebugFolder, "eod");
             if (!string.IsNullOrEmpty(file))
             {
 	            FilePath = file;
-                CurrentPacket = OSCEditorUtils.LoadPacket(file);
+                CurrentIoscPacket = OSCEditorUtils.LoadPacket(file);
             }
         }
 
         private void GenerateSharpCode()
         {
-            if (CurrentPacket == null)
+            if (CurrentIoscPacket == null)
                 return;
 
-            EditorGUIUtility.systemCopyBuffer = OSCSharpCode.GeneratePacket(CurrentPacket);
+            EditorGUIUtility.systemCopyBuffer = OSCSharpCode.GeneratePacket(CurrentIoscPacket);
 			Debug.LogFormat("[extOSC] CSharp code generated and stored in copy buffer!");
         }
 

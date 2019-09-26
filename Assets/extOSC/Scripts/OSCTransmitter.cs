@@ -7,6 +7,7 @@ using System.Collections.Generic;
 
 using extOSC.Core;
 using extOSC.Core.Network;
+using UnityEngine.Serialization;
 
 namespace extOSC
 {
@@ -15,203 +16,162 @@ namespace extOSC
     {
         #region Public Vars
 
-        public override bool IsAvailable
-        {
-            get
-            {
-                if (transmitterBackend != null)
-                    return transmitterBackend.IsAvailable;
+		[Obsolete("Use IsStarted property.")]
+		public bool IsAvailable => IsStarted;
 
-                return false;
-            }
-        }
+		public override bool IsStarted => _transmitterBackend.IsAvailable;
 
-        public OSCLocalHostMode LocalHostMode 
-        {
-            get { return localHostMode; }
-            set {
-                if (localHostMode == value)
-                    return;
 
-                localHostMode = value;
-
-                if (IsAvailable)
-                {
-                    Close();
-                    Connect();
-                }
-            }
-        }
-
-        public OSCLocalPortMode LocalPortMode
+		public OSCLocalHostMode LocalHostMode
 		{
-		    get { return localPortMode; }
+			get => _localHostMode;
 			set
 			{
-				if (localPortMode == value)
+				if (_localHostMode == value)
 					return;
 
-				localPortMode = value;
+				_localHostMode = value;
 
-				if (IsAvailable)
-				{
-					Close();
-					Connect();
-				}
+				LocalRefresh();
+            }
+		}
+
+		public OSCLocalPortMode LocalPortMode
+		{
+		    get => _localPortMode;
+			set
+			{
+				if (_localPortMode == value)
+					return;
+
+				_localPortMode = value;
+
+				LocalRefresh();
+            }
+		}
+
+		public OSCReceiver SourceReceiver
+		{
+			get => _localReceiver;
+			set
+			{
+				if (_localReceiver == value)
+					return;
+
+				_localReceiver = value;
+
+				LocalRefresh();
 			}
 		}
 
-        public OSCReceiver SourceReceiver
+		public string LocalHost
         {
-            get { return localReceiver; }
-            set {
-                if (localReceiver == value)
-                    return;
-
-                localReceiver = value;
-
-                if (IsAvailable && localPortMode == OSCLocalPortMode.FromReceiver)
-                {
-                    Close();
-                    Connect();
-                }
-            }
-        }
-        
-        [Obsolete("\"LocalReceiver\" is deprecated. Use \"SourceReceiver\" property.")]
-		public OSCReceiver LocalReceiver
-		{
-		    get { return SourceReceiver; }
-		    set { SourceReceiver = value; }
-		}
-
-        public string LocalHost
-        {
-            get { return RequestLocalHost(); }
-            set
+            get => RequestLocalHost();
+			set
             {
-                if (localHost == value)
+                if (_localHost == value)
                     return;
 
-                if (IsAvailable &&
-                    localPortMode == OSCLocalPortMode.Custom &&
-                    localHostMode == OSCLocalHostMode.Custom)
-                {
-                    Close();
-                    Connect();
-                }
+				_localHost = value;
+
+				LocalRefresh();
             }
         }
 
 		public int LocalPort
 		{
-		    get { return RequestLocalPort(); }
+		    get => RequestLocalPort();
 			set 
 			{
-				if (localPort == value)
+				if (_localPort == value)
 					return;
 
-				localPort = value;
+				_localPort = value;
 
-				if (IsAvailable && localPortMode == OSCLocalPortMode.Custom)
-				{
-					Close();
-					Connect();
-				}
-			}
+				LocalRefresh();
+            }
 		}
 
         public string RemoteHost
         {
-            get { return remoteHost; }
-            set
+            get => _remoteHost;
+			set
             {
-                if (remoteHost == value)
+                if (_remoteHost == value)
                     return;
 
-				remoteHost = value;
+				_remoteHost = value;
 
-                transmitterBackend.RefreshRemote(remoteHost, remotePort);
-
-                if (IsAvailable && localPortMode == OSCLocalPortMode.FromRemotePort)
-                {
-                    Close();
-                    Connect();
-                }
+				RemoteRefresh();
             }
         }
 
         public int RemotePort
         {
-            get { return remotePort; }
-            set
+            get => _remotePort;
+			set
             {
                 value = OSCUtilities.ClampPort(value);
 
-                if (remotePort == value)
+                if (_remotePort == value)
                     return;
 
-				remotePort = value;
+				_remotePort = value;
 
-				transmitterBackend.RefreshRemote(remoteHost, remotePort);
+				RemoteRefresh();
             }
         }
 
         public bool UseBundle
         {
-            get { return useBundle; }
-            set { useBundle = value; }
-        }
+            get => _useBundle;
+			set => _useBundle = value;
+		}
 
         #endregion
 
-        #region Protected Vars
-        
-        [SerializeField]
-        protected OSCLocalHostMode localHostMode = OSCLocalHostMode.Any;
+		#region Private Vars
 
-        [SerializeField]
-		protected OSCLocalPortMode localPortMode = OSCLocalPortMode.Random;
+		[SerializeField]
+		[FormerlySerializedAs("localHostMode")]
+		private OSCLocalHostMode _localHostMode = OSCLocalHostMode.Any;
+
+		[SerializeField]
+		[FormerlySerializedAs("localPortMode")]
+		private OSCLocalPortMode _localPortMode = OSCLocalPortMode.Random;
 
 		[OSCSelector]
 		[SerializeField]
-		protected OSCReceiver localReceiver;
-
-	    [OSCHost]
-		[SerializeField]
-        protected string localHost;
-
-		[SerializeField]
-		protected int localPort = 7000;
+		[FormerlySerializedAs("localReceiver")]
+		private OSCReceiver _localReceiver;
 
 		[OSCHost]
 		[SerializeField]
-        protected string remoteHost = "127.0.0.1";
+		[FormerlySerializedAs("localHost")]
+		private string _localHost;
 
-        [SerializeField]
-        protected int remotePort = 7000;
+		[SerializeField]
+		[FormerlySerializedAs("localPort")]
+		private int _localPort = 7000;
 
-        [SerializeField]
-        protected bool useBundle;
+		[OSCHost]
+		[SerializeField]
+		[FormerlySerializedAs("remoteHost")]
+		private string _remoteHost = "127.0.0.1";
 
-        protected OSCTransmitterBackend transmitterBackend
-        {
-            get
-            {
-                if (_transmitterBackend == null)
-                    _transmitterBackend = OSCTransmitterBackend.Create();
+		[SerializeField]
+		[FormerlySerializedAs("remotePort")]
+		private int _remotePort = 7000;
 
-                return _transmitterBackend;
-            }
-        }
+		[SerializeField]
+		[FormerlySerializedAs("useBundle")]
+		private bool _useBundle;
 
-        #endregion
+		private readonly List<IOSCPacket> _bundleBuffer = new List<IOSCPacket>();
+		
+        private OSCTransmitterBackend _transmitterBackend => __transmitterBackend ?? (__transmitterBackend = OSCTransmitterBackend.Create());
 
-        #region Private Vars
-
-        private readonly List<OSCPacket> _packetPool = new List<OSCPacket>();
-
-        private OSCTransmitterBackend _transmitterBackend;
+		private OSCTransmitterBackend __transmitterBackend;
 
         #endregion
 
@@ -219,35 +179,35 @@ namespace extOSC
 
         protected virtual void Update()
         {
-            if (_packetPool.Count > 0)
+            if (_bundleBuffer.Count > 0)
             {
                 var bundle = new OSCBundle();
 
-                foreach (var packet in _packetPool)
+                foreach (var packet in _bundleBuffer)
                 {
                     bundle.AddPacket(packet);
                 }
 
                 Send(bundle);
 
-                _packetPool.Clear();
+                _bundleBuffer.Clear();
             }
         }
 
 #if UNITY_EDITOR
 		protected void OnValidate()
 		{
-			remotePort = OSCUtilities.ClampPort(remotePort);
+			_remotePort = OSCUtilities.ClampPort(_remotePort);
 
-		    if (string.IsNullOrEmpty(localHost))
-		        localHost = OSCUtilities.GetLocalHost();
+		    if (string.IsNullOrEmpty(_localHost))
+		        _localHost = OSCUtilities.GetLocalHost();
 
-            if (localPort > 0)
-				localPort = OSCUtilities.ClampPort(localPort);
+            if (_localPort > 0)
+				_localPort = OSCUtilities.ClampPort(_localPort);
 
-			transmitterBackend.RefreshRemote(remoteHost, remotePort);
+			_transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
 
-			if (IsAvailable)
+			if (IsStarted)
 			{
 				Close();
 				Connect();
@@ -261,43 +221,43 @@ namespace extOSC
 
         public override void Connect()
         {
-            transmitterBackend.Connect(RequestLocalHost(), RequestLocalPort());
-            transmitterBackend.RefreshRemote(remoteHost, remotePort);
+            _transmitterBackend.Connect(RequestLocalHost(), RequestLocalPort());
+            _transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
         }
 
         public override void Close()
         {
-            if (transmitterBackend.IsAvailable)
-                transmitterBackend.Close();
+            if (_transmitterBackend.IsAvailable)
+                _transmitterBackend.Close();
         }
 
         public override string ToString()
         {
             return string.Format("<{0} (LocalHost: {1} LocalPort: {2} | RemoteHost: {3}, RemotePort: {4})>",
-                GetType().Name, localHost, localPort, remoteHost, remotePort);
+                GetType().Name, _localHost, _localPort, _remoteHost, _remotePort);
         }
 
-        public void Send(OSCPacket packet)
+        public void Send(IOSCPacket ioscPacket)
         {
-            if (useBundle && packet != null && (packet is OSCMessage))
+            if (_useBundle && ioscPacket != null && (ioscPacket is OSCMessage))
             {
-                _packetPool.Add(packet);
+                _bundleBuffer.Add(ioscPacket);
 
                 return;
             }
 
- 			if (!transmitterBackend.IsAvailable)
+ 			if (!_transmitterBackend.IsAvailable)
 				return; 
 
 			if (mapBundle != null)
-				mapBundle.Map(packet);
+				mapBundle.Map(ioscPacket);
 
             var length = 0;
-            var buffer = OSCConverter.Pack(packet, out length);
+            var buffer = OSCConverter.Pack(ioscPacket, out length);
 
-            transmitterBackend.Send(buffer, length);
+            _transmitterBackend.Send(buffer, length);
 
-            OSCConsole.Transmitted(this, packet);
+            OSCConsole.Transmitted(this, ioscPacket);
         }
 
         public virtual void Send(string address, OSCValue value)
@@ -312,32 +272,46 @@ namespace extOSC
 
         #region Private Methods
 
+		private void LocalRefresh()
+		{
+			if (IsStarted)
+			{
+				Close();
+				Connect();
+			}
+        }
+
+		private void RemoteRefresh()
+		{
+			_transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
+		}
+
         private string RequestLocalHost()
         {
-            if (localReceiver != null)
-                return localReceiver.LocalHost;
+            if (_localReceiver != null)
+                return _localReceiver.LocalHost;
 
-            if (localHostMode == OSCLocalHostMode.Any)
+            if (_localHostMode == OSCLocalHostMode.Any)
                 return "0.0.0.0";
 
-            return localHost;
+            return _localHost;
         }
 
         private int RequestLocalPort()
         {
-            if (localReceiver != null)
-                return localReceiver.LocalPort;
+            if (_localReceiver != null)
+                return _localReceiver.LocalPort;
             
-            if (localPortMode == OSCLocalPortMode.Random)
+            if (_localPortMode == OSCLocalPortMode.Random)
                 return 0;
 
-            if (localPortMode == OSCLocalPortMode.FromReceiver)
+            if (_localPortMode == OSCLocalPortMode.FromReceiver)
                 throw new Exception("[OSCTransmitter] Local Port Mode does not support \"FromReceiver\" option.");
 
-            if (localPortMode == OSCLocalPortMode.Custom)
-                return localPort;
+            if (_localPortMode == OSCLocalPortMode.Custom)
+                return _localPort;
 
-            return remotePort;
+            return _remotePort;
         }
 
         #endregion

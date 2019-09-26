@@ -13,7 +13,7 @@ namespace extOSC.Editor.Panels
     {
         #region Static Public Vars
 
-        private static readonly GUIContent _packetNotSelectedContent = new GUIContent("Packet is not selected!");
+        private static readonly GUIContent _packetNotSelectedContent = new GUIContent("IoscPacket is not selected!");
 
         private static readonly GUIContent _openInDebugContent = new GUIContent("Open in debug");
 
@@ -72,13 +72,13 @@ namespace extOSC.Editor.Panels
                 var debugButton = GUILayout.Button(_openInDebugContent, EditorStyles.toolbarButton);
                 if (debugButton)
                 {
-                    OSCWindowDebug.OpenPacket(SelecedMessage.Packet);
+                    OSCWindowDebug.OpenPacket(SelecedMessage.IoscPacket);
                 }
 
                 GUILayout.EndHorizontal();
 
                 _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-                _packetDrawer.DrawLayout(_selectedMessage.Packet);
+                _packetDrawer.DrawLayout(_selectedMessage.IoscPacket);
 
                 EditorGUILayout.EndScrollView();
             }

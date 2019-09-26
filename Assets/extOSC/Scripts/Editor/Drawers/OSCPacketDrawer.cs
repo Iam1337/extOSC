@@ -29,15 +29,15 @@ namespace extOSC.Editor.Drawers
 
         #region Public 
 
-        public void DrawLayout(OSCPacket packet)
+        public void DrawLayout(IOSCPacket ioscPacket)
         {
-            if (packet.IsBundle())
+            if (ioscPacket.IsBundle())
             {
-                DrawBundle((OSCBundle) packet);
+                DrawBundle((OSCBundle) ioscPacket);
             }
             else
             {
-                DrawMessage((OSCMessage) packet);
+                DrawMessage((OSCMessage) ioscPacket);
             }
         }
 

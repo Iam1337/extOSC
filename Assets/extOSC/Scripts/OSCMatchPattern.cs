@@ -6,24 +6,15 @@ namespace extOSC
     {
         #region Public Methods
 
-        public OSCValueType[] Types
-        {
-            get { return types; }
-        }
+        public OSCValueType[] Types { get; }
 
-        #endregion
-
-        #region Protected Methods
-
-        protected OSCValueType[] types;
-
-        #endregion
+		#endregion
 
         #region Public Methods
 
-        public OSCMatchPattern(params OSCValueType[] paramTypes)
+        public OSCMatchPattern(params OSCValueType[] types)
         {
-            types = paramTypes;
+            Types = types;
         }
 
         #endregion

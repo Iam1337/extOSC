@@ -94,8 +94,9 @@ namespace extOSC.Serialization
 
             Pack(values, target);
 
-            message.Values = values;
-            return message;
+			message.AddRange(values);
+
+			return message;
         }
 
         public static T Deserialize<T>(OSCMessage message)

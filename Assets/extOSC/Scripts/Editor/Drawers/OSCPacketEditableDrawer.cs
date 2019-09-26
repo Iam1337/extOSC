@@ -37,15 +37,15 @@ namespace extOSC.Editor.Drawers
 
         #region Public Methods
 
-        public void DrawLayout(OSCPacket packet)
+        public void DrawLayout(IOSCPacket ioscPacket)
         {
-            if (packet.IsBundle())
+            if (ioscPacket.IsBundle())
             {
-                DrawBundle((OSCBundle) packet);
+                DrawBundle((OSCBundle) ioscPacket);
             }
             else
             {
-                DrawMessage((OSCMessage) packet);
+                DrawMessage((OSCMessage) ioscPacket);
             }
         }
 
@@ -59,7 +59,7 @@ namespace extOSC.Editor.Drawers
 
             if (bundle.Packets.Count > 0)
             {
-	            var removePacket = (OSCPacket) null;
+	            var removePacket = (IOSCPacket) null;
 
                 foreach (var bundlePacket in bundle.Packets)
                 {

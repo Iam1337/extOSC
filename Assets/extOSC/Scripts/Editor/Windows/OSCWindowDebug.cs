@@ -11,14 +11,14 @@ namespace extOSC.Editor.Windows
     {
         #region Static Public Vars
 
-        public static OSCPacket CurrentPacket
+        public static IOSCPacket CurrentIoscPacket
         {
             get
             {
                 if (Instance != null && 
                     Instance._packetEditorPanel != null && 
-                    Instance._packetEditorPanel.CurrentPacket != null)
-                    return Instance._packetEditorPanel.CurrentPacket;
+                    Instance._packetEditorPanel.CurrentIoscPacket != null)
+                    return Instance._packetEditorPanel.CurrentIoscPacket;
 
                 return null;
             }
@@ -36,11 +36,11 @@ namespace extOSC.Editor.Windows
 	        Instance.Focus();
         }
 
-        public static void OpenPacket(OSCPacket packet)
+        public static void OpenPacket(IOSCPacket ioscPacket)
         {
             Open();
 
-	        Instance._packetEditorPanel.CurrentPacket = packet.Copy(); //OSCEditorUtils.CopyPacket(packet);
+	        Instance._packetEditorPanel.CurrentIoscPacket = ioscPacket.Copy(); //OSCEditorUtils.CopyPacket(ioscPacket);
         }
 
         #endregion
@@ -84,7 +84,7 @@ namespace extOSC.Editor.Windows
         {
             if (_packetEditorPanel == null) return;
 
-            var debugPacket = _packetEditorPanel.CurrentPacket;
+            var debugPacket = _packetEditorPanel.CurrentIoscPacket;
             if (debugPacket != null)
             {
                 if (string.IsNullOrEmpty(_packetEditorPanel.FilePath))
@@ -112,7 +112,7 @@ namespace extOSC.Editor.Windows
                 var debugPacket = OSCEditorUtils.LoadPacket(lastOpenedFile);
                 if (debugPacket != null)
                 {
-                    _packetEditorPanel.CurrentPacket = debugPacket;
+                    _packetEditorPanel.CurrentIoscPacket = debugPacket;
                     _packetEditorPanel.FilePath = lastOpenedFile;
                 }
             }

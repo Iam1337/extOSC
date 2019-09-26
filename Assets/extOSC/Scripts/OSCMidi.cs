@@ -31,7 +31,7 @@ namespace extOSC
 
         public override string ToString()
         {
-            return string.Format("({0}, {1}, {2}, {3})", Channel, Status, Data1, Data2);
+            return $"({Channel}, {Status}, {Data1}, {Data2})";
         }
 
         #endregion

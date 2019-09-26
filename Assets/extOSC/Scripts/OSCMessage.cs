@@ -1,12 +1,14 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
+using System;
+using System.Net;
 using System.Collections.Generic;
 
 using extOSC.Core;
 
 namespace extOSC
 {
-    public class OSCMessage : OSCPacket
+    public class OSCMessage : IOSCPacket
     {
         #region Static Public Methods
 
@@ -19,52 +21,50 @@ namespace extOSC
 
         #region Public Vars
 
-        public List<OSCValue> Values
-        {
-            get { return values; }
-            set
-            {
-                if (values == value)
-                    return;
+		public string Address { get; set; }
 
-                values = value;
-            }
-        }
+		public IPAddress Ip { get; set; }
+
+		public int Port { get; set; }
+
+		public List<OSCValue> Values { get; } = new List<OSCValue>();
 
         #endregion
 
-        #region Protected Vars
+		#region Public Methods
 
-        protected List<OSCValue> values = new List<OSCValue>();
-
-        #endregion
-
-        #region Public Methods
-
-        public OSCMessage(string address) : this(address, null) { }
+        public OSCMessage(string address)
+		{
+			Address = address;
+		}
 
         public OSCMessage(string address, params OSCValue[] values)
         {
-            this.address = address;
-
-            if (values != null)
-            {
-                foreach (var value in values)
-                    AddValue(value);
-            }
+            Address = address;
+			AddRange(values);
         }
 
-        public void AddValue(OSCValue value)
-        {
-            if (value != null)
-                values.Add(value);
-        }
+		public void AddValue(OSCValue value)
+		{
+			if (value == null)
+				throw new NullReferenceException(nameof(value));
 
-        public OSCValue[] GetValues(params OSCValueType[] types)
+			Values.Add(value);
+		}
+
+		public void AddRange(IEnumerable<OSCValue> values)
+		{
+			if (values == null)
+				throw new NullReferenceException(nameof(values));
+
+			Values.AddRange(values);
+		}
+
+		public OSCValue[] FindValues(params OSCValueType[] types)
         {
             var tempValues = new List<OSCValue>();
 
-            foreach (var value in values)
+            foreach (var value in Values)
             {
                 foreach (var type in types)
                 {
@@ -78,46 +78,74 @@ namespace extOSC
             return tempValues.ToArray();
         }
 
-        public OSCValueType[] GetTypes()
-        {
-            var types = new OSCValueType[values.Count];
+		public bool IsBundle() => false;
 
-            for (var i = 0; i < values.Count; i++)
-            {
-                types[i] = values[i].Type;
-            }
+		public IOSCPacket Copy()
+		{
+			var valuesCount = Values.Count;
+			var values = new OSCValue[valuesCount];
 
-            return types;
-        }
+			for (var i = 0; i < valuesCount; ++i)
+			{
+				values[i] = Values[i].Copy();
+			}
 
-        public string GetTags()
-        {
-            var tags = string.Empty;
+			return new OSCMessage(Address, values);
+		}
 
-            foreach (var value in values)
-            {
-                tags += value.Tag;
-            }
-
-            return tags;
-        }
-
-	    public override string ToString()
+        public override string ToString()
         {
             var stringValues = string.Empty;
 
-            if (values.Count > 0)
+            if (Values.Count > 0)
             {
-                foreach (var value in values)
+                foreach (var value in Values)
                 {
-                    stringValues += string.Format("{0}({1}) : \"{2}\", ", value.GetType().Name, value.Type, value.Value);
+                    stringValues += $"{value.GetType().Name}({value.Type}) : \"{value.Value}\", ";
                 }
 
-                stringValues = string.Format("({0})", stringValues.Remove(stringValues.Length - 2));
+                stringValues = $"({stringValues.Remove(stringValues.Length - 2)})";
             }
 
-            return string.Format("<{0}:\"{1}\"> : {2}", GetType().Name, address, string.IsNullOrEmpty(stringValues) ? "null" : stringValues);
+            return $"<{GetType().Name}:\"{Address}\"> : {(string.IsNullOrEmpty(stringValues) ? "null" : stringValues)}";
         }
+
+
+
+
+		// OBSOLETE
+        [Obsolete("Use FindValues method.")]
+        public OSCValue[] GetValues(params OSCValueType[] types)
+		{
+			return FindValues(types);
+		}
+		
+        [Obsolete] // TODO: Move in Utils.
+		public OSCValueType[] GetTypes()
+		{
+			var types = new OSCValueType[Values.Count];
+
+			for (var i = 0; i < Values.Count; i++)
+			{
+				types[i] = Values[i].Type;
+			}
+
+			return types;
+		}
+
+		[Obsolete] // TODO: Move in Editor Utils.
+		public string GetTags()
+		{
+			var tags = string.Empty;
+
+			foreach (var value in Values)
+			{
+				tags += value.Tag;
+			}
+
+			return tags;
+		}
+
 
         #endregion
     }

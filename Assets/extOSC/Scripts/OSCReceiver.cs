@@ -31,7 +31,7 @@ namespace extOSC
 
                 localHostMode = value;
 
-                if (receiverBackend.IsRunning && IsAvailable)
+                if (receiverBackend.IsRunning && IsStarted)
                 {
                     Close();
                     Connect();
@@ -49,7 +49,7 @@ namespace extOSC
 
                 localHost = value;
 
-                if (receiverBackend.IsRunning && IsAvailable)
+                if (receiverBackend.IsRunning && IsStarted)
                 {
                     Close();
                     Connect();
@@ -69,7 +69,7 @@ namespace extOSC
 
                 localPort = value;
 
-                if (receiverBackend.IsRunning && IsAvailable)
+                if (receiverBackend.IsRunning && IsStarted)
                 {
                     Close();
                     Connect();
@@ -77,7 +77,7 @@ namespace extOSC
             }
         }
 
-        public override bool IsAvailable
+        public override bool IsStarted
         {
             get { return receiverBackend.IsAvailable; }
         }
@@ -100,7 +100,7 @@ namespace extOSC
         [SerializeField]
         protected int localPort = 7001;
 
-        protected Queue<OSCPacket> packets = new Queue<OSCPacket>();
+        protected Queue<IOSCPacket> packets = new Queue<IOSCPacket>();
 
         protected List<IOSCBind> bindings = new List<IOSCBind>();
 
@@ -138,7 +138,7 @@ namespace extOSC
 
         protected virtual void Update()
         {
-            if (!IsAvailable || !receiverBackend.IsRunning) return;
+            if (!IsStarted || !receiverBackend.IsRunning) return;
 
             lock (_lock)
             {
@@ -164,7 +164,7 @@ namespace extOSC
 
             localPort = OSCUtilities.ClampPort(localPort);
             
-            if (receiverBackend.IsRunning && IsAvailable)
+            if (receiverBackend.IsRunning && IsStarted)
             {
                 Close();
                 Connect();
@@ -246,15 +246,15 @@ namespace extOSC
 
         #region Protected Methods
 
-        protected void InvokePacket(OSCPacket packet)
+        protected void InvokePacket(IOSCPacket ioscPacket)
         {
-            if (packet.IsBundle())
+            if (ioscPacket.IsBundle())
             {
-                InvokeBundle(packet as OSCBundle);
+                InvokeBundle(ioscPacket as OSCBundle);
             }
             else
             {
-                InvokeMessage(packet as OSCMessage);
+                InvokeMessage(ioscPacket as OSCMessage);
             }
         }
 
@@ -308,11 +308,11 @@ namespace extOSC
             UnbindAll();
         }
 
-        protected virtual void PacketReceived(OSCPacket packet)
+        protected virtual void PacketReceived(IOSCPacket ioscPacket)
         {
             lock (_lock)
             {
-                packets.Enqueue(packet);
+                packets.Enqueue(ioscPacket);
             }
         }
 

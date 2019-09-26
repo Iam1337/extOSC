@@ -42,7 +42,7 @@ namespace extOSC.Editor.Panels
             var consoleMessage = menuData as OSCConsolePacket;
             if (consoleMessage == null) return;
 
-            OSCWindowDebug.OpenPacket(consoleMessage.Packet);
+            OSCWindowDebug.OpenPacket(consoleMessage.IoscPacket);
         }
 
         private static void GenerateCodeCallback(object menuData)
@@ -50,7 +50,7 @@ namespace extOSC.Editor.Panels
             var consoleMessage = menuData as OSCConsolePacket;
             if (consoleMessage == null) return;
 
-            EditorGUIUtility.systemCopyBuffer = OSCSharpCode.GeneratePacket(consoleMessage.Packet);
+            EditorGUIUtility.systemCopyBuffer = OSCSharpCode.GeneratePacket(consoleMessage.IoscPacket);
 
             Debug.LogFormat("[OSCConsole] CSharp code generated and stored in copy buffer!");
         }
@@ -369,7 +369,7 @@ namespace extOSC.Editor.Panels
                                      iconsRect.y + padding,
                                      iconsRect.height - padding * 2f,
                                      iconsRect.height - padding * 2f),
-                            consolePacket.Packet.IsBundle()
+                            consolePacket.IoscPacket.IsBundle()
                                 ? OSCEditorTextures.Bundle
                                 : OSCEditorTextures.Message);
 

@@ -5,6 +5,6 @@ using System;
 namespace extOSC.Core.Events
 {
     [Serializable]
-    public class OSCEventPacket : OSCEvent<OSCPacket>
+    public class OSCEventPacket : OSCEvent<IOSCPacket>
     { }
 }

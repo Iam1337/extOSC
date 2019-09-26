@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
+using extOSC.Core;
 
 #if NETFX_CORE
 using System.Reflection;
@@ -117,7 +118,18 @@ namespace extOSC
             return structure;
         }
 
-		#endregion
+		public static string ToBase64String(IOSCPacket packet)
+		{
+			var buffer = OSCConverter.Pack(packet, out var length);
+			return Convert.ToBase64String(buffer, 0, length);
+		}
+
+		public static IOSCPacket FromBase64String(string value)
+		{
+			return OSCConverter.Unpack(Convert.FromBase64String(value));
+		}
+
+        #endregion
 
         #region Public Extensions Static Methods
 
@@ -138,7 +150,7 @@ namespace extOSC
                         return false;
                     }
                 }
-                else if ((pattern.Types[i] != messageTypes[i]))
+                else if (pattern.Types[i] != messageTypes[i])
                 {
                     return false;
                 }
@@ -149,7 +161,7 @@ namespace extOSC
 
         public static bool ToFloat(this OSCMessage message, out float value)
         {
-            var values = message.GetValues(OSCValueType.Float);
+            var values = message.FindValues(OSCValueType.Float);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -164,19 +176,19 @@ namespace extOSC
 
         public static bool HasImpulse(this OSCMessage message)
         {
-            var values = message.GetValues(OSCValueType.Impulse);
+            var values = message.FindValues(OSCValueType.Impulse);
             return values.Length > 0;
         }
 
         public static bool HasNull(this OSCMessage message)
         {
-            var values = message.GetValues(OSCValueType.Null);
+            var values = message.FindValues(OSCValueType.Null);
             return values.Length > 0;
         }
 
         public static bool ToInt(this OSCMessage message, out int value)
         {
-            var values = message.GetValues(OSCValueType.Int);
+            var values = message.FindValues(OSCValueType.Int);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -191,7 +203,7 @@ namespace extOSC
 
         public static bool ToDouble(this OSCMessage message, out double value)
         {
-            var values = message.GetValues(OSCValueType.Double);
+            var values = message.FindValues(OSCValueType.Double);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -206,7 +218,7 @@ namespace extOSC
 
         public static bool ToLong(this OSCMessage message, out long value)
         {
-            var values = message.GetValues(OSCValueType.Long);
+            var values = message.FindValues(OSCValueType.Long);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -221,7 +233,7 @@ namespace extOSC
 
         public static bool ToChar(this OSCMessage message, out char value)
         {
-            var values = message.GetValues(OSCValueType.Char);
+            var values = message.FindValues(OSCValueType.Char);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -236,7 +248,7 @@ namespace extOSC
 
         public static bool ToBool(this OSCMessage message, out bool value)
         {
-            var values = message.GetValues(OSCValueType.True, OSCValueType.False);
+            var values = message.FindValues(OSCValueType.True, OSCValueType.False);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -251,7 +263,7 @@ namespace extOSC
 
         public static bool ToBlob(this OSCMessage message, out byte[] value)
         {
-            var values = message.GetValues(OSCValueType.Blob);
+            var values = message.FindValues(OSCValueType.Blob);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -266,7 +278,7 @@ namespace extOSC
 
         public static bool ToString(this OSCMessage message, out string value)
         {
-            var values = message.GetValues(OSCValueType.String);
+            var values = message.FindValues(OSCValueType.String);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -281,7 +293,7 @@ namespace extOSC
 
         public static bool ToTimeTag(this OSCMessage message, out DateTime value)
         {
-            var values = message.GetValues(OSCValueType.TimeTag);
+            var values = message.FindValues(OSCValueType.TimeTag);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -296,7 +308,7 @@ namespace extOSC
 
         public static bool ToColor(this OSCMessage message, out Color value, bool force = false)
         {
-            var values = message.GetValues(OSCValueType.Color);
+            var values = message.FindValues(OSCValueType.Color);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -328,7 +340,7 @@ namespace extOSC
 
         public static bool ToMidi(this OSCMessage message, out OSCMidi value)
         {
-            var values = message.GetValues(OSCValueType.Midi);
+            var values = message.FindValues(OSCValueType.Midi);
             if (values.Length > 0)
             {
                 var firstValue = values[0];
@@ -343,7 +355,7 @@ namespace extOSC
 
         public static bool ToVector2(this OSCMessage message, out Vector2 value, bool force = false)
         {
-            var values = message.GetValues(OSCValueType.Float);
+            var values = message.FindValues(OSCValueType.Float);
             if (values.Length >= 2)
             {
                 var firstValue = values[0];
@@ -377,7 +389,7 @@ namespace extOSC
 
         public static bool ToVector3(this OSCMessage message, out Vector3 value, bool force = false)
         {
-            var values = message.GetValues(OSCValueType.Float);
+            var values = message.FindValues(OSCValueType.Float);
             if (values.Length >= 3)
             {
                 var firstValue = values[0];
@@ -412,7 +424,7 @@ namespace extOSC
 
         public static bool ToVector4(this OSCMessage message, out Vector4 value, bool force = false)
         {
-            var values = message.GetValues(OSCValueType.Float);
+            var values = message.FindValues(OSCValueType.Float);
             if (values.Length >= 4)
             {
                 var firstValue = values[0];
@@ -475,7 +487,7 @@ namespace extOSC
 
         public static bool ToArray(this OSCMessage message, out List<OSCValue> value)
         {
-            var values = message.GetValues(OSCValueType.Array);
+            var values = message.FindValues(OSCValueType.Array);
             if (values.Length > 0)
             {
                 var firstValue = values[0];

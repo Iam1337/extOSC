@@ -12,12 +12,12 @@ namespace extOSC.Editor
     {
         #region Static Public Methods
 
-        public static string GeneratePacket(OSCPacket packet)
+        public static string GeneratePacket(IOSCPacket ioscPacket)
         {
-            if (packet.IsBundle())
-                return GenerateBundle(packet as OSCBundle);
+            if (ioscPacket.IsBundle())
+                return GenerateBundle(ioscPacket as OSCBundle);
             else
-                return GenerateMessage(packet as OSCMessage);
+                return GenerateMessage(ioscPacket as OSCMessage);
         }
 
         public static string GenerateBundle(OSCBundle bundle)
@@ -59,7 +59,7 @@ namespace extOSC.Editor
                 if (string.IsNullOrEmpty(packetName))
                     continue;
 
-                sharpCode += string.Format("{0}.AddPacket({1});\n\n", name, packetName);
+                sharpCode += string.Format("{0}.Add({1});\n\n", name, packetName);
             }
 
             if (sharpCode.EndsWith("\n\n", StringComparison.Ordinal))

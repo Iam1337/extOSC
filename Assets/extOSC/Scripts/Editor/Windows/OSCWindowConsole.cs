@@ -87,7 +87,7 @@ namespace extOSC.Editor.Windows
                 {
                     if (!string.IsNullOrEmpty(filter))
                     {
-                        var address = consoleMessage.Packet.Address;
+                        var address = consoleMessage.IoscPacket.Address;
                         var compare = OSCUtilities.CompareAddresses(filter, address);
 
                         if ((inverse && compare) ||

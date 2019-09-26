@@ -154,8 +154,8 @@ namespace extOSC.Editor
                     var typeAttribute = messageElement.Attributes["type"];
                     consoleMessage.PacketType = (OSCConsolePacketType)Enum.Parse(typeof(OSCConsolePacketType), typeAttribute.InnerText);
 
-                    var packetElement = messageElement["packet"];
-                    consoleMessage.Packet = OSCPacket.FromBase64String(packetElement.InnerText);
+                    var packetElement = messageElement["ioscPacket"];
+                    consoleMessage.IoscPacket = OSCUtilities.FromBase64String(packetElement.InnerText);
 
                     list.Add(consoleMessage);
                 }
@@ -187,8 +187,8 @@ namespace extOSC.Editor
                 messageElement.Attributes.Append(instanceAttribute);
                 messageElement.Attributes.Append(typeAttribute);
 
-                var packetElement = document.CreateElement("packet");
-                packetElement.InnerText = OSCPacket.ToBase64String(consoleMessage.Packet);
+                var packetElement = document.CreateElement("ioscPacket");
+                packetElement.InnerText = OSCUtilities.ToBase64String(consoleMessage.IoscPacket);
 
                 messageElement.AppendChild(packetElement);
             }
@@ -196,7 +196,7 @@ namespace extOSC.Editor
             document.Save(filePath);
         }
 
-        public static OSCPacket LoadPacket(string filePath)
+        public static IOSCPacket LoadPacket(string filePath)
         {
             if (!File.Exists(filePath))
                 return null;
@@ -207,30 +207,30 @@ namespace extOSC.Editor
             }
             catch (Exception e)
             {
-                Debug.LogFormat("[OSCEditorUtils] Load Packet error: {0}", e);
+                Debug.LogFormat("[OSCEditorUtils] Load IoscPacket error: {0}", e);
 
                 try
                 {
                     var document = new XmlDocument();
                     document.Load(filePath);
 
-                    return OSCPacket.FromBase64String(document.FirstChild.InnerText);
+                    return OSCUtilities.FromBase64String(document.FirstChild.InnerText);
                 }
                 catch (Exception e2)
                 {
-                    Debug.LogFormat("[OSCEditorUtils] Load Old Format Packet Error: {0}", e2);
+                    Debug.LogFormat("[OSCEditorUtils] Load Old Format IoscPacket Error: {0}", e2);
                 }
             }
 
             return null;
         }
 
-        public static void SavePacket(string filePath, OSCPacket packet)
+        public static void SavePacket(string filePath, IOSCPacket ioscPacket)
         {
             using (var fileWriter = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
             {
                 var size = 0;
-                var buffer = OSCConverter.Pack(packet, out size);
+                var buffer = OSCConverter.Pack(ioscPacket, out size);
 
                 fileWriter.Write(buffer, 0, size);
             }

@@ -49,7 +49,7 @@ namespace extOSC.Editor.Drawers
             var controlName = GUI.GetNameOfFocusedControl();
             if (controlName != _controlName && string.IsNullOrEmpty(_filterValue))
             {
-                GUI.Label(fieldPosition, "Packet Filter", OSCEditorStyles.SearchFieldPlaceholder);
+                GUI.Label(fieldPosition, "IoscPacket Filter", OSCEditorStyles.SearchFieldPlaceholder);
             }
 
         }

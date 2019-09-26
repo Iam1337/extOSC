@@ -29,18 +29,18 @@ namespace extOSC.Mapping
 
         #region Public Methods
 
-        public void Map(OSCPacket packet)
+        public void Map(IOSCPacket ioscPacket)
         {
-            if (packet is OSCBundle)
+            if (ioscPacket is OSCBundle)
             {
-                var bundle = packet as OSCBundle;
+                var bundle = ioscPacket as OSCBundle;
 
                 foreach (var bundlePacket in bundle.Packets)
                     Map(bundlePacket);
             }
-            else if (packet is OSCMessage)
+            else if (ioscPacket is OSCMessage)
             {
-                var message = packet as OSCMessage;
+                var message = ioscPacket as OSCMessage;
 
                 foreach (var mapMessage in messages)
                     mapMessage.Map(message);

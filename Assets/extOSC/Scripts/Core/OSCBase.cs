@@ -37,7 +37,7 @@ namespace extOSC.Core
             set { closeOnPause = value; }
         }
 
-        public abstract bool IsAvailable { get; }
+        public abstract bool IsStarted { get; }
 
         #endregion
 
@@ -82,7 +82,7 @@ namespace extOSC.Core
 
         protected virtual void OnDisable()
         {
-            restoreOnEnable = IsAvailable;
+            restoreOnEnable = IsStarted;
 
             if (Application.isPlaying && restoreOnEnable)
                 Close();
@@ -99,7 +99,7 @@ namespace extOSC.Core
 
             if (pauseStatus)
             {
-                if (IsAvailable)
+                if (IsStarted)
                 {
                     Close();
 
