@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 using extOSC.Core;
 using extOSC.Core.Events;
@@ -12,40 +13,34 @@ namespace extOSC
     {
         #region Public Vars
 
-        public string ReceiverAddress
-        {
-            get { return address; }
-        }
+        public string ReceiverAddress => _address;
 
-        public OSCEventMessage Callback
+		public OSCEventMessage Callback
         {
-            get { return callback; }
-            set { callback = value; }
-        }
+            get => _callback;
+			set => _callback = value;
+		}
 
         #endregion
 
         #region Protected Vars
 
         [SerializeField]
-        protected string address;
+		[FormerlySerializedAs("address")]
+        private string _address;
 
         [SerializeField]
-        protected OSCEventMessage callback = new OSCEventMessage();
+		[FormerlySerializedAs("callback")]
+        private OSCEventMessage _callback = new OSCEventMessage();
 
         #endregion
 
         #region Public Methods
 
-        public OSCBind(string address)
+		public OSCBind(string address, UnityAction<OSCMessage> callback)
         {
-            this.address = address;
-        }
-
-        public OSCBind(string address, UnityAction<OSCMessage> callback)
-        {
-            this.address = address;
-            this.callback.AddListener(callback);
+            _address = address;
+            _callback.AddListener(callback);
         }
 
         #endregion

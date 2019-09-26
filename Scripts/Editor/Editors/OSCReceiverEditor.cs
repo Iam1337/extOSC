@@ -79,7 +79,7 @@ namespace extOSC.Editor
 
             EditorApplication.update += ReceiverEditorUpdate;
 
-            if (!Application.isPlaying && !_receiver.IsAvailable && _workInEditorProperty.boolValue)
+            if (!Application.isPlaying && !_receiver.IsStarted && _workInEditorProperty.boolValue)
             {
                 _receiver.Connect();
             }
@@ -92,7 +92,7 @@ namespace extOSC.Editor
 
             EditorApplication.update -= ReceiverEditorUpdate;
 
-            if (!Application.isPlaying && _receiver.IsAvailable)
+            if (!Application.isPlaying && _receiver.IsStarted)
             {
                 _receiver.Close();
             }
@@ -110,7 +110,7 @@ namespace extOSC.Editor
 	        OSCEditorInterface.LogoLayout();
 
 			// INSPECTOR
-            EditorGUILayout.LabelField("Active: " + _receiver.IsAvailable, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Active: " + _receiver.IsStarted, EditorStyles.boldLabel);
             using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 	        {
 				// SETTINGS BLOCK
@@ -187,18 +187,18 @@ namespace extOSC.Editor
 
 	    protected void InGameControls()
 	    {
-			GUI.color = _receiver.IsAvailable ? Color.green : Color.red;
-		    if (GUILayout.Button(_receiver.IsAvailable ? "Connected" : "Disconnected"))
+			GUI.color = _receiver.IsStarted ? Color.green : Color.red;
+		    if (GUILayout.Button(_receiver.IsStarted ? "Connected" : "Disconnected"))
 		    {
-			    if (_receiver.IsAvailable) _receiver.Close();
+			    if (_receiver.IsStarted) _receiver.Close();
 			    else _receiver.Connect();
 		    }
 			
 			GUI.color = Color.yellow;
-		    GUI.enabled = !_receiver.IsAvailable;
+		    GUI.enabled = !_receiver.IsStarted;
 			if (GUILayout.Button("Reconnect"))
 		    {
-			    if (_receiver.IsAvailable) _receiver.Close();
+			    if (_receiver.IsStarted) _receiver.Close();
 
 			    _receiver.Connect();
 		    }
@@ -215,14 +215,14 @@ namespace extOSC.Editor
 
 				if (_workInEditorProperty.boolValue)
 				{
-					if (_receiver.IsAvailable)
+					if (_receiver.IsStarted)
 						_receiver.Close();
 
 					_receiver.Connect();
 				}
 				else
 				{
-					if (_receiver.IsAvailable)
+					if (_receiver.IsStarted)
 						_receiver.Close();
 				}
 			}
@@ -233,7 +233,7 @@ namespace extOSC.Editor
 	        {
 		        if (_workInEditorProperty.boolValue)
 		        {
-					if (_receiver.IsAvailable)
+					if (_receiver.IsStarted)
 						_receiver.Close();
 
 					_receiver.Connect();

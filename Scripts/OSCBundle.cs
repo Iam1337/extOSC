@@ -1,115 +1,104 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
+using System;
 using System.Net;
 using System.Collections.Generic;
 
 using extOSC.Core;
+using JetBrains.Annotations;
 
 namespace extOSC
 {
-    public class OSCBundle : OSCPacket
+    public class OSCBundle : IOSCPacket
     {
         #region Static Public Methods
 
-        public static OSCBundle Create(params OSCPacket[] packets)
+        public static OSCBundle Create(params IOSCPacket[] packets)
         {
             return new OSCBundle(packets);
         }
 
         #endregion
-		
-	    #region Constants
 
-        public const string KBundle = "#bundle";
+        #region Constants
+
+		[Obsolete("Use BundleAddress constant.")]
+		public const string KBundle = "#bundle";
+
+        public const string BundleAddress = "#bundle";
 
         #endregion
 
         #region Public Vars
 
-        public long TimeStamp
-        {
-            get { return timeStamp; }
-            set { timeStamp = value; }
-        }
+		public string Address => "#bundle";
 
-        public override string Address
-        {
-            get { return KBundle; }
-        }
+		public IPAddress Ip { get; set; }
 
-        public override IPAddress Ip
-        {
-            get { return base.Ip; }
-            set
-            {
-                foreach (var packet in packets)
-                    packet.Ip = value;
+		public int Port { get; set; }
 
-                base.Ip = value;
-            }
-        }
+		public List<IOSCPacket> Packets { get; } = new List<IOSCPacket>();
 
-        public List<OSCPacket> Packets
-        {
-            get { return packets; }
-            set
-            {
-                if (packets == value)
-                    return;
+		public long TimeStamp { get; set; }
 
-                packets = value;
-            }
-        }
-
-        #endregion
-
-        #region Protected Vars
-
-        protected List<OSCPacket> packets = new List<OSCPacket>();
-
-        protected long timeStamp;
-
-        #endregion
+		#endregion
 
         #region Public Methods
 
-        public OSCBundle() : this(null) { }
+        public OSCBundle() { }
 
-        public OSCBundle(params OSCPacket[] packets)
+		public OSCBundle(params IOSCPacket[] packets)
+		{
+			AddRange(packets);
+		}
+
+		public void AddPacket(IOSCPacket ioscPacket)
         {
-            address = KBundle;
+			if (ioscPacket == null)
+				throw new NullReferenceException(nameof(ioscPacket));
 
-            if (packets != null)
-            {
-                foreach (var value in packets)
-                    AddPacket(value);
-            }
+			Packets.Add(ioscPacket);
+		}
+
+		public void AddRange(IEnumerable<IOSCPacket> packets)
+		{
+			if (packets == null)
+				throw new NullReferenceException(nameof(packets));
+
+			Packets.AddRange(packets);
+		}
+
+		public bool IsBundle() => true;
+
+		public IOSCPacket Copy()
+		{
+			var packetsCount = Packets.Count;
+			var packets = new IOSCPacket[packetsCount];
+
+			for (var i = 0; i < packetsCount; ++i)
+			{
+				packets[i] = Packets[i].Copy();
+			}
+
+			return new OSCBundle(packets);
         }
 
-        public void AddPacket(OSCPacket packet)
-        {
-            if (packet != null)
-            {
-                packets.Add(packet);
-            }
-        }
-		
-	    public override string ToString()
-        {
-            var stringValues = string.Empty;
+		public override string ToString()
+		{
+			var stringValues = string.Empty;
 
-            if (packets.Count > 0)
-            {
-                foreach (var packet in packets)
-                {
-                    stringValues += string.Format("[{0}], ", packet);
-                }
+			if (Packets.Count > 0)
+			{
+				foreach (var packet in Packets)
+				{
+					stringValues += $"[{packet}], ";
+				}
 
-                stringValues = string.Format("({0})", stringValues.Remove(stringValues.Length - 2));
-            }
+				stringValues = $"({stringValues.Remove(stringValues.Length - 2)})";
+			}
 
-            return string.Format("<{0}:\"{1}\"> : {2}", GetType().Name, address, string.IsNullOrEmpty(stringValues) ? "null" : stringValues);
-        }
+			return $"<{GetType().Name}> : {(string.IsNullOrEmpty(stringValues) ? "null" : stringValues)}";
+		}
 
         #endregion
     }

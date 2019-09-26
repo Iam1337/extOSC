@@ -13,7 +13,7 @@ namespace extOSC.Components.Events
 
         protected override void Invoke(OSCMessage message)
         {
-            var values = message.GetValues(OSCValueType.Impulse);
+            var values = message.FindValues(OSCValueType.Impulse);
             if (values.Length > 0)
             {
                 if (onReceive != null)

@@ -17,7 +17,7 @@ namespace extOSC.Core.Network
     {
         #region Public Vars
 
-        public override bool IsAvailable
+        public override bool IsStarted
         {
             get { return _datagramSocket != null; }
         }

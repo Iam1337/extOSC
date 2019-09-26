@@ -25,7 +25,7 @@ namespace extOSC.Core.Network
             set { _receivedCallback = value; }
         }
 
-        public override bool IsAvailable
+        public override bool IsStarted
         {
             get { return _datagramSocket != null; }
         }
@@ -132,12 +132,12 @@ namespace extOSC.Core.Network
                     var data = new byte[dataReader.UnconsumedBufferLength];
                     dataReader.ReadBytes(data);
 
-                    var packet = OSCConverter.Unpack(data);
-                    packet.Ip = IPAddress.Parse(args.RemoteAddress.ToString());
-                    packet.Port = int.Parse(args.RemotePort);
+                    var ioscPacket = OSCConverter.Unpack(data);
+                    ioscPacket.Ip = IPAddress.Parse(args.RemoteAddress.ToString());
+                    ioscPacket.Port = int.Parse(args.RemotePort);
 
                     if (_receivedCallback != null)
-                        _receivedCallback.Invoke(packet);
+                        _receivedCallback.Invoke(ioscPacket);
                 }
             }
             catch (Exception e)

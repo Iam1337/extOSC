@@ -14,7 +14,7 @@ namespace extOSC.Components.Events
 
         protected override void Invoke(OSCMessage message)
         {
-            var values = message.GetValues(OSCValueType.TimeTag);
+            var values = message.FindValues(OSCValueType.TimeTag);
             if (values.Length > 0)
             {
                 var value = values[0];

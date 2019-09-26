@@ -13,12 +13,12 @@ namespace extOSC.Core
 	{
 		#region Public Vars
 
-		public OSCPacket Packet
+		public IOSCPacket IoscPacket
 		{
-			get { return _packet; }
+			get { return _ioscPacket; }
 			set
 			{
-				_packet = value;
+				_ioscPacket = value;
 				_description = null;
 			}
 		}
@@ -47,7 +47,7 @@ namespace extOSC.Core
 
 		#region Private Vars
 
-		private OSCPacket _packet;
+		private IOSCPacket _ioscPacket;
 
 		private OSCConsolePacketType _packetType;
 
@@ -62,15 +62,15 @@ namespace extOSC.Core
 #if UNITY_EDITOR
 		public override string ToString()
 		{
-			if (_description == null && _packet != null)
+			if (_description == null && _ioscPacket != null)
 			{
 				var packetDescription = string.Empty;
-				if (!_packet.IsBundle())
+				if (!_ioscPacket.IsBundle())
 				{
-					packetDescription = string.Format("<color=orange>Message:</color> {0}", _packet.Address);
+					packetDescription = string.Format("<color=orange>Message:</color> {0}", _ioscPacket.Address);
 				}
 
-				var bundle = _packet as OSCBundle;
+				var bundle = _ioscPacket as OSCBundle;
 				if (bundle != null)
 				{
 					packetDescription =

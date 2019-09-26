@@ -124,13 +124,13 @@ namespace extOSC.Editor.Panels
 
         private void DrawElement(OSCBase osc)
         {
-            GUI.color = osc.IsAvailable ? Color.green : Color.red;
+            GUI.color = osc.IsStarted ? Color.green : Color.red;
 			using (new GUILayout.VerticalScope(EditorStyles.helpBox))
 	        {
 				DrawName(osc);
 		        using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
 		        {
-			        GUILayout.Label("Active: " + osc.IsAvailable);
+			        GUILayout.Label("Active: " + osc.IsStarted);
 		        }
 
 		        GUILayout.Label(_actionsContent);
@@ -161,14 +161,14 @@ namespace extOSC.Editor.Panels
         private void DrawActions(OSCBase osc)
         {
             GUI.color = Color.yellow;
-            GUI.enabled = osc.IsAvailable;
+            GUI.enabled = osc.IsStarted;
 
 	        var transmitter = osc as OSCTransmitter;
 	        if (transmitter != null)
 	        {
 		        if (GUILayout.Button(_sendActionContent))
 		        {
-			        var debugPacket = OSCWindowDebug.CurrentPacket;
+			        var debugPacket = OSCWindowDebug.CurrentIoscPacket;
 			        if (debugPacket != null)
 			        {
 				        transmitter.Send(debugPacket.Copy());
@@ -181,7 +181,7 @@ namespace extOSC.Editor.Panels
 	        {
 		        if (GUILayout.Button(_receiveActionContent))
 		        {
-			        var debugPacket = OSCWindowDebug.CurrentPacket;
+			        var debugPacket = OSCWindowDebug.CurrentIoscPacket;
 			        if (debugPacket != null)
 			        {
 				        if (_receiveMethod == null)

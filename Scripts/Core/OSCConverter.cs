@@ -88,31 +88,31 @@ namespace extOSC.Core
 		}
 
 		/// <summary>
-		/// Serializes a OSCPacket and writes it to a buffer, returning the size of the packet.
+		/// Serializes a IOSCPacket and writes it to a buffer, returning the size of the ioscPacket.
 		/// </summary>
-		/// <param name="packet">Packet</param>
-		/// <param name="size">Serialized packet size</param>
+		/// <param name="ioscPacket">IoscPacket</param>
+		/// <param name="size">Serialized ioscPacket size</param>
 		/// <returns>Buffer with a fixed value.</returns>
-		public static byte[] Pack(OSCPacket packet, out int size)
+		public static byte[] Pack(IOSCPacket ioscPacket, out int size)
 		{
 			lock (_lock)
 			{
 				size = 0;
-				return PackInternal(packet, ref size);
+				return PackInternal(ioscPacket, ref size);
 			}
 		}
 
 		/// <summary>
-		/// Serializes a packet and returns the packet data in byte array.
+		/// Serializes a ioscPacket and returns the ioscPacket data in byte array.
 		/// </summary>
-		/// <param name="packet">Packet</param>
-		/// <returns>Packet data</returns>
-		public static byte[] Pack(OSCPacket packet)
+		/// <param name="ioscPacket">IoscPacket</param>
+		/// <returns>IoscPacket data</returns>
+		public static byte[] Pack(IOSCPacket ioscPacket)
 		{
 			lock (_lock)
 			{
 				var size = 0;
-				var buffer = PackInternal(packet, ref size);
+				var buffer = PackInternal(ioscPacket, ref size);
 
 				var bytes = new byte[size];
 
@@ -122,7 +122,7 @@ namespace extOSC.Core
 			}
 		}
 
-		public static OSCPacket Unpack(byte[] bytes)
+		public static IOSCPacket Unpack(byte[] bytes)
 		{
 			lock (_lock)
 			{
@@ -130,7 +130,7 @@ namespace extOSC.Core
 			}
 		}
 
-		public static OSCPacket Unpack(byte[] buffer, int length)
+		public static IOSCPacket Unpack(byte[] buffer, int length)
 		{
 			lock (_lock)
 			{
@@ -149,7 +149,7 @@ namespace extOSC.Core
 		}
 
 		//  PACK METHODS
-		public static byte[] PackInternal(OSCPacket packet, ref int index)
+		public static byte[] PackInternal(IOSCPacket ioscPacket, ref int index)
 		{
 			if (_bufferIndex >= _buffers.Count)
 			{
@@ -164,13 +164,13 @@ namespace extOSC.Core
 			var buffer = _buffers[_bufferIndex];
 			_bufferIndex++;
 
-			if (packet.IsBundle())
+			if (ioscPacket.IsBundle())
 			{
-				PackBundle((OSCBundle) packet, buffer, ref index);
+				PackBundle((OSCBundle) ioscPacket, buffer, ref index);
 			}
 			else
 			{
-				PackMessage((OSCMessage) packet, buffer, ref index);
+				PackMessage((OSCMessage) ioscPacket, buffer, ref index);
 			}
 
 			_bufferIndex--;
@@ -247,7 +247,7 @@ namespace extOSC.Core
 		}
 
 		//  UNPACK METHODS.
-		private static OSCPacket UnpackInternal(byte[] bytes, ref int start, int end)
+		private static IOSCPacket UnpackInternal(byte[] bytes, ref int start, int end)
 		{
 			if (IsBundle(bytes, ref start))
 				return UnpackBundle(bytes, ref start, end);
@@ -260,7 +260,7 @@ namespace extOSC.Core
 			OSCBundle bundle = null;
 
 			var address = (string) UnpackValue(OSCValueType.String, bytes, ref start);
-			if (address.Equals(OSCBundle.KBundle))
+			if (address.Equals(OSCBundle.BundleAddress))
 			{
 				var timeStamp = (long) UnpackValue(OSCValueType.Long, bytes, ref start);
 

@@ -102,7 +102,7 @@ namespace extOSC.Editor
             _localPortModeProperty = serializedObject.FindProperty("localPortMode");
 			_localPortProperty = serializedObject.FindProperty("localPort");
 
-            if (!Application.isPlaying && !_transmitter.IsAvailable && _workInEditorProperty.boolValue)
+            if (!Application.isPlaying && !_transmitter.IsStarted && _workInEditorProperty.boolValue)
             {
                 _transmitter.Connect();
             }
@@ -113,7 +113,7 @@ namespace extOSC.Editor
             if (_transmitter == null)
                 _transmitter = target as OSCTransmitter;
 
-            if (!Application.isPlaying && _transmitter.IsAvailable)
+            if (!Application.isPlaying && _transmitter.IsStarted)
             {
                 _transmitter.Close();
             }
@@ -130,7 +130,7 @@ namespace extOSC.Editor
             // LOGO
             OSCEditorInterface.LogoLayout();
 
-            EditorGUILayout.LabelField("Active: " + _transmitter.IsAvailable, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Active: " + _transmitter.IsStarted, EditorStyles.boldLabel);
 	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 	        {
 				// SETTINGS BLOCK
@@ -265,20 +265,20 @@ namespace extOSC.Editor
 
         protected void InGameControls()
         {
-			GUI.color = _transmitter.IsAvailable ? Color.green : Color.red;
-	        if (GUILayout.Button(_transmitter.IsAvailable ? "Connected" : "Disconnected"))
+			GUI.color = _transmitter.IsStarted ? Color.green : Color.red;
+	        if (GUILayout.Button(_transmitter.IsStarted ? "Connected" : "Disconnected"))
 	        {
-		        if (_transmitter.IsAvailable)
+		        if (_transmitter.IsStarted)
 			        _transmitter.Close();
 
 		        else _transmitter.Connect();
 	        }
 			
             GUI.color = Color.yellow;
-	        GUI.enabled = !_transmitter.IsAvailable;
+	        GUI.enabled = !_transmitter.IsStarted;
             if (GUILayout.Button("Reconnect"))
             {
-                if (_transmitter.IsAvailable)
+                if (_transmitter.IsStarted)
 	                _transmitter.Close();
 
                 _transmitter.Connect();
@@ -296,14 +296,14 @@ namespace extOSC.Editor
 
 			    if (_workInEditorProperty.boolValue)
 			    {
-				    if (_transmitter.IsAvailable)
+				    if (_transmitter.IsStarted)
 					    _transmitter.Close();
 
 				    _transmitter.Connect();
 			    }
 			    else
 			    {
-				    if (_transmitter.IsAvailable)
+				    if (_transmitter.IsStarted)
 					    _transmitter.Close();
 			    }
 		    }
@@ -315,7 +315,7 @@ namespace extOSC.Editor
 			    if (_workInEditorProperty.boolValue)
 			    {
 
-				    if (_transmitter.IsAvailable)
+				    if (_transmitter.IsStarted)
 					    _transmitter.Close();
 
 				    _transmitter.Connect();

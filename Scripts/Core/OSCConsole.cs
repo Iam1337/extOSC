@@ -32,24 +32,24 @@ namespace extOSC.Core
 
         #region Public Methods
 
-        public static void Received(OSCReceiver receiver, OSCPacket packet)
+        public static void Received(OSCReceiver receiver, IOSCPacket ioscPacket)
         {
-			var ip = packet.Ip != null ? string.Format("{0}:{1}", packet.Ip, packet.Port) : "Debug";
+			var ip = ioscPacket.Ip != null ? string.Format("{0}:{1}", ioscPacket.Ip, ioscPacket.Port) : "Debug";
 
 			var consolePacket = new OSCConsolePacket();
             consolePacket.Info = string.Format("Receiver: {0}. From: {1}", receiver.LocalPort, ip);
             consolePacket.PacketType = OSCConsolePacketType.Received;
-            consolePacket.Packet = packet;
+            consolePacket.IoscPacket = ioscPacket;
 
             Log(consolePacket);
         }
 
-        public static void Transmitted(OSCTransmitter transmitter, OSCPacket packet)
+        public static void Transmitted(OSCTransmitter transmitter, IOSCPacket ioscPacket)
         {
             var consolePacket = new OSCConsolePacket();
             consolePacket.Info = string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);
             consolePacket.PacketType = OSCConsolePacketType.Transmitted;
-            consolePacket.Packet = packet;
+            consolePacket.IoscPacket = ioscPacket;
 
             Log(consolePacket);
         }
@@ -62,13 +62,13 @@ namespace extOSC.Core
         {
 #if UNITY_EDITOR
             // COPY PACKET
-	        consolePacket.Packet = consolePacket.Packet.Copy();
+	        consolePacket.IoscPacket = consolePacket.IoscPacket.Copy();
             
             _consoleBuffer.Add(consolePacket);
 #else
             if (_logConsole)
             {
-                UnityEngine.Debug.LogFormat("[OSCConsole] Packed {0}: {1}", consolePacket.PacketType, consolePacket.Packet);
+                UnityEngine.Debug.LogFormat("[OSCConsole] Packed {0}: {1}", consolePacket.PacketType, consolePacket.IoscPacket);
             }
 #endif
         }

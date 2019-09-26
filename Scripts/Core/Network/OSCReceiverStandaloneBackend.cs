@@ -132,7 +132,7 @@ namespace extOSC.Core.Network
             }
         }
 
-        protected OSCPacket Receive(UdpClient receivedClient, IAsyncResult result)
+        protected IOSCPacket Receive(UdpClient receivedClient, IAsyncResult result)
         {
             try
             {
