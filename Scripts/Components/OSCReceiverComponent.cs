@@ -1,6 +1,7 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 using extOSC.Core;
 using extOSC.Core.Events;
@@ -8,138 +9,144 @@ using extOSC.Mapping;
 
 namespace extOSC.Components
 {
-    public abstract class OSCReceiverComponent : MonoBehaviour, IOSCBind, IOSCReceiverComponent
-    {
-        #region Public Vars
+	public abstract class OSCReceiverComponent : MonoBehaviour, IOSCBind
+	{
+		#region Public Vars
 
-        public OSCReceiver Receiver {
-            get { return receiver; }
-            set {
-                if (receiver == value)
-                    return;
+		public OSCReceiver Receiver
+		{
+			get => _receiver;
+			set
+			{
+				if (_receiver == value)
+					return;
 
-                Unbind();
+				Unbind();
+				_receiver = value;
+				Bind();
+			}
+		}
 
-                receiver = value;
+		public string ReceiverAddress
+		{
+			get => _address;
+			set
+			{
+				if (_address == value)
+					return;
 
-                Bind();
-            }
-        }
+				Unbind();
+				_address = value;
+				Bind();
+			}
+		}
 
-        public string ReceiverAddress {
-            get { return address; }
-            set {
-                if (address == value)
-                    return;
+		public OSCMapBundle MapBundle
+		{
+			get => _mapBundle;
+			set => _mapBundle = value;
+		}
 
-                Unbind();
+		public OSCEventMessage Callback
+		{
+			get
+			{
+				if (_callback == null)
+				{
+					_callback = new OSCEventMessage();
+					_callback.AddListener(InvokeMessage);
+				}
 
-                address = value;
+				return _callback;
+			}
+		}
 
-                Bind();
-            }
-        }
+		#endregion
 
-        public OSCMapBundle MapBundle {
-            get { return mapBundle; }
-            set { mapBundle = value; }
-        }
+		#region Protected Vars
 
-        public OSCEventMessage Callback {
-            get {
-                if (callback == null)
-                {
-                    callback = new OSCEventMessage();
-                    callback.AddListener(InvokeMessage);
-                }
+		[OSCSelector]
+		[SerializeField]
+		[FormerlySerializedAs("receiver")]
+        private OSCReceiver _receiver;
 
-                return callback;
-            }
-        }
+		[SerializeField]
+		[FormerlySerializedAs("address")]
+		private string _address = "/address";
 
-        #endregion
+		[SerializeField]
+		[FormerlySerializedAs("mapBundle")]
+		private OSCMapBundle _mapBundle;
 
-        #region Protected Vars
+		private OSCEventMessage _callback;
 
-        [OSCSelector]
-        [SerializeField]
-        protected OSCReceiver receiver;
+		private OSCReceiver _bindedReceiver;
 
-        [SerializeField]
-        protected string address = "/address";
+		#endregion
 
-        [SerializeField]
-        protected OSCMapBundle mapBundle;
+		#region Unity Methods
 
-        protected OSCEventMessage callback;
+		protected virtual void OnEnable()
+		{
+			Bind();
+		}
 
-        protected OSCReceiver bindedReceiver;
-
-        #endregion
-
-        #region Unity Methods
-
-        protected virtual void OnEnable()
-        {
-            Bind();
-        }
-
-        protected virtual void OnDisable()
-        {
-            Unbind();
-        }
+		protected virtual void OnDisable()
+		{
+			Unbind();
+		}
 
 #if UNITY_EDITOR
-        protected virtual void OnValidate()
-        {
-            if (Application.isPlaying)
-            {
-                Unbind();
-                Bind();
-            }
-        }
+		protected virtual void OnValidate()
+		{
+			if (Application.isPlaying)
+			{
+				Unbind();
+				Bind();
+			}
+		}
 #endif
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public virtual void Bind()
-        {
-            if (receiver != null)
-                receiver.Bind(this);
+		public virtual void Bind()
+		{
+			if (_receiver != null)
+				_receiver.Bind(this);
 
-            bindedReceiver = receiver;
-        }
+			_bindedReceiver = _receiver;
+		}
 
-        public virtual void Unbind()
-        {
-            if (bindedReceiver != null)
-                bindedReceiver.Unbind(this);
+		public virtual void Unbind()
+		{
+			if (_bindedReceiver != null)
+				_bindedReceiver.Unbind(this);
 
-            bindedReceiver = null;
-        }
+			_bindedReceiver = null;
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected abstract void Invoke(OSCMessage message);
+		protected abstract void Invoke(OSCMessage message);
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void InvokeMessage(OSCMessage message)
-        {
-            if (!enabled) return;
+		private void InvokeMessage(OSCMessage message)
+		{
+			if (!enabled) return;
 
-            if (mapBundle != null)
-                mapBundle.Map(message);
+			if (_mapBundle != null)
+				_mapBundle.Map(message);
 
-            Invoke(message);
-        }
+			Invoke(message);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

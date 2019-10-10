@@ -1,143 +1,131 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace extOSC.Components.Ping
 {
-    [AddComponentMenu("extOSC/Components/Ping/Ping Client")]
-    public class OSCPingClient : OSCComponent
-    {
-        #region Public Vars
+	[AddComponentMenu("extOSC/Components/Ping/Ping Client")]
+	public class OSCPingClient : OSCComponent
+	{
+		#region Public Vars
 
-        public float Interval
-        {
-            get { return interval; }
-            set { interval = value; }
-        }
+		public float Interval
+		{
+			get => _interval;
+			set => _interval = value;
+		}
 
-        public float Timeout
-        {
-            get { return timeout; }
-            set { timeout = value; }
-        }
+		public float Timeout
+		{
+			get => _timeout;
+			set => _timeout = value;
+		}
 
-        public bool AutoStart
-        {
-            get { return autoStart; }
-            set { autoStart = value; }
-        }
+		public bool AutoStart
+		{
+			get => _autoStart;
+			set => _autoStart = value;
+		}
 
-        public bool IsAvailable
-        {
-            get { return _IsAvailable; }
-        }
+		public bool IsAvailable => _isAvailable;
 
-        public float Timer
-        {
-            get { return _timer; }
-        }
+		public float Timer => _timer;
 
-        public float LastReceiveTime
-        {
-            get { return _lastReceiveTime; }
-        }
+		public float LastReceiveTime => _lastReceiveTime;
 
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-        }
+		public bool IsRunning => _isRunning;
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Private Vars
 
-        [SerializeField]
-        protected float interval;
+		[SerializeField]
+		[FormerlySerializedAs("interval")]
+		private float _interval;
 
-        [SerializeField]
-        protected float timeout;
+		[SerializeField]
+		[FormerlySerializedAs("timeout")]
+		private float _timeout;
 
-        [SerializeField]
-        protected bool autoStart = true;
+		[SerializeField]
+		[FormerlySerializedAs("autoStart")]
+		private bool _autoStart = true;
 
-        #endregion
+		private float _timer;
 
-        #region Private Vars
+		private float _lastReceiveTime;
 
-        protected float _timer;
+		private bool _isAvailable;
 
-        protected float _lastReceiveTime;
+		private bool _isRunning;
 
-        protected bool _IsAvailable;
+		#endregion
 
-        protected bool _isRunning;
+		#region Unity Methods
 
-        #endregion
+		protected virtual void Start()
+		{
+			if (_autoStart) StartPing();
+		}
 
-        #region Unity Methods
+		protected virtual void Update()
+		{
+			if (!_isRunning) return;
 
-        protected virtual void Start()
-        {
-            if (autoStart) StartPing();
-        }
+			_timer += Time.deltaTime;
 
-        protected virtual void Update()
-        {
-            if (!_isRunning) return;
+			if (_timer >= _interval)
+			{
+				Send();
 
-            _timer += Time.deltaTime;
+				_timer = 0;
+			}
 
-            if (_timer >= interval)
-            {
-                Send();
+			_lastReceiveTime += Time.deltaTime;
+			_isAvailable = _timeout > _lastReceiveTime;
+		}
 
-                _timer = 0;
-            }
+		#endregion
 
-            _lastReceiveTime += Time.deltaTime;
-            _IsAvailable = timeout > _lastReceiveTime;
-        }
+		#region Public Methods
 
-        #endregion
+		public void StartPing()
+		{
+			_isRunning = true;
+		}
 
-        #region Public Methods
+		public void StopPing()
+		{
+			_isRunning = false;
+			_timer = 0;
+		}
 
-        public void StartPing()
-        {
-            _isRunning = true;
-        }
+		public void PausePing()
+		{
+			_isRunning = false;
+		}
 
-        public void StopPing()
-        {
-            _isRunning = false;
-            _timer = 0;
-        }
+		#endregion
 
-        public void PausePing()
-        {
-            _isRunning = false;
-        }
+		#region Protected Methods
 
-        #endregion
+		protected override bool FillMessage(OSCMessage message)
+		{
+			if (Receiver == null) return false;
 
-        #region Protected Methods
+			message.AddValue(OSCValue.String(ReceiverAddress));
+			message.AddValue(OSCValue.Int(Receiver.LocalPort));
 
-        protected override bool FillMessage(OSCMessage message)
-        {
-            if (receiver == null) return false;
+			return true;
+		}
 
-            message.AddValue(OSCValue.String(receiverAddress));
-            message.AddValue(OSCValue.Int(receiver.LocalPort));
+		protected override void Invoke(OSCMessage message)
+		{
+			if (message.HasImpulse())
+				_lastReceiveTime = 0;
+		}
 
-            return true;
-        }
-
-        protected override void Invoke(OSCMessage message)
-        {
-            if (message.HasImpulse())
-                _lastReceiveTime = 0;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

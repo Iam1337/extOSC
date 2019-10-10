@@ -1,6 +1,7 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 using System;
 using System.Collections.Generic;
@@ -9,37 +10,38 @@ using extOSC.Core.Reflection;
 
 namespace extOSC.Components.ReceiverReflections
 {
-    public abstract class OSCReceiverReflection : OSCReceiverComponent
-    {
-        #region Public Vars
+	public abstract class OSCReceiverReflection : OSCReceiverComponent
+	{
+		#region Public Vars
 
-        public abstract Type ReceiverType { get; }
+		public abstract Type ReceiverType { get; }
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Protected Vars
 
-        [SerializeField]
-        protected List<OSCReflectionMember> reflectionMembers = new List<OSCReflectionMember>();
+		[SerializeField]
+		[FormerlySerializedAs("reflectionMembers")]
+		private List<OSCReflectionMember> _reflectionMembers = new List<OSCReflectionMember>();
 
-        protected Dictionary<OSCReflectionMember, OSCReflectionProperty> cachedProperties = new Dictionary<OSCReflectionMember, OSCReflectionProperty>();
+		protected readonly Dictionary<OSCReflectionMember, OSCReflectionProperty> _cachedProperties = new Dictionary<OSCReflectionMember, OSCReflectionProperty>();
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void OnEnable()
-        {
-        	UpdateCachedReferences();
-        }
+		protected override void OnEnable()
+		{
+			UpdateCachedReferences();
+		}
 
 #if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
+		protected override void OnValidate()
+		{
+			base.OnValidate();
 
-            UpdateCachedReferences();
-        }
+			UpdateCachedReferences();
+		}
 #endif
 
 		#endregion
@@ -48,89 +50,84 @@ namespace extOSC.Components.ReceiverReflections
 
 		public OSCReflectionMember[] GetMembers()
 		{
-			return reflectionMembers.ToArray();
+			return _reflectionMembers.ToArray();
 		}
 
 		public void AddMember(OSCReflectionMember member)
-        {
-            if (reflectionMembers.Contains(member))
-                return;
+		{
+			if (_reflectionMembers.Contains(member))
+				return;
 
-            reflectionMembers.Add(member);
+			_reflectionMembers.Add(member);
 
-            UpdateCachedReferences();
-        }
+			UpdateCachedReferences();
+		}
 
-        public void RemoveMember(OSCReflectionMember member)
-        {
-            if (!reflectionMembers.Contains(member))
-                return;
+		public void RemoveMember(OSCReflectionMember member)
+		{
+			if (!_reflectionMembers.Contains(member))
+				return;
 
-            reflectionMembers.Remove(member);
+			_reflectionMembers.Remove(member);
 
-            UpdateCachedReferences();
-        }
+			UpdateCachedReferences();
+		}
 
-        public void UpdateMembers()
-        {
-            UpdateCachedReferences();
-        }
+		public void UpdateMembers()
+		{
+			UpdateCachedReferences();
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void UpdateCachedReferences()
-        {
-            cachedProperties.Clear();
+		private void UpdateCachedReferences()
+		{
+			_cachedProperties.Clear();
 
-            foreach (var reflectionMember in reflectionMembers)
-            {
-                if (reflectionMember == null)
-                    continue;
+			foreach (var reflectionMember in _reflectionMembers)
+			{
+				if (reflectionMember == null)
+					continue;
 
-                if (cachedProperties.ContainsKey(reflectionMember))
-                    cachedProperties.Add(reflectionMember, null);
+				if (_cachedProperties.ContainsKey(reflectionMember))
+					_cachedProperties.Add(reflectionMember, null);
 
-                if (reflectionMember.IsValid())
-                    cachedProperties[reflectionMember] = reflectionMember.GetProperty();
-                else
-                    cachedProperties[reflectionMember] = null;
-            }
-        }
+				if (reflectionMember.IsValid())
+					_cachedProperties[reflectionMember] = reflectionMember.GetProperty();
+				else
+					_cachedProperties[reflectionMember] = null;
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 
-    public abstract class OSCReceiverReflection<T> : OSCReceiverReflection
-    {
-        #region Public Vars
+	public abstract class OSCReceiverReflection<T> : OSCReceiverReflection
+	{
+		#region Public Vars
 
-        public override Type ReceiverType
-        {
-            get { return typeof(T); }
-        }
+		public override Type ReceiverType => typeof(T);
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
-        {
-            T value;
+		protected override void Invoke(OSCMessage message)
+		{
+			if (ProcessMessage(message, out var value))
+			{
+				foreach (var property in _cachedProperties.Values)
+				{
+					if (property != null)
+						property.SetValue(value);
+				}
+			}
+		}
 
-            if (ProcessMessage(message, out value))
-            {
-                foreach (var property in cachedProperties.Values)
-                {
-                    if (property != null)
-                        property.SetValue(value);
-                }
-            }
-        }
+		protected abstract bool ProcessMessage(OSCMessage message, out T value);
 
-        protected abstract bool ProcessMessage(OSCMessage message, out T value);
-
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -2,27 +2,24 @@
 
 namespace extOSC.Core.Packers
 {
-    internal class OSCPackerTrue : OSCPacker<bool>
-    {
-        #region Public Methods
+	internal class OSCPackerTrue : OSCPacker<bool>
+	{
+		#region Public Methods
 
-        public override OSCValueType GetPackerType()
-        {
-            return OSCValueType.True;
-        }
+		public override OSCValueType PackerType => OSCValueType.True;
 
         #endregion
 
         #region Protected Methods
 
         protected override bool BytesToValue(byte[] buffer, ref int index)
-        {
-            return true;
-        }
+		{
+			return true;
+		}
 
-        protected override void ValueToBytes(byte[] buffer, ref int index, bool value)
-        { }
+		protected override void ValueToBytes(byte[] buffer, ref int index, bool value)
+		{ }
 
-        #endregion
-    }
+		#endregion
+	}
 }

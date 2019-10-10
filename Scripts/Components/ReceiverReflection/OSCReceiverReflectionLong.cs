@@ -4,21 +4,13 @@ using UnityEngine;
 
 namespace extOSC.Components.ReceiverReflections
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Long Reflection")]
-    public class OSCReceiverReflectionLong : OSCReceiverReflection<long>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Long Reflection")]
+	public class OSCReceiverReflectionLong : OSCReceiverReflection<long>
+	{
+		#region Protected Methods
 
-        protected override bool ProcessMessage(OSCMessage message, out long value)
-        {
-            value = 0;
+		protected override bool ProcessMessage(OSCMessage message, out long value) => message.ToLong(out value);
 
-            if (message.ToLong(out value))
-                return true;
-
-            return false;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

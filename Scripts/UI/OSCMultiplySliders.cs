@@ -11,358 +11,312 @@ using extOSC.Components.Informers;
 
 namespace extOSC.UI
 {
-    [AddComponentMenu("extOSC/UI/Multiply Sliders")]
-    [RequireComponent(typeof(RectTransform))]
-    public class OSCMultiplySliders : Selectable, IDragHandler, IInitializePotentialDragHandler, ICanvasElement
-    {
-        #region Extensions
+	[AddComponentMenu("extOSC/UI/Multiply Sliders")]
+	[RequireComponent(typeof(RectTransform))]
+	public class OSCMultiplySliders : Selectable, IDragHandler, IInitializePotentialDragHandler, ICanvasElement
+	{
+		#region Extensions
 
-        public enum Direction
-        {
-            Horizontal,
+		public enum Direction
+		{
+			Horizontal,
 
-            Vertical
-        }
+			Vertical
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Vars
+		#region Public Vars
 
-        public Color DefaultColor
-        {
-            get
-            {
-                return _defaultColor;
-            }
-            set
-            {
-                if (_defaultColor == value)
-                    return;
+		public Color DefaultColor
+		{
+			get => _defaultColor;
+			set => _defaultColor = value;
+		}
 
-                _defaultColor = value;
-            }
-        }
+		public string Address
+		{
+			get => _address;
+			set
+			{
+				if (_address == value)
+					return;
 
-        public string Address
-        {
-            get
-            {
-                return _address;
-            }
-            set
-            {
-                if (_address == value)
-                    return;
+				_address = value;
 
-                _address = value;
+				UpdateSliders();
+			}
+		}
 
-                UpdateSliders();
-            }
-        }
+		public OSCTransmitter Transmitter
+		{
+			get => _transmitter;
+			set
+			{
+				if (_transmitter == value)
+					return;
 
-        public OSCTransmitter Transmitter
-        {
-            get
-            {
-                return _transmitter;
-            }
-            set
-            {
-                if (_transmitter == value)
-                    return;
+				_transmitter = value;
 
-                _transmitter = value;
+				UpdateSliders();
+			}
+		}
 
-                UpdateSliders();
-            }
-        }
+		public float MinValue
+		{
+			get => _minValue;
+			set
+			{
+				if (_minValue.Equals(value))
+					return;
 
-        public float MinValue
-        {
-            get
-            {
-                return _minValue;
-            }
-            set
-            {
-                if (_minValue.Equals(value))
-                    return;
+				_minValue = value;
 
-                _minValue = value;
+				UpdateSliders();
+			}
+		}
 
-                UpdateSliders();
-            }
-        }
+		public float MaxValue
+		{
+			get => _maxValue;
+			set
+			{
+				if (_maxValue.Equals(value))
+					return;
 
-        public float MaxValue
-        {
-            get
-            {
-                return _maxValue;
-            }
-            set
-            {
-                if (_maxValue.Equals(value))
-                    return;
+				_maxValue = value;
 
-                _maxValue = value;
+				UpdateSliders();
+			}
+		}
 
-                UpdateSliders();
-            }
-        }
+		public bool WholeNumbers
+		{
+			get => _wholeNumbers;
+			set
+			{
+				if (_wholeNumbers.Equals(value))
+					return;
 
-        public bool WholeNumbers
-        {
-            get
-            {
-                return _wholeNumbers;
-            }
-            set
-            {
-                if (_wholeNumbers.Equals(value))
-                    return;
+				_wholeNumbers = value;
 
-                _wholeNumbers = value;
+				UpdateSliders();
+			}
+		}
 
-                UpdateSliders();
-            }
-        }
+		public Direction LayoutDirection => _layoutGroup is VerticalLayoutGroup ? Direction.Vertical : Direction.Horizontal;
 
-        public Direction LayoutDirection
-        {
-            get
-            {
-                if (_layoutGroup is VerticalLayoutGroup)
-                    return Direction.Vertical;
-                else
-                    return Direction.Horizontal;
-            }
-        }
+		public HorizontalOrVerticalLayoutGroup LayoutGroup
+		{
+			get => _layoutGroup;
+			set
+			{
+				if (_layoutGroup == value)
+					return;
 
-        public HorizontalOrVerticalLayoutGroup LayoutGroup
-        {
-            get
-            {
-                return _layoutGroup;
-            }
-            set
-            {
-                if (_layoutGroup == value)
-                    return;
+				_layoutGroup = value;
+				_layoutTransform = _layoutGroup.GetComponent<RectTransform>();
+			}
+		}
 
-                _layoutGroup = value;
-                _layoutTransform = _layoutGroup.GetComponent<RectTransform>();
-            }
-        }
+		public OSCSlider[] Sliders => _sliders.ToArray();
 
-        public OSCSlider[] Sliders
-        {
-            get
-            {
-                return _sliders.ToArray();
-            }
-        }
+		#endregion
 
-        #endregion
+		#region Private Vars
 
-        #region Private Vars
-
-        [SerializeField]
-        private string _address = "/address";
-
-	    [OSCSelector]
 		[SerializeField]
-        private OSCTransmitter _transmitter;
+		private string _address = "/address";
 
-        [SerializeField]
-        private HorizontalOrVerticalLayoutGroup _layoutGroup;
+		[OSCSelector]
+		[SerializeField]
+		private OSCTransmitter _transmitter;
 
-        [SerializeField]
-        private List<OSCSlider> _sliders = new List<OSCSlider>();
+		[SerializeField]
+		private HorizontalOrVerticalLayoutGroup _layoutGroup;
 
-        [SerializeField]
-        private Color _defaultColor;
+		[SerializeField]
+		private List<OSCSlider> _sliders = new List<OSCSlider>();
 
-        [SerializeField]
-        private float _maxValue = 1;
+		[SerializeField]
+		private Color _defaultColor;
 
-        [SerializeField]
-        private float _minValue;
+		[SerializeField]
+		private float _maxValue = 1;
 
-        [SerializeField]
-        private bool _wholeNumbers;
+		[SerializeField]
+		private float _minValue;
 
-        private OSCSlider _currentSlider;
+		[SerializeField]
+		private bool _wholeNumbers;
 
-        private RectTransform _layoutTransform;
+		private OSCSlider _currentSlider;
 
-        #endregion
+		private RectTransform _layoutTransform;
 
-        #region Unity Methods
+		#endregion
 
-        protected override void Awake()
-        {
-            if (_layoutGroup != null)
-                _layoutTransform = _layoutGroup.GetComponent<RectTransform>();
-        }
+		#region Unity Methods
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+		protected override void Awake()
+		{
+			if (_layoutGroup != null)
+				_layoutTransform = _layoutGroup.GetComponent<RectTransform>();
+		}
+
+		protected override void OnEnable()
+		{
+			base.OnEnable();
 
 #if UNITY_EDITOR
-            if (Application.isPlaying)
+			if (Application.isPlaying)
 #endif
 
-                UpdateSliders();
-        }
+				UpdateSliders();
+		}
 
-        public virtual void OnDrag(PointerEventData eventData)
-        {
-            if (!MayDrag(eventData))
-                return;
+		public virtual void OnDrag(PointerEventData eventData)
+		{
+			if (!MayDrag(eventData))
+				return;
 
-            Vector2 localPoint;
+			if (_layoutTransform == null ||
+				_layoutTransform.rect.size.x <= 0.0 ||
+				_layoutTransform.rect.size.y <= 0.0 ||
+				!RectTransformUtility.ScreenPointToLocalPointInRectangle(_layoutTransform, eventData.position, eventData.pressEventCamera, out var localPoint))
+				return;
 
-            if (_layoutTransform == null ||
-                _layoutTransform.rect.size.x <= 0.0 ||
-                _layoutTransform.rect.size.y <= 0.0 ||
-                !RectTransformUtility.ScreenPointToLocalPointInRectangle(_layoutTransform, eventData.position, eventData.pressEventCamera, out localPoint))
-                return;
+			for (var index = 0; index < _sliders.Count; index++)
+			{
+				var slider = _sliders[index];
+				if (slider == null) continue;
 
-            for (var index = 0; index < _sliders.Count; index++)
-            {
-                var slider = _sliders[index];
-                if (slider == null) continue;
+				var sliderRectTransform = slider.transform as RectTransform;
+				var sliderPosition = (Vector2) sliderRectTransform.localPosition - sliderRectTransform.sizeDelta * 0.5f;
+				var sliderRect = new Rect(sliderPosition, sliderRectTransform.rect.size);
 
-                var sliderRectTransform = slider.transform as RectTransform;
-                var sliderPosition = (Vector2)sliderRectTransform.localPosition - sliderRectTransform.sizeDelta * 0.5f;
-                var sliderRect = new Rect(sliderPosition, sliderRectTransform.rect.size);
+				if (Contain(sliderRect, localPoint, index))
+				{
+					_currentSlider = slider;
+					break;
+				}
+			}
 
-                if (Contain(sliderRect, localPoint, index))
-                {
-                    _currentSlider = slider;
-                    break;
-                }
-            }
+			if (_currentSlider != null) _currentSlider.OnDrag(eventData);
+		}
 
-            if (_currentSlider != null) _currentSlider.OnDrag(eventData);
-        }
-
-        public void OnInitializePotentialDrag(PointerEventData eventData)
-        {
-            eventData.useDragThreshold = true;
-        }
+		public void OnInitializePotentialDrag(PointerEventData eventData)
+		{
+			eventData.useDragThreshold = true;
+		}
 
 #if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
+		protected override void OnValidate()
+		{
+			base.OnValidate();
 
-            if (Application.isPlaying && IsActive())
-                UpdateSliders();
+			if (Application.isPlaying && IsActive())
+				UpdateSliders();
 
-            _layoutTransform = _layoutGroup.GetComponent<RectTransform>();
+			_layoutTransform = _layoutGroup.GetComponent<RectTransform>();
 
 #if UNITY_2018_3_OR_NEWER
-            var assetType = UnityEditor.PrefabUtility.GetPrefabAssetType(this);
-            if (assetType == UnityEditor.PrefabAssetType.NotAPrefab && !Application.isPlaying)
-                CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+			var assetType = UnityEditor.PrefabUtility.GetPrefabAssetType(this);
+			if (assetType == UnityEditor.PrefabAssetType.NotAPrefab && !Application.isPlaying)
+				CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
 #else
             var prefabType = UnityEditor.PrefabUtility.GetPrefabType(this);
             if (prefabType != UnityEditor.PrefabType.Prefab && !Application.isPlaying)
                 CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
 #endif
-        }
+		}
 #endif
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void GraphicUpdateComplete()
-        { }
+		public void GraphicUpdateComplete()
+		{ }
 
-        public void LayoutComplete()
-        { }
+		public void LayoutComplete()
+		{ }
 
-        public void Rebuild(CanvasUpdate executing)
-        { }
+		public void Rebuild(CanvasUpdate executing)
+		{ }
 
-        public void AddSlider(OSCSlider slider)
-        {
-            if (!_sliders.Contains(slider))
-                _sliders.Add(slider);
-        }
+		public void AddSlider(OSCSlider slider)
+		{
+			if (!_sliders.Contains(slider))
+				_sliders.Add(slider);
+		}
 
-        public void RemoveSlider(OSCSlider slider)
-        {
-            if (_sliders.Contains(slider))
-                _sliders.Remove(slider);
-        }
+		public void RemoveSlider(OSCSlider slider)
+		{
+			if (_sliders.Contains(slider))
+				_sliders.Remove(slider);
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void UpdateSliders()
-        {
-            for (var index = 0; index < _sliders.Count; index++)
-            {
-                var slider = _sliders[index];
-                if (slider == null) continue;
+		private void UpdateSliders()
+		{
+			for (var index = 0; index < _sliders.Count; index++)
+			{
+				var slider = _sliders[index];
+				if (slider == null) continue;
 
-                slider.MultiplyController = this;
-                slider.wholeNumbers = _wholeNumbers;
-                slider.maxValue = _maxValue;
-                slider.minValue = _minValue;
+				slider.MultiplyController = this;
+				slider.wholeNumbers = _wholeNumbers;
+				slider.maxValue = _maxValue;
+				slider.minValue = _minValue;
 
-                var informerFloat = slider.gameObject.GetComponent<OSCTransmitterInformerFloat>();
-                if (informerFloat == null)
-                {
-                    informerFloat = slider.gameObject.AddComponent<OSCTransmitterInformerFloat>();
-                    informerFloat.ReflectionTarget = new OSCReflectionMember()
-                    {
-                        Target = slider,
-                        MemberName = "value"
-                    };
-                }
+				var informerFloat = slider.gameObject.GetComponent<OSCTransmitterInformerFloat>();
+				if (informerFloat == null)
+				{
+					informerFloat = slider.gameObject.AddComponent<OSCTransmitterInformerFloat>();
+					informerFloat.ReflectionTarget = new OSCReflectionMember()
+					{
+						Target = slider,
+						MemberName = "value"
+					};
+				}
 
-                informerFloat.Transmitter = _transmitter;
-                informerFloat.TransmitterAddress = string.Format("{0}/{1}", _address, index);
-            }
-        }
+				informerFloat.Transmitter = _transmitter;
+				informerFloat.TransmitterAddress = $"{_address}/{index}";
+			}
+		}
 
-        private bool Contain(Rect rect, Vector2 point, int index)
-        {
-            if (LayoutDirection == Direction.Horizontal)
-            {
-                if (index == 0)
-                    return rect.x + rect.width > point.x;
-                if (index >= _sliders.Count - 1)
-                    return rect.x < point.x;
+		private bool Contain(Rect rect, Vector2 point, int index)
+		{
+			if (LayoutDirection == Direction.Horizontal)
+			{
+				if (index == 0)
+					return rect.x + rect.width > point.x;
+				if (index >= _sliders.Count - 1)
+					return rect.x < point.x;
 
-                return rect.x < point.x && rect.x + rect.width > point.x;
-            }
-            else
-            {
-                if (index == 0)
-                    return rect.y < point.y;
-                if (index >= _sliders.Count - 1)
-                    return rect.y + rect.height > point.y;
+				return rect.x < point.x && rect.x + rect.width > point.x;
+			}
 
-                return rect.y < point.y && rect.y + rect.height > point.y;
-            }
-        }
+			if (index == 0)
+				return rect.y < point.y;
+			if (index >= _sliders.Count - 1)
+				return rect.y + rect.height > point.y;
 
-        private bool MayDrag(PointerEventData eventData)
-        {
-            if (IsActive() && IsInteractable())
-                return eventData.button == PointerEventData.InputButton.Left;
+			return rect.y < point.y && rect.y + rect.height > point.y;
+		}
 
-            return false;
-        }
+		private bool MayDrag(PointerEventData eventData)
+		{
+			if (IsActive() && IsInteractable())
+				return eventData.button == PointerEventData.InputButton.Left;
 
-        #endregion
-    }
+			return false;
+		}
+
+		#endregion
+	}
 }

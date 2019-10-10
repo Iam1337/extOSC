@@ -8,235 +8,235 @@ using extOSC.Core.Events;
 
 namespace extOSC.UI
 {
-    [AddComponentMenu("extOSC/UI/Button")]
-    [RequireComponent(typeof(RectTransform))]
-    public class OSCButton : Selectable, IEventSystemHandler, ICanvasElement, ISubmitHandler
-    {
-        #region Extensions
+	[AddComponentMenu("extOSC/UI/Button")]
+	[RequireComponent(typeof(RectTransform))]
+	public class OSCButton : Selectable, ICanvasElement, ISubmitHandler
+	{
+		#region Extensions
 
-        public enum ButtonTransition
-        {
-            None,
+		public enum ButtonTransition
+		{
+			None,
 
-            Fade
-        }
+			Fade
+		}
 
-        public enum Type
-        {
-            Push,
+		public enum Type
+		{
+			Push,
 
-            Toggle
-        }
+			Toggle
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Vars
+		#region Public Vars
 
-        public virtual bool Value
-        {
-            get { return _value; }
-            set { Set(value); }
-        }
+		public virtual bool Value
+		{
+			get => _value;
+			set => Set(value);
+		}
 
-        public Graphic Graphic
-        {
-            get { return _graphic; }
-            set { _graphic = value; }
-        }
+		public Graphic Graphic
+		{
+			get => _graphic;
+			set => _graphic = value;
+		}
 
-        public ButtonTransition GraphicTransition
-        {
-            get { return _graphicTransition; }
-            set { _graphicTransition = value; }
-        }
+		public ButtonTransition GraphicTransition
+		{
+			get => _graphicTransition;
+			set => _graphicTransition = value;
+		}
 
-        public Type ButtonType
-        {
-            get { return _buttonType; }
-            set
-            {
-                if (_buttonType == value)
-                    return;
+		public Type ButtonType
+		{
+			get => _buttonType;
+			set
+			{
+				if (_buttonType == value)
+					return;
 
-                _buttonType = value;
+				_buttonType = value;
 
-                Set(false, false);
-            }
-        }
+				Set(false, false);
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        [SerializeField]
-        protected bool _value;
+		[SerializeField]
+		protected bool _value;
 
-        [SerializeField]
-        private OSCEventBool _onValueChanged = new OSCEventBool();
+		[SerializeField]
+		private OSCEventBool _onValueChanged = new OSCEventBool();
 
-        [SerializeField]
-        private Graphic _graphic;
+		[SerializeField]
+		private Graphic _graphic;
 
-        [SerializeField]
-        private ButtonTransition _graphicTransition;
+		[SerializeField]
+		private ButtonTransition _graphicTransition;
 
-        [SerializeField]
-        private Type _buttonType;
+		[SerializeField]
+		private Type _buttonType;
 
-        private bool _isPressed;
+		private bool _isPressed;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+		protected override void OnEnable()
+		{
+			base.OnEnable();
 
-            if (_buttonType == Type.Push)
-                Set(false, false);
+			if (_buttonType == Type.Push)
+				Set(false, false);
 
-            UpdateMarker(true);
-        }
+			UpdateMarker(true);
+		}
 
-        public override void OnPointerDown(PointerEventData eventData)
-        {
-            if (_isPressed)
-                return;
+		public override void OnPointerDown(PointerEventData eventData)
+		{
+			if (_isPressed)
+				return;
 
-            if (eventData.button != PointerEventData.InputButton.Left)
-                return;
+			if (eventData.button != PointerEventData.InputButton.Left)
+				return;
 
-            base.OnPointerDown(eventData);
+			base.OnPointerDown(eventData);
 
-            _isPressed = true;
+			_isPressed = true;
 
-            if (_buttonType == Type.Push)
-            {
-                Set(true);
-            }
-        }
+			if (_buttonType == Type.Push)
+			{
+				Set(true);
+			}
+		}
 
-        public override void OnPointerUp(PointerEventData eventData)
-        {
-            if (!_isPressed)
-                return;
+		public override void OnPointerUp(PointerEventData eventData)
+		{
+			if (!_isPressed)
+				return;
 
-            base.OnPointerUp(eventData);
+			base.OnPointerUp(eventData);
 
-            _isPressed = false;
+			_isPressed = false;
 
-            if (_buttonType == Type.Push)
-            {
-                Set(false);
-            }
-            else if (_buttonType == Type.Toggle)
-            {
-                Set(!_value);
-            }
-        }
+			if (_buttonType == Type.Push)
+			{
+				Set(false);
+			}
+			else if (_buttonType == Type.Toggle)
+			{
+				Set(!_value);
+			}
+		}
 
-        protected override void OnDidApplyAnimationProperties()
-        {
-            if (_graphic != null)
-            {
-                bool oldValue = !Mathf.Approximately(_graphic.canvasRenderer.GetColor().a, 0);
-                if (_value != oldValue)
-                {
-                    _value = oldValue;
-                    Set(!oldValue);
-                }
-            }
+		protected override void OnDidApplyAnimationProperties()
+		{
+			if (_graphic != null)
+			{
+				bool oldValue = !Mathf.Approximately(_graphic.canvasRenderer.GetColor().a, 0);
+				if (_value != oldValue)
+				{
+					_value = oldValue;
+					Set(!oldValue);
+				}
+			}
 
-            base.OnDidApplyAnimationProperties();
-        }
+			base.OnDidApplyAnimationProperties();
+		}
 
-        public void OnSubmit(BaseEventData eventData)
-        {
-            if (_buttonType == Type.Toggle)
-            {
-                Set(!_value);
-            }
-        }
+		public void OnSubmit(BaseEventData eventData)
+		{
+			if (_buttonType == Type.Toggle)
+			{
+				Set(!_value);
+			}
+		}
 
 #if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
+		protected override void OnValidate()
+		{
+			base.OnValidate();
 
-            Set(_value, false);
+			Set(_value, false);
 
-            if (_buttonType == Type.Push)
-                Set(false, false);
+			if (_buttonType == Type.Push)
+				Set(false, false);
 
-            UpdateMarker(_graphicTransition == ButtonTransition.None);
+			UpdateMarker(_graphicTransition == ButtonTransition.None);
 
 #if UNITY_2018_3_OR_NEWER
-            var assetType = UnityEditor.PrefabUtility.GetPrefabAssetType(this);
-            if (assetType == UnityEditor.PrefabAssetType.NotAPrefab && !Application.isPlaying)
-                CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+			var assetType = UnityEditor.PrefabUtility.GetPrefabAssetType(this);
+			if (assetType == UnityEditor.PrefabAssetType.NotAPrefab && !Application.isPlaying)
+				CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
 #else
             var prefabType = UnityEditor.PrefabUtility.GetPrefabType(this);
             if (prefabType != UnityEditor.PrefabType.Prefab && !Application.isPlaying)
                 CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
 #endif
-        }
+		}
 #endif
 
-#endregion
+		#endregion
 
-            #region Public Methods
+		#region Public Methods
 
-            public void GraphicUpdateComplete()
-        { }
+		public void GraphicUpdateComplete()
+		{ }
 
-        public void LayoutComplete()
-        { }
+		public void LayoutComplete()
+		{ }
 
-        public void Rebuild(CanvasUpdate executing)
-        {
+		public void Rebuild(CanvasUpdate executing)
+		{
 #if UNITY_EDITOR
-            if (executing == CanvasUpdate.Prelayout)
-                _onValueChanged.Invoke(_value);
+			if (executing == CanvasUpdate.Prelayout)
+				_onValueChanged.Invoke(_value);
 #endif
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected virtual void Set(bool input)
-        {
-            Set(input, true);
-        }
+		protected virtual void Set(bool input)
+		{
+			Set(input, true);
+		}
 
-        protected virtual void Set(bool input, bool sendCallback)
-        {
-            _value = input;
+		protected virtual void Set(bool input, bool sendCallback)
+		{
+			_value = input;
 
-            UpdateMarker(_graphicTransition == ButtonTransition.None);
+			UpdateMarker(_graphicTransition == ButtonTransition.None);
 
-            if (sendCallback)
-                _onValueChanged.Invoke(_value);
-        }
+			if (sendCallback)
+				_onValueChanged.Invoke(_value);
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void UpdateMarker(bool force)
-        {
-            if (_graphic == null)
-                return;
+		private void UpdateMarker(bool force)
+		{
+			if (_graphic == null)
+				return;
 
 #if UNITY_EDITOR
-            if (!Application.isPlaying)
-                _graphic.canvasRenderer.SetAlpha(_value ? 1f : 0f);
-            else
+			if (!Application.isPlaying)
+				_graphic.canvasRenderer.SetAlpha(_value ? 1f : 0f);
+			else
 #endif
-                _graphic.CrossFadeAlpha(_value ? 1f : 0f, force ? 0f : 0.1f, true);
-        }
+				_graphic.CrossFadeAlpha(_value ? 1f : 0f, force ? 0f : 0.1f, true);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

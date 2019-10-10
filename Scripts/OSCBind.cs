@@ -44,11 +44,5 @@ namespace extOSC
         }
 
         #endregion
-
-        #region Private Methods
-
-        protected OSCBind() { }
-
-        #endregion
-    }
+	}
 }

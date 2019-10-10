@@ -217,3 +217,11 @@ v1.17
 -----
 
 - Fixed OSCConverter bug.
+
+-----
+v1.18
+-----
+
+- Total refactored.
+- Removed many reducant methods and classes.
+- Removed Serialization extension.

@@ -4,21 +4,13 @@ using UnityEngine;
 
 namespace extOSC.Components.ReceiverReflections
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Int Reflection")]
-    public class OSCReceiverReflectionInt : OSCReceiverReflection<int>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Int Reflection")]
+	public class OSCReceiverReflectionInt : OSCReceiverReflection<int>
+	{
+		#region Protected Methods
 
-        protected override bool ProcessMessage(OSCMessage message, out int value)
-        {
-            value = 0;
+		protected override bool ProcessMessage(OSCMessage message, out int value) => message.ToInt(out value);
 
-            if (message.ToInt(out value))
-                return true;
-
-            return false;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

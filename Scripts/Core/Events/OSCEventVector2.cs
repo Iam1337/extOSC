@@ -1,12 +1,11 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
-
-using System;
+using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [Serializable]
-    public class OSCEventVector2 : OSCEvent<Vector2>
+    [System.Serializable]
+    public class OSCEventVector2 : UnityEvent<Vector2>
     { }
 }

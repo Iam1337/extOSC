@@ -2,332 +2,316 @@
 
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
+using System;
 using System.Collections.Generic;
 
 using extOSC.Core;
 using extOSC.Core.Network;
 
+
 namespace extOSC
 {
-    [AddComponentMenu("extOSC/OSC Receiver")]
-    public class OSCReceiver : OSCBase
-    {
-        #region Extensions
+	[AddComponentMenu("extOSC/OSC Receiver")]
+	public class OSCReceiver : OSCBase
+	{
+		#region Public Vars
 
-        public delegate void MessageReceiveDelegate(OSCMessage message);
+		public override bool IsStarted => _receiverBackend.IsAvailable;
 
-        #endregion
+		public OSCLocalHostMode LocalHostMode
+		{
+			get => _localHostMode;
+			set
+			{
+				if (_localHostMode == value)
+					return;
 
-        #region Public Vars
+				_localHostMode = value;
 
-        public OSCLocalHostMode LocalHostMode
-        {
-            get { return localHostMode; }
-            set
-            {
-                if (localHostMode == value)
-                    return;
+				if (_receiverBackend.IsRunning && IsStarted)
+				{
+					Close();
+					Connect();
+				}
+			}
+		}
 
-                localHostMode = value;
+		public string LocalHost
+		{
+			get => RequestLocalHost();
+			set
+			{
+				if (_localHost == value)
+					return;
 
-                if (receiverBackend.IsRunning && IsStarted)
-                {
-                    Close();
-                    Connect();
-                }
-            }
-        }
+				_localHost = value;
 
-        public string LocalHost
-        {
-            get { return RequestLocalHost(); }
-            set
-            {
-                if (localHost == value)
-                    return;
+				if (_receiverBackend.IsRunning && IsStarted)
+				{
+					Close();
+					Connect();
+				}
+			}
+		}
 
-                localHost = value;
+		public int LocalPort
+		{
+			get => _localPort;
+			set
+			{
+				value = OSCUtilities.ClampPort(value);
 
-                if (receiverBackend.IsRunning && IsStarted)
-                {
-                    Close();
-                    Connect();
-                }
-            }
-        }
+				if (_localPort == value)
+					return;
 
-        public int LocalPort
-        {
-            get { return localPort; }
-            set
-            {
-                value = OSCUtilities.ClampPort(value);
+				_localPort = value;
 
-                if (localPort == value)
-                    return;
+				if (_receiverBackend.IsRunning && IsStarted)
+				{
+					Close();
+					Connect();
+				}
+			}
+		}
 
-                localPort = value;
+		#endregion
 
-                if (receiverBackend.IsRunning && IsStarted)
-                {
-                    Close();
-                    Connect();
-                }
-            }
-        }
+		#region Private Vars
 
-        public override bool IsStarted
-        {
-            get { return receiverBackend.IsAvailable; }
-        }
+		private OSCReceiverBackend _receiverBackend
+		{
+			get
+			{
+				if (__receiverBackend == null)
+				{
+					__receiverBackend = OSCReceiverBackend.Create();
+					__receiverBackend.ReceivedCallback = PacketReceived;
+				}
 
-        public bool IsRunning
-        {
-            get { return enabled ? false : receiverBackend.IsRunning; }
-        }
+				return __receiverBackend;
+			}
+		}
 
-        #endregion
+		[SerializeField]
+		[FormerlySerializedAs("localHostMode")]
+		private OSCLocalHostMode _localHostMode = OSCLocalHostMode.Any;
 
-        #region Protected Vars
+		[SerializeField]
+		[FormerlySerializedAs("localHost")]
+		private string _localHost;
 
-        [SerializeField]
-        protected OSCLocalHostMode localHostMode = OSCLocalHostMode.Any;
+		[SerializeField]
+		[FormerlySerializedAs("localPort")]
+		private int _localPort = 7001;
 
-        [SerializeField]
-        protected string localHost;
+		private readonly Queue<IOSCPacket> _packets = new Queue<IOSCPacket>();
 
-        [SerializeField]
-        protected int localPort = 7001;
+		private readonly List<IOSCBind> _bindings = new List<IOSCBind>();
 
-        protected Queue<IOSCPacket> packets = new Queue<IOSCPacket>();
+		private readonly Stack<IOSCBind> _bindStack = new Stack<IOSCBind>();
 
-        protected List<IOSCBind> bindings = new List<IOSCBind>();
+		private readonly Stack<IOSCBind> _unbindStack = new Stack<IOSCBind>();
 
-        protected OSCReceiverBackend receiverBackend
-        {
-            get
-            {
-                if (_receiverBackend == null)
-                {
-                    _receiverBackend = OSCReceiverBackend.Create();
-                    _receiverBackend.ReceivedCallback = PacketReceived;
-                }
+		private readonly object _lock = new object();
 
-                return _receiverBackend;
-            }
-        }
+		private OSCReceiverBackend __receiverBackend;
 
-        #endregion
+		private bool _processMessage;
 
-        #region Private Vars
+		#endregion
 
-        private object _lock = new object();
+		#region Unity Methods
 
-        private OSCReceiverBackend _receiverBackend;
+		protected virtual void Update()
+		{
+			if (!IsStarted || !_receiverBackend.IsRunning) return;
 
-        private Stack<IOSCBind> _bindStack = new Stack<IOSCBind>();
+			lock (_lock)
+			{
+				while (_packets.Count > 0)
+				{
+					var packet = _packets.Dequeue();
 
-        private Stack<IOSCBind> _unbindStack = new Stack<IOSCBind>();
+					if (MapBundle != null)
+						MapBundle.Map(packet);
 
-        private bool _processMessage;
+					OSCConsole.Received(this, packet);
 
-        #endregion
-
-        #region Unity Methods
-
-        protected virtual void Update()
-        {
-            if (!IsStarted || !receiverBackend.IsRunning) return;
-
-            lock (_lock)
-            {
-                while (packets.Count > 0)
-                {
-                    var packet = packets.Dequeue();
-
-                    if (mapBundle != null)
-                        mapBundle.Map(packet);
-
-                    OSCConsole.Received(this, packet);
-
-                    InvokePacket(packet);
-                }
-            }
-        }
+					InvokePacket(packet);
+				}
+			}
+		}
 
 #if UNITY_EDITOR
-        protected void OnValidate()
-        {
-            if (string.IsNullOrEmpty(localHost))
-                localHost = OSCUtilities.GetLocalHost();
+		protected void OnValidate()
+		{
+			if (string.IsNullOrEmpty(_localHost))
+				_localHost = OSCUtilities.GetLocalHost();
 
-            localPort = OSCUtilities.ClampPort(localPort);
-            
-            if (receiverBackend.IsRunning && IsStarted)
-            {
-                Close();
-                Connect();
-            }
-        }
+			_localPort = OSCUtilities.ClampPort(_localPort);
+
+			if (_receiverBackend.IsRunning && IsStarted)
+			{
+				Close();
+				Connect();
+			}
+		}
 #endif
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public override string ToString()
-        {
-            return string.Format("<{0} (LocalHost: {1} LocalPort: {2})>", GetType().Name, localHost, localPort);
-        }
+		public override string ToString()
+		{
+			return $"<{GetType().Name} (LocalHost: {_localHost} LocalPort: {_localPort})>";
+		}
 
-        public override void Connect()
-        {
-            receiverBackend.Connect(RequestLocalHost(), localPort);
-        }
+		public override void Connect()
+		{
+			_receiverBackend.Connect(RequestLocalHost(), _localPort);
+		}
 
-        public override void Close()
-        {
-            if (receiverBackend.IsAvailable)
-                receiverBackend.Close();
-        }
+		public override void Close()
+		{
+			if (_receiverBackend.IsAvailable)
+				_receiverBackend.Close();
+		}
 
-        public void Bind(IOSCBind bind)
-        {
-            if (bind == null) return;
+		public void Bind(IOSCBind bind)
+		{
+			if (bind == null) return;
 
-            if (string.IsNullOrEmpty(bind.ReceiverAddress))
-            {
-                Debug.Log("[OSCReceiver] Address can not be empty!");
-                return;
-            }
+			if (string.IsNullOrEmpty(bind.ReceiverAddress))
+			{
+				Debug.Log("[OSCReceiver] Address can not be empty!");
+				return;
+			}
 
-            if (_processMessage)
-            {
-                _bindStack.Push(bind);
+			if (_processMessage)
+			{
+				_bindStack.Push(bind);
 
-                return;
-            }
+				return;
+			}
 
-            if (!bindings.Contains(bind))
-                bindings.Add(bind);
-        }
+			if (!_bindings.Contains(bind))
+				_bindings.Add(bind);
+		}
 
-        public OSCBind Bind(string address, UnityAction<OSCMessage> callback)
-        {
-            var bind = new OSCBind(address, callback);
+		public OSCBind Bind(string address, UnityAction<OSCMessage> callback)
+		{
+			var bind = new OSCBind(address, callback);
 
-            Bind(bind);
+			Bind(bind);
 
-            return bind;
-        }
+			return bind;
+		}
 
-        public void Unbind(IOSCBind bind)
-        {
-            if (bind == null) return;
+		public void Unbind(IOSCBind bind)
+		{
+			if (bind == null) return;
 
-            if (_processMessage)
-            {
-                _unbindStack.Push(bind);
+			if (_processMessage)
+			{
+				_unbindStack.Push(bind);
 
-                return;
-            }
+				return;
+			}
 
-            if (bindings.Contains(bind))
-                bindings.Remove(bind);
-        }
+			if (_bindings.Contains(bind))
+				_bindings.Remove(bind);
+		}
 
-        public void UnbindAll()
-        {
-            bindings.Clear();
-        }
+		public void ClearBinds()
+		{
+			_bindings.Clear();
+		}
 
-        #endregion
+		[Obsolete("Use ClearBinds() method.")]
+		public void UnbindAll()
+		{
+			ClearBinds();
+		}
 
-        #region Protected Methods
+		#endregion
 
-        protected void InvokePacket(IOSCPacket ioscPacket)
-        {
-            if (ioscPacket.IsBundle())
-            {
-                InvokeBundle(ioscPacket as OSCBundle);
-            }
-            else
-            {
-                InvokeMessage(ioscPacket as OSCMessage);
-            }
-        }
+		#region Private Methods
 
-        protected void InvokeBundle(OSCBundle bundle)
-        {
-            if (bundle == null) return;
+		private void InvokePacket(IOSCPacket packet)
+		{
+			if (packet.IsBundle())
+			{
+				InvokeBundle(packet as OSCBundle);
+			}
+			else
+			{
+				InvokeMessage(packet as OSCMessage);
+			}
+		}
 
-            foreach (var packet in bundle.Packets)
-            {
-                InvokePacket(packet);
-            }
-        }
+		private void InvokeBundle(OSCBundle bundle)
+		{
+			if (bundle == null) return;
 
-        protected void InvokeMessage(OSCMessage message)
-        {
-            if (message == null) return;
+			foreach (var packet in bundle.Packets)
+			{
+				InvokePacket(packet);
+			}
+		}
 
-            _bindStack.Clear();
-            _bindStack.Clear();
+		private void InvokeMessage(OSCMessage message)
+		{
+			if (message == null) return;
 
-            _processMessage = true;
+			_bindStack.Clear();
+			_bindStack.Clear();
 
-            foreach (var bind in bindings)
-            {
-                if (bind == null) continue;
+			_processMessage = true;
 
-                if (OSCUtilities.CompareAddresses(bind.ReceiverAddress, message.Address))
-                {
-                    if (bind.Callback != null)
-                        bind.Callback.Invoke(message);
-                }
-            }
+			foreach (var bind in _bindings)
+			{
+				if (bind == null) continue;
 
-            _processMessage = false;
+				if (OSCUtilities.CompareAddresses(bind.ReceiverAddress, message.Address))
+				{
+					if (bind.Callback != null)
+						bind.Callback.Invoke(message);
+				}
+			}
 
-            while (_bindStack.Count > 0)
-            {
-                Bind(_bindStack.Pop());
-            }
+			_processMessage = false;
 
-            while (_unbindStack.Count > 0)
-            {
-                Unbind(_unbindStack.Pop());
-            }
-        }
+			while (_bindStack.Count > 0)
+			{
+				Bind(_bindStack.Pop());
+			}
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
+			while (_unbindStack.Count > 0)
+			{
+				Unbind(_unbindStack.Pop());
+			}
+		}
 
-            UnbindAll();
-        }
+		private void PacketReceived(IOSCPacket packet)
+		{
+			lock (_lock)
+			{
+				_packets.Enqueue(packet);
+			}
+		}
 
-        protected virtual void PacketReceived(IOSCPacket ioscPacket)
-        {
-            lock (_lock)
-            {
-                packets.Enqueue(ioscPacket);
-            }
-        }
 
-        #endregion
+		private string RequestLocalHost()
+		{
+			if (_localHostMode == OSCLocalHostMode.Any)
+				return "0.0.0.0";
 
-        #region Private Methods
+			return _localHost;
+		}
 
-        private string RequestLocalHost()
-        {
-            if (localHostMode == OSCLocalHostMode.Any)
-                return "0.0.0.0";
-
-            return localHost;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

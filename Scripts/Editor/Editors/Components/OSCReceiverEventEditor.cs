@@ -7,7 +7,7 @@ using extOSC.Components.Events;
 
 namespace extOSC.Editor.Components
 {
-    [CustomEditor(typeof(OSCReceiverEvent), true)]
+    [CustomEditor(typeof(OSCReceiverEvent<>), true)]
     public class OSCReceiverEventEditor : OSCReceiverComponentEditor
     {
         #region Static Private Vars

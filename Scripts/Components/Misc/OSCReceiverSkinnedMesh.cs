@@ -48,10 +48,8 @@ namespace extOSC.Components
 		{
 			if (Target == TargetType.InComponent)
 			{
-				float weight;
-
 				// Take all messages with float value;
-				if (message.ToFloat(out weight))
+				if (message.ToFloat(out var weight))
 				{
 					// Set skinned mesh blend shape weight.
 					_skinnedMesh.SetBlendShapeWeight(TargetIndex, weight);
@@ -59,12 +57,9 @@ namespace extOSC.Components
 			}
 			else
 			{
-				int targetIndex;
-				float weight;
-
 				// Take all messages with int and float values.
-				if (message.ToInt(out targetIndex) && 
-				    message.ToFloat(out weight))
+				if (message.ToInt(out var targetIndex) &&
+					message.ToFloat(out var weight))
 				{
 					// Set skinned mesh blend shape weight.
 					_skinnedMesh.SetBlendShapeWeight(targetIndex, weight);

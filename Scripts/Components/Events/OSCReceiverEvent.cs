@@ -1,36 +1,19 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using System;
-
 using UnityEngine;
-
-using extOSC.Core.Events;
+using UnityEngine.Events;
 
 namespace extOSC.Components.Events
 {
-    public abstract class OSCReceiverEvent : OSCReceiverComponent
+	public abstract class OSCReceiverEvent<T> : OSCReceiverComponent where T : UnityEventBase
     {
         #region Public Vars
 
-        public abstract Type ReceiverType { get; }
-
-        #endregion
-    }
-
-    public abstract class OSCReceiverEvent<T> : OSCReceiverEvent where T : IOSCEvent
-    {
-        #region Public Vars
-
-        public override Type ReceiverType
+		public T OnReceive
         {
-            get { return typeof(T); }
-        }
-
-        public T OnReceive
-        {
-            get { return onReceive; }
-            set { onReceive = value; }
-        }
+            get => onReceive;
+			set => onReceive = value;
+		}
 
         #endregion
 

@@ -6,22 +6,19 @@ using extOSC.Core.Events;
 
 namespace extOSC.Components.Events
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Bool Event")]
-    public class OSCReceiverEventBool : OSCReceiverEvent<OSCEventBool>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Bool Event")]
+	public class OSCReceiverEventBool : OSCReceiverEvent<OSCEventBool>
+	{
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
-        {
-            bool value;
+		protected override void Invoke(OSCMessage message)
+		{
+			if (onReceive != null && message.ToBool(out var value))
+			{
+				onReceive.Invoke(value);
+			}
+		}
 
-            if (message.ToBool(out value))
-            {
-                if (onReceive != null)
-                    onReceive.Invoke(value);
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

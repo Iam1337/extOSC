@@ -15,22 +15,19 @@ namespace extOSC.Editor
         #region Constructor Methods
 
         static OSCHierarchyIcon()
-        {
-            EditorApplication.hierarchyWindowItemOnGUI =
-                (EditorApplication.HierarchyWindowItemCallback)
-                    Delegate.Combine(EditorApplication.hierarchyWindowItemOnGUI,
-                        (EditorApplication.HierarchyWindowItemCallback)DrawHierarchyIcon);
-        }
+		{
+			EditorApplication.hierarchyWindowItemOnGUI += DrawHierarchyIcon;
+		}
 
         #endregion
 
         #region Private Methods
 
-        private static void DrawHierarchyIcon(int instanceID, Rect selectionRect)
+        private static void DrawHierarchyIcon(int instanceId, Rect selectionRect)
         {
             if (OSCEditorTextures.IronWall == null) return;
 
-            var gameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
+            var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
             if (gameObject == null) return;
 
             var oscBase = gameObject.GetComponent<OSCBase>();

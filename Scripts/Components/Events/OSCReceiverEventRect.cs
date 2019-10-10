@@ -6,22 +6,19 @@ using extOSC.Core.Events;
 
 namespace extOSC.Components.Events
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Rect Event")]
-    public class OSCReceiverEventRect : OSCReceiverEvent<OSCEventRect>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Rect Event")]
+	public class OSCReceiverEventRect : OSCReceiverEvent<OSCEventRect>
+	{
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
-        {
-            Rect value;
+		protected override void Invoke(OSCMessage message)
+		{
+			if (onReceive != null && message.ToRect(out var value))
+			{
+				onReceive.Invoke(value);
+			}
+		}
 
-            if (message.ToRect(out value))
-            {
-                if (onReceive != null)
-                    onReceive.Invoke(value);
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

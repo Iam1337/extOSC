@@ -5,21 +5,11 @@ using System.Net;
 using System.Collections.Generic;
 
 using extOSC.Core;
-using JetBrains.Annotations;
 
 namespace extOSC
 {
     public class OSCBundle : IOSCPacket
     {
-        #region Static Public Methods
-
-        public static OSCBundle Create(params IOSCPacket[] packets)
-        {
-            return new OSCBundle(packets);
-        }
-
-        #endregion
-
         #region Constants
 
 		[Obsolete("Use BundleAddress constant.")]

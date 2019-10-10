@@ -16,21 +16,15 @@ namespace extOSC.Core.Network
 
         public override OSCReceivedCallback ReceivedCallback
         {
-            get { return _receivedCallback; }
-            set { _receivedCallback = value; }
-        }
+            get => _receivedCallback;
+			set => _receivedCallback = value;
+		}
 
-        public override bool IsAvailable
-        {
-            get { return _client != null; }
-        }
+        public override bool IsAvailable => _client != null;
 
-        public override bool IsRunning
-        {
-            get { return _isRunning; }
-        }
+		public override bool IsRunning => _isRunning;
 
-        #endregion
+		#endregion
 
         #region Private Vars
 
@@ -64,30 +58,28 @@ namespace extOSC.Core.Network
             {
                 if (e.ErrorCode == 10048)
                 {
-                    Debug.LogErrorFormat("[OSCReceiver] Socket Error: Could not use port {0} because another application is listening on it.",
-                        localPort);
+                    Debug.LogErrorFormat($"[OSCReceiver] Socket Error: Could not use port {localPort} because another application is listening on it.");
                 }
                 else if (e.ErrorCode == 10049)
                 {
-                    Debug.LogErrorFormat("[OSCReceiver] Socket Error: Could not use local host \"{0}\". Cannot assign requested address.",
-                        localHost);
+                    Debug.LogError($"[OSCReceiver] Socket Error: Could not use local host \"{localHost}\". Cannot assign requested address.");
                 }
                 else
                 {
-                    Debug.LogErrorFormat("[OSCReceiver] Socket Error: Error Code {0}.\n{1}", e.ErrorCode, e.Message);
+                    Debug.LogErrorFormat($"[OSCReceiver] Socket Error: Error Code {e.ErrorCode}.\n{e.Message}");
                 }
 
                 Close();
             }
             catch (ArgumentOutOfRangeException)
             {
-                Debug.LogErrorFormat("[OSCReceiver] Invalid port: {0}", localPort);
+                Debug.LogErrorFormat($"[OSCReceiver] Invalid port: {localPort}!");
 
                 Close();
             }
             catch (Exception e)
             {
-                Debug.LogErrorFormat("[OSCReceiver] Error: {0}", e);
+                Debug.LogErrorFormat($"[OSCReceiver] Error: {e}");
 
                 Close();
             }
@@ -128,7 +120,7 @@ namespace extOSC.Core.Network
             { }
             catch (Exception e)
             {
-                Debug.LogErrorFormat("[OSCReceiver] Error: " + e);
+                Debug.LogError($"[OSCReceiver] Error: {e}");
             }
         }
 
@@ -152,7 +144,7 @@ namespace extOSC.Core.Network
             { }
             catch (Exception e)
             {
-                Debug.LogErrorFormat("[OSCReceiver] Receive error: " + e);
+                Debug.LogError($"[OSCReceiver] Receive error: {e}");
             }
 
             return null;

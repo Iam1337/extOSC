@@ -4,21 +4,13 @@ using UnityEngine;
 
 namespace extOSC.Components.ReceiverReflections
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Color Reflection")]
-    public class OSCReceiverReflectionColor : OSCReceiverReflection<Color>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Color Reflection")]
+	public class OSCReceiverReflectionColor : OSCReceiverReflection<Color>
+	{
+		#region Protected Methods
 
-        protected override bool ProcessMessage(OSCMessage message, out Color value)
-        {
-            value = Color.white;
+		protected override bool ProcessMessage(OSCMessage message, out Color value) => message.ToColor(out value);
 
-            if (message.ToColor(out value))
-                return true;
-
-            return false;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

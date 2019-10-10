@@ -1,10 +1,9 @@
-﻿using UnityEditor;
+﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
+using UnityEditor;
 using UnityEngine;
 
 using System;
-
-using extOSC.Core;
 
 
 namespace extOSC.Editor.Drawers
@@ -14,9 +13,9 @@ namespace extOSC.Editor.Drawers
 	{
 		#region Static Private Vars
 
-		private static Type _transmitterType = typeof(OSCTransmitter);
+		private static readonly Type _transmitterType = typeof(OSCTransmitter);
 
-		private static Type _receiverType = typeof(OSCReceiver);
+		private static readonly Type _receiverType = typeof(OSCReceiver);
 
         #endregion
 
@@ -33,10 +32,7 @@ namespace extOSC.Editor.Drawers
 			var fieldType = fieldInfo.FieldType;
 			if (fieldType == _transmitterType)
 			{
-				var content = (GUIContent[]) null;
-				var objects = (OSCTransmitter[]) null;
-
-				OSCEditorUtils.FindObjects(TransmitterCallback, true, out content, out objects);
+				OSCEditorUtils.FindObjects(TransmitterCallback, true, out var content, out OSCTransmitter[] objects);
 
 				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
 				                                                      (OSCTransmitter) property.objectReferenceValue,
@@ -45,10 +41,7 @@ namespace extOSC.Editor.Drawers
 			}
 			else if (fieldType == _receiverType)
 			{
-				var content = (GUIContent[]) null;
-				var objects = (OSCReceiver[]) null;
-
-				OSCEditorUtils.FindObjects(ReceiverCallback, true, out content, out objects);
+				OSCEditorUtils.FindObjects(ReceiverCallback, true, out var content, out OSCReceiver[] objects);
 
 				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
 				                                                      (OSCReceiver) property.objectReferenceValue,
@@ -67,12 +60,12 @@ namespace extOSC.Editor.Drawers
 		
 		private string TransmitterCallback(OSCTransmitter transmitter)
 		{
-			return string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);
+			return $"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}";
 		}
 
 		private string ReceiverCallback(OSCReceiver receiver)
 		{
-			return string.Format("Receiver: {0}", receiver.LocalPort);
+			return $"Receiver: {receiver.LocalPort}";
 		}
 
 		#endregion

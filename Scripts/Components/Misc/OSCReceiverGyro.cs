@@ -1,88 +1,87 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace extOSC.Components.Misc
 {
-    [AddComponentMenu("extOSC/Components/Misc/Gyro")]
-    public class OSCReceiverGyro : OSCReceiverComponent
-    {
-        #region Extensions
+	[AddComponentMenu("extOSC/Components/Misc/Gyro")]
+	public class OSCReceiverGyro : OSCReceiverComponent
+	{
+		#region Extensions
 
-        public enum GyroMode
-        {
-            Other,
+		public enum GyroMode
+		{
+			Other,
 
-            TouchOSC
-        }
+			TouchOSC
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Vars
+		#region Public Vars
 
-        public float Speed
-        {
-            get { return speed; }
-            set { speed = value; }
-        }
+		public float Speed
+		{
+			get => _speed;
+			set => _speed = value;
+		}
 
-        public GyroMode Mode
-        {
-            get { return mode; }
-            set { mode = value; }
-        }
+		public GyroMode Mode
+		{
+			get => _mode;
+			set => _mode = value;
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Private Vars
 
-        [SerializeField]
-        protected float speed = 1;
+		[SerializeField]
+		[FormerlySerializedAs("speed")]
+		private float _speed = 1;
 
-        [SerializeField]
-        protected GyroMode mode = GyroMode.TouchOSC;
+		[SerializeField]
+		[FormerlySerializedAs("mode")]
+		private GyroMode _mode = GyroMode.TouchOSC;
 
-        protected Quaternion defaultRotation;
+		private Quaternion _defaultRotation;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected virtual void Start()
-        {
-            defaultRotation = transform.localRotation;
-        }
+		protected virtual void Start()
+		{
+			_defaultRotation = transform.localRotation;
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
-        {
-            Vector3 value;
+		protected override void Invoke(OSCMessage message)
+		{
+			if (message.ToVector3(out var value))
+			{
+				var rotation = _mode == GyroMode.Other ? OtherProcess(value) : TouchOSCProcess(value);
 
-            if (message.ToVector3(out value))
-            {
-                var rotation = mode == GyroMode.Other ?
-                                               OtherProcess(value) :
-                                               TouchOSCProcess(value);
+				rotation *= _defaultRotation;
 
-                rotation *= defaultRotation;
+				transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.deltaTime * Speed);
+			}
+		}
 
-                transform.localRotation = Quaternion.Slerp(transform.localRotation, rotation, Time.deltaTime * Speed);
-            }
-        }
+		protected Quaternion TouchOSCProcess(Vector3 value)
+		{
+			return Quaternion.Euler(value.y * 90, 0, -value.x * 90);
+		}
 
-        protected Quaternion TouchOSCProcess(Vector3 value)
-        {
-            return Quaternion.Euler(value.y * 90, 0, -value.x * 90);
-        }
+		protected Quaternion OtherProcess(Vector3 value)
+		{
+			return Quaternion.Euler(value.x, value.y, value.z);
+		}
 
-        protected Quaternion OtherProcess(Vector3 value)
-        {
-            return Quaternion.Euler(value.x, value.y, value.z);
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

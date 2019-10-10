@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using extOSC.Core.Packers;
 
@@ -16,8 +15,7 @@ namespace extOSC.Core
 
 		private static int _bufferIndex = 0;
 
-		private static readonly byte[]
-			_valuesBuffer = new byte[_packetSize]; // Max UDP size. But better use available default MTU size - 1432.
+		private static readonly byte[] _valuesBuffer = new byte[_packetSize]; // Max UDP size. But better use available default MTU size - 1432.
 
 		private static readonly object _lock = new object();
 
@@ -45,24 +43,23 @@ namespace extOSC.Core
 			new byte[_packetSize],
 		};
 
-		private static readonly Dictionary<OSCValueType, OSCPacker> _packersDictionary =
-			new Dictionary<OSCValueType, OSCPacker>()
-			{
-				{ OSCValueType.Int, new OSCPackerInt() },
-				{ OSCValueType.Null, new OSCPackerNull() },
-				{ OSCValueType.Blob, new OSCPackerBlob() },
-				{ OSCValueType.Long, new OSCPackerLong() },
-				{ OSCValueType.True, new OSCPackerTrue() },
-				{ OSCValueType.Char, new OSCPackerChar() },
-				{ OSCValueType.Midi, new OSCPackerMidi() },
-				{ OSCValueType.Color, new OSCPackerColor()},
-				{ OSCValueType.False, new OSCPackerFalse() },
-				{ OSCValueType.Float, new OSCPackerFloat() },
-				{ OSCValueType.Double, new OSCPackerDouble() },
-				{ OSCValueType.String, new OSCPackerString() },
-				{ OSCValueType.Impulse, new OSCPackerImpulse() },
-				{ OSCValueType.TimeTag, new OSCPackerTimeTag() }
-			};
+		private static readonly Dictionary<OSCValueType, OSCPacker> _packersDictionary = new Dictionary<OSCValueType, OSCPacker>()
+		{
+			{OSCValueType.Int, new OSCPackerInt()},
+			{OSCValueType.Null, new OSCPackerNull()},
+			{OSCValueType.Blob, new OSCPackerBlob()},
+			{OSCValueType.Long, new OSCPackerLong()},
+			{OSCValueType.True, new OSCPackerTrue()},
+			{OSCValueType.Char, new OSCPackerChar()},
+			{OSCValueType.Midi, new OSCPackerMidi()},
+			{OSCValueType.Color, new OSCPackerColor()},
+			{OSCValueType.False, new OSCPackerFalse()},
+			{OSCValueType.Float, new OSCPackerFloat()},
+			{OSCValueType.Double, new OSCPackerDouble()},
+			{OSCValueType.String, new OSCPackerString()},
+			{OSCValueType.Impulse, new OSCPackerImpulse()},
+			{OSCValueType.TimeTag, new OSCPackerTimeTag()}
+		};
 
 		#endregion
 
@@ -90,29 +87,30 @@ namespace extOSC.Core
 		/// <summary>
 		/// Serializes a IOSCPacket and writes it to a buffer, returning the size of the ioscPacket.
 		/// </summary>
-		/// <param name="ioscPacket">IoscPacket</param>
+		/// <param name="packet">IoscPacket</param>
 		/// <param name="size">Serialized ioscPacket size</param>
 		/// <returns>Buffer with a fixed value.</returns>
-		public static byte[] Pack(IOSCPacket ioscPacket, out int size)
+		public static int Pack(IOSCPacket packet, out byte[] buffer)
 		{
 			lock (_lock)
 			{
-				size = 0;
-				return PackInternal(ioscPacket, ref size);
+				var size = 0;
+				buffer = PackInternal(packet, ref size);
+				return size;
 			}
 		}
 
 		/// <summary>
 		/// Serializes a ioscPacket and returns the ioscPacket data in byte array.
 		/// </summary>
-		/// <param name="ioscPacket">IoscPacket</param>
+		/// <param name="packet">IoscPacket</param>
 		/// <returns>IoscPacket data</returns>
-		public static byte[] Pack(IOSCPacket ioscPacket)
+		public static byte[] Pack(IOSCPacket packet)
 		{
 			lock (_lock)
 			{
 				var size = 0;
-				var buffer = PackInternal(ioscPacket, ref size);
+				var buffer = PackInternal(packet, ref size);
 
 				var bytes = new byte[size];
 
@@ -149,28 +147,25 @@ namespace extOSC.Core
 		}
 
 		//  PACK METHODS
-		public static byte[] PackInternal(IOSCPacket ioscPacket, ref int index)
+		private static byte[] PackInternal(IOSCPacket packet, ref int index)
 		{
 			if (_bufferIndex >= _buffers.Count)
 			{
 				_bufferIndex = 0;
 
-				throw new Exception(
-								    "[OSCConverter.PackInternal] You have reached the nesting package depth limit. Maximum depth of nested packages: " +
-								    _buffers.Count + "\n" +
-								    "To change the depth use: OSCConverter.SetBuffersDepth() method.");
+				throw new Exception($"[OSCConverter.PackInternal] You have reached the nesting package depth limit. Maximum depth of nested packages: {_buffers.Count}\nTo change the depth use: OSCConverter.SetBuffersDepth() method.");
 			}
 
 			var buffer = _buffers[_bufferIndex];
 			_bufferIndex++;
 
-			if (ioscPacket.IsBundle())
+			if (packet.IsBundle())
 			{
-				PackBundle((OSCBundle) ioscPacket, buffer, ref index);
+				PackBundle((OSCBundle) packet, buffer, ref index);
 			}
 			else
 			{
-				PackMessage((OSCMessage) ioscPacket, buffer, ref index);
+				PackMessage((OSCMessage) packet, buffer, ref index);
 			}
 
 			_bufferIndex--;

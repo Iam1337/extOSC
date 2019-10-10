@@ -9,302 +9,272 @@ using System.Collections;
 
 namespace extOSC.UI
 {
-    [AddComponentMenu("extOSC/UI/Slider")]
-    [RequireComponent(typeof(RectTransform))]
-    public class OSCSlider : Slider
-    {
-        #region Public Vars
+	[AddComponentMenu("extOSC/UI/Slider")]
+	[RequireComponent(typeof(RectTransform))]
+	public class OSCSlider : Slider
+	{
+		#region Public Vars
 
-        public bool ResetValue
-        {
-            get
-            {
-                return _resetValue;
-            }
-            set
-            {
-                if (_resetValue == value)
-                    return;
+		public bool ResetValue
+		{
+			get => _resetValue;
+			set => _resetValue = value;
+		}
 
-                _resetValue = value;
-            }
-        }
+		public float ResetValueTime
+		{
+			get => _resetValueTime;
+			set
+			{
+				if (Math.Abs(_resetValueTime - value) < float.Epsilon)
+					return;
 
-        public float ResetValueTime
-        {
-            get
-            {
-                return _resetValueTime;
-            }
-            set
-            {
-                if (Math.Abs(_resetValueTime - value) < float.Epsilon)
-                    return;
+				_resetValueTime = value;
 
-                _resetValueTime = value;
+				if (_resetValueTime < 0)
+					_resetValueTime = 0;
+			}
+		}
 
-                if (_resetValueTime < 0)
-                    _resetValueTime = 0;
-            }
-        }
+		public bool CallbackOnReset
+		{
+			get => _callbackOnReset;
+			set => _callbackOnReset = value;
+		}
 
-        public bool CallbackOnReset
-        {
-            get
-            {
-                return _callbackOnReset;
-            }
-            set
-            {
-                if (_callbackOnReset == value)
-                    return;
+		public float DefaultValue
+		{
+			get => _defaultValue;
+			set
+			{
+				if (_defaultValue.Equals(value))
+					return;
 
-                _callbackOnReset = value;
-            }
-        }
+				_defaultValue = ClampValue(value);
 
-        public float DefaultValue
-        {
-            get
-            {
-                return _defaultValue;
-            }
-            set
-            {
-                if (_defaultValue.Equals(value))
-                    return;
+				if (_resetValue && !_dragged)
+				{
+					if (_resetAnimationCoroutine != null)
+						StopCoroutine(_resetAnimationCoroutine);
 
-                _defaultValue = ClampValue(value);
+					_resetAnimationCoroutine = StartCoroutine(ResetAnimationCoroutine());
+				}
+			}
+		}
 
-                if (_resetValue && !_dragged)
-                {
-                    if (_resetAnimationCoroutine != null)
-                        StopCoroutine(_resetAnimationCoroutine);
+		public OSCMultiplySliders MultiplyController
+		{
+			get => _multiplyController;
+			set
+			{
+				if (_multiplyController == value)
+					return;
 
-                    _resetAnimationCoroutine = StartCoroutine(ResetAnimationCoroutine());
-                }
-            }
-        }
+				_multiplyController = value;
 
-        public OSCMultiplySliders MultiplyController
-        {
-            get
-            {
-                return _multiplyController;
-            }
+				SetMultiplyController(value);
+			}
+		}
 
-            set
-            {
-                if (_multiplyController == value)
-                    return;
+		#endregion
 
-                _multiplyController = value;
+		#region Private Vars
 
-                SetMultiplyController(value);
-            }
-        }
+		[SerializeField]
+		private bool _resetValue;
 
-        #endregion
+		[SerializeField]
+		private float _resetValueTime;
 
-        #region Private Vars
+		[SerializeField]
+		private bool _callbackOnReset;
 
-        [SerializeField]
-        private bool _resetValue;
+		[SerializeField]
+		private OSCMultiplySliders _multiplyController;
 
-        [SerializeField]
-        private float _resetValueTime;
+		private float _defaultValue;
 
-        [SerializeField]
-        private bool _callbackOnReset;
+		private bool _dragged;
 
-        [SerializeField]
-        private OSCMultiplySliders _multiplyController;
+		private Coroutine _resetAnimationCoroutine;
 
-        private float _defaultValue;
+		#endregion
 
-        private bool _dragged;
+		#region Unity Methods
 
-        private Coroutine _resetAnimationCoroutine;
+		protected override void Awake()
+		{
+			base.Awake();
 
-        #endregion
+			_defaultValue = m_Value;
+		}
 
-        #region Unity Methods
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+			SetMultiplyController(_multiplyController);
+		}
 
-        protected override void Awake()
-        {
-            base.Awake();
+		public override void OnPointerDown(PointerEventData eventData)
+		{
+			if (!MayDrag(eventData))
+				return;
 
-            _defaultValue = m_Value;
-        }
+			if (_resetAnimationCoroutine != null)
+				StopCoroutine(_resetAnimationCoroutine);
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            SetMultiplyController(_multiplyController);
-        }
+			base.OnPointerDown(eventData);
 
-        public override void OnPointerDown(PointerEventData eventData)
-        {
-            if (!MayDrag(eventData))
-                return;
+			_dragged = true;
+		}
 
-            if (_resetAnimationCoroutine != null)
-                StopCoroutine(_resetAnimationCoroutine);
+		public override void OnDrag(PointerEventData eventData)
+		{
+			if (_multiplyController != null && eventData.pointerDrag != _multiplyController.gameObject)
+			{
+				eventData.selectedObject = _multiplyController.gameObject;
+				eventData.pointerDrag = _multiplyController.gameObject;
 
-            base.OnPointerDown(eventData);
+				return;
+			}
 
-            _dragged = true;
-        }
+			base.OnDrag(eventData);
+		}
 
-        public override void OnDrag(PointerEventData eventData)
-        {
-            if (_multiplyController != null && eventData.pointerDrag != _multiplyController.gameObject)
-            {
-                eventData.selectedObject = _multiplyController.gameObject;
-                eventData.pointerDrag = _multiplyController.gameObject;
+		public override void OnPointerUp(PointerEventData eventData)
+		{
+			base.OnPointerUp(eventData);
 
-                return;
-            }
+			if (!_dragged) return;
+			_dragged = false;
 
-            base.OnDrag(eventData);
-        }
+			if (_resetValue)
+			{
+				if (_resetAnimationCoroutine != null)
+					StopCoroutine(_resetAnimationCoroutine);
 
-        public override void OnPointerUp(PointerEventData eventData)
-        {
-            base.OnPointerUp(eventData);
+				if (Math.Abs(_resetValueTime) < float.Epsilon)
+					Set(_defaultValue, _callbackOnReset);
+				else
+					_resetAnimationCoroutine = StartCoroutine(ResetAnimationCoroutine());
+			}
+		}
 
-            if (!_dragged) return;
-            _dragged = false;
+		public override void OnMove(AxisEventData eventData)
+		{
+			if (!IsActive() || !IsInteractable())
+			{
+				base.OnMove(eventData);
+				return;
+			}
 
-            if (_resetValue)
-            {
-                if (_resetAnimationCoroutine != null)
-                    StopCoroutine(_resetAnimationCoroutine);
+			var tempValue = value;
 
-                if (Math.Abs(_resetValueTime) < float.Epsilon)
-                    Set(_defaultValue, _callbackOnReset);
-                else
-                    _resetAnimationCoroutine = StartCoroutine(ResetAnimationCoroutine());
-            }
-        }
+			base.OnMove(eventData);
 
-        public override void OnMove(AxisEventData eventData)
-        {
-            if (!IsActive() || !IsInteractable())
-            {
-                base.OnMove(eventData);
-                return;
-            }
+			if (Math.Abs(tempValue - value) < float.Epsilon) return;
 
-            var tempValue = value;
-
-            base.OnMove(eventData);
-
-            if (Math.Abs(tempValue - value) < float.Epsilon) return;
-
-            if (direction == Direction.RightToLeft || direction == Direction.LeftToRight)
-            {
-                if (eventData.moveDir == MoveDirection.Left || eventData.moveDir == MoveDirection.Right)
-                {
-                    TryResetValue();
-                }
-            }
-            else if (direction == Direction.TopToBottom || direction == Direction.BottomToTop)
-            {
-                if (eventData.moveDir == MoveDirection.Up || eventData.moveDir == MoveDirection.Down)
-                {
-                    TryResetValue();
-                }
-            }
-        }
+			if (direction == Direction.RightToLeft || direction == Direction.LeftToRight)
+			{
+				if (eventData.moveDir == MoveDirection.Left || eventData.moveDir == MoveDirection.Right)
+				{
+					TryResetValue();
+				}
+			}
+			else if (direction == Direction.TopToBottom || direction == Direction.BottomToTop)
+			{
+				if (eventData.moveDir == MoveDirection.Up || eventData.moveDir == MoveDirection.Down)
+				{
+					TryResetValue();
+				}
+			}
+		}
 
 #if UNITY_EDITOR
+		protected override void OnValidate()
+		{
+			base.OnValidate();
 
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-
-            MultiplyController = _multiplyController;
-        }
-
+			MultiplyController = _multiplyController;
+		}
 #endif
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void TryResetValue()
-        {
-            if (_resetValue)
-            {
-                if (_resetAnimationCoroutine != null)
-                    StopCoroutine(_resetAnimationCoroutine);
+		private void TryResetValue()
+		{
+			if (_resetValue)
+			{
+				if (_resetAnimationCoroutine != null)
+					StopCoroutine(_resetAnimationCoroutine);
 
-                if (Math.Abs(_resetValueTime) < float.Epsilon)
-                    Set(_defaultValue, _callbackOnReset);
-                else
-                    _resetAnimationCoroutine = StartCoroutine(ResetAnimationCoroutine());
-            }
-        }
+				if (Math.Abs(_resetValueTime) < float.Epsilon)
+					Set(_defaultValue, _callbackOnReset);
+				else
+					_resetAnimationCoroutine = StartCoroutine(ResetAnimationCoroutine());
+			}
+		}
 
-        private void SetMultiplyController(OSCMultiplySliders controller)
-        {
-            if (_multiplyController == null)
-                return;
+		private void SetMultiplyController(OSCMultiplySliders controller)
+		{
+			if (_multiplyController == null)
+				return;
 
-            if (_multiplyController.LayoutDirection == OSCMultiplySliders.Direction.Vertical)
-            {
-                if (direction == Direction.BottomToTop || direction == Direction.TopToBottom)
-                {
-                    SetDirection(direction == Direction.BottomToTop ? Direction.LeftToRight : Direction.RightToLeft, true);
-                }
-            }
-            else
-            {
-                if (direction == Direction.LeftToRight || direction == Direction.RightToLeft)
-                {
-                    SetDirection(direction == Direction.LeftToRight ? Direction.BottomToTop : Direction.TopToBottom, true);
-                }
-            }
-        }
+			if (_multiplyController.LayoutDirection == OSCMultiplySliders.Direction.Vertical)
+			{
+				if (direction == Direction.BottomToTop || direction == Direction.TopToBottom)
+				{
+					SetDirection(direction == Direction.BottomToTop ? Direction.LeftToRight : Direction.RightToLeft, true);
+				}
+			}
+			else
+			{
+				if (direction == Direction.LeftToRight || direction == Direction.RightToLeft)
+				{
+					SetDirection(direction == Direction.LeftToRight ? Direction.BottomToTop : Direction.TopToBottom, true);
+				}
+			}
+		}
 
-        private IEnumerator ResetAnimationCoroutine()
-        {
-            var timer = 0f;
-            var currentValue = value;
+		private IEnumerator ResetAnimationCoroutine()
+		{
+			var timer = 0f;
+			var currentValue = value;
 
-            while (timer < _resetValueTime)
-            {
-                timer += Time.deltaTime;
+			while (timer < _resetValueTime)
+			{
+				timer += Time.deltaTime;
 
-                currentValue = Mathf.Lerp(currentValue, _defaultValue, timer / _resetValueTime);
+				currentValue = Mathf.Lerp(currentValue, _defaultValue, timer / _resetValueTime);
 
-                Set(currentValue, _callbackOnReset);
+				Set(currentValue, _callbackOnReset);
 
-                yield return null;
-            }
+				yield return null;
+			}
 
-            _resetAnimationCoroutine = null;
-        }
+			_resetAnimationCoroutine = null;
+		}
 
-        private bool MayDrag(PointerEventData eventData)
-        {
-            if (IsActive() && IsInteractable())
-                return eventData.button == PointerEventData.InputButton.Left;
+		private bool MayDrag(PointerEventData eventData)
+		{
+			if (IsActive() && IsInteractable())
+				return eventData.button == PointerEventData.InputButton.Left;
 
-            return false;
-        }
+			return false;
+		}
 
-        private float ClampValue(float input)
-        {
-            float newValue = Mathf.Clamp(input, minValue, maxValue);
+		private float ClampValue(float input)
+		{
+			var newValue = Mathf.Clamp(input, minValue, maxValue);
 
-            if (wholeNumbers)
-                newValue = Mathf.Round(newValue);
+			if (wholeNumbers)
+				newValue = Mathf.Round(newValue);
 
-            return newValue;
-        }
+			return newValue;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

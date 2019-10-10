@@ -6,22 +6,19 @@ using extOSC.Core.Events;
 
 namespace extOSC.Components.Events
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Quaternion Event")]
-    public class OSCReceiverEventQuaternion : OSCReceiverEvent<OSCEventQuaternion>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Quaternion Event")]
+	public class OSCReceiverEventQuaternion : OSCReceiverEvent<OSCEventQuaternion>
+	{
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
-        {
-            Quaternion value;
+		protected override void Invoke(OSCMessage message)
+		{
+			if (onReceive != null && message.ToQuaternion(out var value))
+			{
+				onReceive.Invoke(value);
+			}
+		}
 
-            if (message.ToQuaternion(out value))
-            {
-                if (onReceive != null)
-                    onReceive.Invoke(value);
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

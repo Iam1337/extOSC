@@ -89,18 +89,18 @@ namespace extOSC.Editor
             _transmitter = target as OSCTransmitter;
             _localHostCache = OSCUtilities.GetLocalHost();
 
-            _remoteHostProperty = serializedObject.FindProperty("remoteHost");
-            _remotePortProperty = serializedObject.FindProperty("remotePort");
-            _autoConnectProperty = serializedObject.FindProperty("autoConnect");
-            _workInEditorProperty = serializedObject.FindProperty("workInEditor");
-            _mapBundleProperty = serializedObject.FindProperty("mapBundle");
-            _useBundleProperty = serializedObject.FindProperty("useBundle");
-            _closeOnPauseProperty = serializedObject.FindProperty("closeOnPause");
-            _sourceReceiverProperty = serializedObject.FindProperty("localReceiver");
-            _localHostModeProperty = serializedObject.FindProperty("localHostMode");
-            _localHostProperty = serializedObject.FindProperty("localHost");
-            _localPortModeProperty = serializedObject.FindProperty("localPortMode");
-			_localPortProperty = serializedObject.FindProperty("localPort");
+            _remoteHostProperty = serializedObject.FindProperty("_remoteHost");
+            _remotePortProperty = serializedObject.FindProperty("_remotePort");
+            _autoConnectProperty = serializedObject.FindProperty("_autoConnect");
+            _workInEditorProperty = serializedObject.FindProperty("_workInEditor");
+            _mapBundleProperty = serializedObject.FindProperty("_mapBundle");
+            _useBundleProperty = serializedObject.FindProperty("_useBundle");
+            _closeOnPauseProperty = serializedObject.FindProperty("_closeOnPause");
+            _sourceReceiverProperty = serializedObject.FindProperty("_localReceiver");
+            _localHostModeProperty = serializedObject.FindProperty("_localHostMode");
+            _localHostProperty = serializedObject.FindProperty("_localHost");
+            _localPortModeProperty = serializedObject.FindProperty("_localPortMode");
+			_localPortProperty = serializedObject.FindProperty("_localPort");
 
             if (!Application.isPlaying && !_transmitter.IsStarted && _workInEditorProperty.boolValue)
             {

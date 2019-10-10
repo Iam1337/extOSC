@@ -1,10 +1,10 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using System;
+using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [Serializable]
-    public class OSCEventLong : OSCEvent<long>
+    [System.Serializable]
+    public class OSCEventLong : UnityEvent<long>
     { }
 }
