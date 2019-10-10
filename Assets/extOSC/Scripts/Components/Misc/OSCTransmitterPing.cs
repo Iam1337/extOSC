@@ -1,108 +1,104 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace extOSC.Components.Misc
 {
-    [AddComponentMenu("extOSC/Components/Misc/Ping")]
-    public class OSCTransmitterPing : OSCTransmitterComponent
-    {
-        #region Public Vars
+	[AddComponentMenu("extOSC/Components/Misc/Ping")]
+	public class OSCTransmitterPing : OSCTransmitterComponent
+	{
+		#region Public Vars
 
-        public bool AutoStart
-        {
-            get { return autoStart; }
-            set { autoStart = value; }
-        }
+		public bool AutoStart
+		{
+			get => _autoStart;
+			set => _autoStart = value;
+		}
 
-        public float Interval
-        {
-            get { return interval; }
-            set
-            {
-                interval = value;
+		public float Interval
+		{
+			get => _interval;
+			set
+			{
+				_interval = value;
 
-                if (interval < 0)
-                    interval = 0;
-            }
-        }
+				if (_interval < 0)
+					_interval = 0;
+			}
+		}
 
-        public bool IsRunning
-        {
-            get { return _isRunning; }
-        }
+		public bool IsRunning => _isRunning;
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Private Vars
 
         [Range(0, 60)]
-        [SerializeField]
-        protected float interval = 1;
+		[SerializeField]
+		[FormerlySerializedAs("interval")]
+		private float _interval = 1;
 
-        [SerializeField]
-        protected bool autoStart = true;
+		[SerializeField]
+		[FormerlySerializedAs("autoStart")]
+		private bool _autoStart = true;
 
-        #endregion
+		private float _timer;
 
-        #region Private Vars
+		private bool _isRunning;
 
-        private float _timer;
+		#endregion
 
-        private bool _isRunning;
+		#region Unity Methods
 
-        #endregion
+		protected virtual void Start()
+		{
+			if (_autoStart) StartPing();
+		}
 
-        #region Unity Methods
+		protected virtual void Update()
+		{
+			if (!_isRunning) return;
 
-        protected virtual void Start()
-        {
-            if (autoStart) StartPing();
-        }
+			_timer += Time.deltaTime;
 
-        protected virtual void Update()
-        {
-            if (!_isRunning) return;
+			if (_timer >= _interval)
+			{
+				_timer = 0;
 
-            _timer += Time.deltaTime;
+				Send();
+			}
+		}
 
-            if (_timer >= interval)
-            {
-                _timer = 0;
+		#endregion
 
-                Send();
-            }
-        }
+		#region Public Methods
 
-        #endregion
+		public void StartPing()
+		{
+			_isRunning = true;
+		}
 
-        #region Public Methods
+		public void StopPing()
+		{
+			_isRunning = false;
+			_timer = 0;
+		}
 
-        public void StartPing()
-        {
-            _isRunning = true;
-        }
+		public void PausePing()
+		{
+			_isRunning = false;
+		}
 
-        public void StopPing()
-        {
-            _isRunning = false;
-            _timer = 0;
-        }
+		#endregion
 
-        public void PausePing()
-        {
-            _isRunning = false;
-        }
+		#region Protected Methods
 
-        #endregion
+		protected override bool FillMessage(OSCMessage message)
+		{
+			return true;
+		}
 
-        #region Protected Methods
-
-        protected override bool FillMessage(OSCMessage message)
-        {
-            return true;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

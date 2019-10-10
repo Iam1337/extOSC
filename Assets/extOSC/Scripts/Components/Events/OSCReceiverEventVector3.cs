@@ -6,22 +6,19 @@ using extOSC.Core.Events;
 
 namespace extOSC.Components.Events
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Vector3 Event")]
-    public class OSCReceiverEventVector3 : OSCReceiverEvent<OSCEventVector3>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Vector3 Event")]
+	public class OSCReceiverEventVector3 : OSCReceiverEvent<OSCEventVector3>
+	{
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
-        {
-            Vector3 value;
+		protected override void Invoke(OSCMessage message)
+		{
+			if (onReceive != null && message.ToVector3(out var value))
+			{
+				onReceive.Invoke(value);
+			}
+		}
 
-            if (message.ToVector3(out value))
-            {
-                if (onReceive != null)
-                    onReceive.Invoke(value);
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

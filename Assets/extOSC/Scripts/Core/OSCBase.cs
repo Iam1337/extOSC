@@ -5,67 +5,68 @@ using UnityEngine;
 using System;
 
 using extOSC.Mapping;
+using UnityEngine.Serialization;
 
 namespace extOSC.Core
 {
     [ExecuteInEditMode]
-    public abstract class OSCBase : MonoBehaviour, IDisposable
+    public abstract class OSCBase : MonoBehaviour
     {
         #region Public Vars
 
         public bool AutoConnect
         {
-            get { return autoConnect; }
-            set { autoConnect = value; }
-        }
+            get => _autoConnect;
+			set => _autoConnect = value;
+		}
 
         public OSCMapBundle MapBundle
         {
-            get { return mapBundle; }
-            set { mapBundle = value; }
-        }
+            get => _mapBundle;
+			set => _mapBundle = value;
+		}
 
         public bool WorkInEditor
         {
-            get { return workInEditor; }
-            set { workInEditor = value; }
-        }
+            get => _workInEditor;
+			set => _workInEditor = value;
+		}
 
         public bool CloseOnPause
         {
-            get { return closeOnPause; }
-            set { closeOnPause = value; }
-        }
+            get => _closeOnPause;
+			set => _closeOnPause = value;
+		}
 
         public abstract bool IsStarted { get; }
 
         #endregion
 
-        #region Protected Vars
-
-        [SerializeField]
-        protected bool autoConnect = true;
-
-        [SerializeField]
-        protected bool closeOnPause = false;
-
-        [SerializeField]
-        protected OSCMapBundle mapBundle;
-
-        [SerializeField]
-        protected bool workInEditor;
-
-        protected bool restoreOnEnable;
-
-        #endregion
-
         #region Private Vars
 
-        private bool _wasClosed;
+        [SerializeField]
+		[FormerlySerializedAs("autoConnect")]
+        private bool _autoConnect = true;
+
+        [SerializeField]
+		[FormerlySerializedAs("closeOnPause")]
+		private bool _closeOnPause = false;
+
+        [SerializeField]
+		[FormerlySerializedAs("mapBundle")]
+		private OSCMapBundle _mapBundle;
+
+        [SerializeField]
+		[FormerlySerializedAs("workInEditor")]
+        private bool _workInEditor;
+
+		private bool _restoreOnEnable;
+
+		private bool _wasClosed;
 
         #endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
         protected virtual void Start()
         {
@@ -76,26 +77,21 @@ namespace extOSC.Core
 
         protected virtual void OnEnable()
         {
-            if (Application.isPlaying && restoreOnEnable)
+            if (Application.isPlaying && _restoreOnEnable)
                 Connect();
         }
 
         protected virtual void OnDisable()
         {
-            restoreOnEnable = IsStarted;
+            _restoreOnEnable = IsStarted;
 
-            if (Application.isPlaying && restoreOnEnable)
+            if (Application.isPlaying && _restoreOnEnable)
                 Close();
         }
 
-        protected virtual void OnDestroy()
+		protected void OnApplicationPause(bool pauseStatus)
         {
-            Dispose();
-        }
-
-        protected void OnApplicationPause(bool pauseStatus)
-        {
-            if (!closeOnPause) return;
+            if (!_closeOnPause) return;
 
             if (pauseStatus)
             {
@@ -125,27 +121,6 @@ namespace extOSC.Core
 
         public abstract void Close();
 
-        public void Dispose()
-        {
-            Dispose(true);
-
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
-
-        #region Protected Methods
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                ///IDK, rly...
-            }
-
-            Close();
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

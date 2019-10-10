@@ -4,36 +4,36 @@ using System;
 
 namespace extOSC
 {
-    [Serializable]
-    public struct OSCMidi
-    {
-        #region Public Vars
+	[Serializable]
+	public struct OSCMidi
+	{
+		#region Public Vars
 
-        public byte Channel;
+		public byte Channel;
 
-        public byte Status;
+		public byte Status;
 
-        public byte Data1;
+		public byte Data1;
 
-        public byte Data2;
+		public byte Data2;
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public OSCMidi(byte channel, byte status, byte data1, byte data2)
-        {
-            Channel = channel;
-            Status = status;
-            Data1 = data1;
-            Data2 = data2;
-        }
+		public OSCMidi(byte channel, byte status, byte data1, byte data2)
+		{
+			Channel = channel;
+			Status = status;
+			Data1 = data1;
+			Data2 = data2;
+		}
 
-        public override string ToString()
-        {
-            return $"({Channel}, {Status}, {Data1}, {Data2})";
-        }
+		public override string ToString()
+		{
+			return $"({Channel}, {Status}, {Data1}, {Data2})";
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

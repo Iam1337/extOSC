@@ -8,48 +8,32 @@ namespace extOSC.Core
     {
         #region Public Vars
 
-        public static List<OSCConsolePacket> ConsoleBuffer
-        {
-            get { return _consoleBuffer; }
-            set { _consoleBuffer = value; }
-        }
+        public static List<OSCConsolePacket> ConsoleBuffer { get; set; } = new List<OSCConsolePacket>();
 
-        public static bool LogConsole
-        {
-            get { return _logConsole; }
-            set { _logConsole = value; }
-        }
+		public static bool LogConsole { get; set; } = false;
 
-        #endregion
-
-        #region Private Vars
-
-        private static List<OSCConsolePacket> _consoleBuffer = new List<OSCConsolePacket>();
-
-        private static bool _logConsole = false;
-
-        #endregion
+		#endregion
 
         #region Public Methods
 
-        public static void Received(OSCReceiver receiver, IOSCPacket ioscPacket)
+        public static void Received(OSCReceiver receiver, IOSCPacket packet)
         {
-			var ip = ioscPacket.Ip != null ? string.Format("{0}:{1}", ioscPacket.Ip, ioscPacket.Port) : "Debug";
+			var ip = packet.Ip != null ? $"{packet.Ip}:{packet.Port}" : "Debug";
 
 			var consolePacket = new OSCConsolePacket();
-            consolePacket.Info = string.Format("Receiver: {0}. From: {1}", receiver.LocalPort, ip);
+            consolePacket.Info = $"Receiver: {receiver.LocalPort}. From: {ip}";
             consolePacket.PacketType = OSCConsolePacketType.Received;
-            consolePacket.IoscPacket = ioscPacket;
+            consolePacket.Packet = packet;
 
             Log(consolePacket);
         }
 
-        public static void Transmitted(OSCTransmitter transmitter, IOSCPacket ioscPacket)
+        public static void Transmitted(OSCTransmitter transmitter, IOSCPacket packet)
         {
             var consolePacket = new OSCConsolePacket();
-            consolePacket.Info = string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort);
+            consolePacket.Info = $"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}";
             consolePacket.PacketType = OSCConsolePacketType.Transmitted;
-            consolePacket.IoscPacket = ioscPacket;
+            consolePacket.Packet = packet;
 
             Log(consolePacket);
         }
@@ -62,13 +46,13 @@ namespace extOSC.Core
         {
 #if UNITY_EDITOR
             // COPY PACKET
-	        consolePacket.IoscPacket = consolePacket.IoscPacket.Copy();
+	        consolePacket.Packet = consolePacket.Packet.Copy();
             
-            _consoleBuffer.Add(consolePacket);
+            ConsoleBuffer.Add(consolePacket);
 #else
-            if (_logConsole)
+            if (LogConsole)
             {
-                UnityEngine.Debug.LogFormat("[OSCConsole] Packed {0}: {1}", consolePacket.PacketType, consolePacket.IoscPacket);
+                UnityEngine.Debug.Log($"[OSCConsole] Packed {consolePacket.PacketType}: {consolePacket.Packet}");
             }
 #endif
         }

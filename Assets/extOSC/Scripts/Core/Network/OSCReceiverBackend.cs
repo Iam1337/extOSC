@@ -6,7 +6,7 @@ namespace extOSC.Core.Network
     {
         #region Extensions
 
-        public delegate void OSCReceivedCallback(IOSCPacket ioscPacket);
+        public delegate void OSCReceivedCallback(IOSCPacket packet);
 
         #endregion
 

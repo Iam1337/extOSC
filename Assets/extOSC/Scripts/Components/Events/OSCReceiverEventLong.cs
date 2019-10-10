@@ -6,22 +6,19 @@ using extOSC.Core.Events;
 
 namespace extOSC.Components.Events
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Long Event")]
-    public class OSCReceiverEventLong : OSCReceiverEvent<OSCEventLong>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Long Event")]
+	public class OSCReceiverEventLong : OSCReceiverEvent<OSCEventLong>
+	{
+		#region Protected Methods
 
-        protected override void Invoke(OSCMessage message)
-        {
-            long value;
+		protected override void Invoke(OSCMessage message)
+		{
+			if (onReceive != null && message.ToLong(out var value))
+			{
+				onReceive.Invoke(value);
+			}
+		}
 
-            if (message.ToLong(out value))
-            {
-                if (onReceive != null)
-                    onReceive.Invoke(value);
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

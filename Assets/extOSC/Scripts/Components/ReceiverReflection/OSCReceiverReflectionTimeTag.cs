@@ -6,21 +6,13 @@ using System;
 
 namespace extOSC.Components.ReceiverReflections
 {
-    [AddComponentMenu("extOSC/Components/Receiver/TimeTag Reflection")]
-    public class OSCReceiverReflectionTimeTag : OSCReceiverReflection<DateTime>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/TimeTag Reflection")]
+	public class OSCReceiverReflectionTimeTag : OSCReceiverReflection<DateTime>
+	{
+		#region Protected Methods
 
-        protected override bool ProcessMessage(OSCMessage message, out DateTime value)
-        {
-            value = DateTime.Now;
+		protected override bool ProcessMessage(OSCMessage message, out DateTime value) => message.ToTimeTag(out value);
 
-            if (message.ToTimeTag(out value))
-                return true;
-
-            return false;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

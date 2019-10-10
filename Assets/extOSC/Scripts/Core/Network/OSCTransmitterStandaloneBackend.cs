@@ -46,30 +46,28 @@ namespace extOSC.Core.Network
 			{
 				if (e.ErrorCode == 10048)
 				{
-					Debug.LogErrorFormat("[OSCTransmitter] Socket Error: Could not use local port {0} because another application is listening on it.",
-						localPort);
+					Debug.LogError($"[OSCTransmitter] Socket Error: Could not use local port {localPort} because another application is listening on it.");
 				}
                 else if (e.ErrorCode == 10049)
 			    {
-			        Debug.LogErrorFormat("[OSCTransmitter] Socket Error: Could not use local host \"{0}\". Cannot assign requested address.",
-			            localHost);
+			        Debug.LogError($"[OSCTransmitter] Socket Error: Could not use local host \"{localHost}\". Cannot assign requested address.");
                 }
 				else
 				{
-					Debug.LogErrorFormat("[OSCTransmitter] Socket Error: Error Code {0}.\n{1}", e.ErrorCode, e.Message);
+					Debug.LogError($"[OSCTransmitter] Socket Error: Error Code {e.ErrorCode}.\n{e.Message}");
 				}
 
 				Close();
 			}
 			catch (ArgumentOutOfRangeException)
 			{
-				Debug.LogErrorFormat("[OSCTransmitter] Invalid port: {0}", localPort);
+				Debug.LogError($"[OSCTransmitter] Invalid port: {localPort}");
 
 				Close();
 			}
 			catch (Exception e)
 			{
-				Debug.LogErrorFormat("[OSCTransmitter] Error: {0}", e);
+				Debug.LogError($"[OSCTransmitter] Error: {e}");
 
 				Close();
 			}

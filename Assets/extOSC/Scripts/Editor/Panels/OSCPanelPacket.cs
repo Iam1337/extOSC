@@ -72,13 +72,13 @@ namespace extOSC.Editor.Panels
                 var debugButton = GUILayout.Button(_openInDebugContent, EditorStyles.toolbarButton);
                 if (debugButton)
                 {
-                    OSCWindowDebug.OpenPacket(SelecedMessage.IoscPacket);
+                    OSCWindowDebug.OpenPacket(SelecedMessage.Packet);
                 }
 
                 GUILayout.EndHorizontal();
 
                 _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-                _packetDrawer.DrawLayout(_selectedMessage.IoscPacket);
+                _packetDrawer.DrawLayout(_selectedMessage.Packet);
 
                 EditorGUILayout.EndScrollView();
             }

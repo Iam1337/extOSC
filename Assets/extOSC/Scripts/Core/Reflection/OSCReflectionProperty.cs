@@ -5,265 +5,201 @@ using System.Reflection;
 
 namespace extOSC.Core.Reflection
 {
-    public class OSCReflectionProperty
-    {
-        #region Static Public Methods
+	public class OSCReflectionProperty
+	{
+		#region Static Public Methods
 
-        public static OSCReflectionProperty Create(object target, MemberInfo memberInfo)
-        {
-            if (memberInfo == null)
-                return null;
-            if (memberInfo is FieldInfo)
-                return new OSCReflectionProperty(target, (FieldInfo)memberInfo);
-            if (memberInfo is PropertyInfo)
-                return new OSCReflectionProperty(target, (PropertyInfo)memberInfo);
-            if (memberInfo is MethodInfo)
-                return new OSCReflectionProperty(target, (MethodInfo)memberInfo);
+		public static OSCReflectionProperty Create(object target, MemberInfo memberInfo)
+		{
+			if (memberInfo == null)
+				return null;
 
-            return null;
-        }
+			if (memberInfo is FieldInfo fieldInfo)
+				return new OSCReflectionProperty(target, fieldInfo);
+			if (memberInfo is PropertyInfo propertyInfo)
+				return new OSCReflectionProperty(target, propertyInfo);
+			if (memberInfo is MethodInfo methodInfo)
+				return new OSCReflectionProperty(target, methodInfo);
 
-        #endregion
+			return null;
+		}
 
-        #region Public Vars
+		#endregion
 
-        public object Target
-        {
-            get { return _valueType; }
-        }
+		#region Public Vars
 
-        public object Value
-        {
-            get { return GetValue(); }
-            set { SetValue(value); }
-        }
+		public object Value
+		{
+			get => GetValue();
+			set => SetValue(value);
+		}
 
-        public Type PropertyType
-        {
-            get { return _valueType; }
-        }
+		public Type ValueType => _valueType;
 
-        public Type MethodWriteType
-        {
-            get { return _methodWriteType; }
-        }
+		#endregion
 
-        public Type MethodReadType
-        {
-            get { return _methodReadType; }
-        }
+		#region Private Vars
 
-        public MemberInfo MemberInfo
-        {
-            get { return GetMemberInfo(); }
-        }
+		private readonly object _target;
 
-        public string PropertyName
-        {
-            get { return _propertyName; }
-        }
+		private readonly OSCReflectionType _propertyType;
 
-        #endregion
+		private readonly Type _valueType;
 
-        #region Private Vars
+		// FIELD
+		private readonly FieldInfo _fieldInfo;
 
-        private OSCReflectionType _propertyType;
+		// PROPERTY
+		private readonly MethodInfo _propertyGetter;
 
-        private Type _valueType;
+		private readonly MethodInfo _propertySetter;
 
-        private object _target;
+		// Method
+		private readonly MethodInfo _methodInfo;
 
-        private string _propertyName;
+		private readonly Type _methodWriteType;
 
-        // FIELD
-        private FieldInfo _fieldInfo;
+		#endregion
 
-        // PROPERTY
-        private PropertyInfo _propertyInfo;
+		#region Public Methods
 
-        private MethodInfo _propertyGetter;
+		public object GetValue()
+		{
+			object value = null;
 
-        private MethodInfo _propertySetter;
+			if (_propertyType == OSCReflectionType.Field)
+				value = GetFieldValue();
+			else if (_propertyType == OSCReflectionType.Property)
+				value = GetPropertyValue();
+			else if (_propertyType == OSCReflectionType.Method)
+				value = GetMethodValue();
 
-        // Method
-        private MethodInfo _methodInfo;
+			return value;
+		}
 
-        private Type _methodReadType;
+		public void SetValue(object value)
+		{
+			if (_propertyType == OSCReflectionType.Field)
+				SetFieldValue(value);
+			else if (_propertyType == OSCReflectionType.Property)
+				SetPropertyValue(value);
+			else if (_propertyType == OSCReflectionType.Method)
+				SetMethodValue(value);
+		}
 
-        private Type _methodWriteType;
+		#endregion
 
-        #endregion
+		#region Private Methods
 
-        #region Public Methods
+		private OSCReflectionProperty(object target, FieldInfo fieldInfo)
+		{
+			_target = target;
+			_propertyType = OSCReflectionType.Field;
 
-        public object GetValue()
-        {
-            object value = null;
+			_fieldInfo = fieldInfo;
 
-            if (_propertyType == OSCReflectionType.Field)
-                value = GetFieldValue();
-            else if (_propertyType == OSCReflectionType.Property)
-                value = GetPropertyValue();
-            else if (_propertyType == OSCReflectionType.Method)
-                value = GetMethodValue();
-
-            return value;
-        }
-
-        public void SetValue(object value)
-        {
-            if (_propertyType == OSCReflectionType.Field)
-                SetFieldValue(value);
-            else if (_propertyType == OSCReflectionType.Property)
-                SetPropertyValue(value);
-            else if (_propertyType == OSCReflectionType.Method)
-                SetMethodValue(value);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private OSCReflectionProperty(object target, FieldInfo fieldInfo)
-        {
-            _target = target;
-            _propertyType = OSCReflectionType.Field;
-            _propertyName = fieldInfo.Name;
-
-            _fieldInfo = fieldInfo;
-
-            _valueType = fieldInfo.FieldType;
-        }
-
-        private OSCReflectionProperty(object target, PropertyInfo propertyInfo)
-        {
-            _target = target;
-            _propertyType = OSCReflectionType.Property;
-            _propertyName = propertyInfo.Name;
-
-            _propertyInfo = propertyInfo;
-            _propertyGetter = propertyInfo.GetGetMethod();
-            _propertySetter = propertyInfo.GetSetMethod();
-
-            _valueType = propertyInfo.PropertyType;
-        }
-
-        private OSCReflectionProperty(object target, MethodInfo methodInfo)
-        {
-            _target = target;
-            _propertyType = OSCReflectionType.Method;
-            _propertyName = methodInfo.Name;
-
-            _methodInfo = methodInfo;
-            _methodWriteType = OSCReflection.GetMethodWriteType(methodInfo);
-            _methodReadType = OSCReflection.GetMethodReadType(methodInfo);
-
-	        _valueType = _methodInfo.ReturnType;
-        }
-
-        private OSCReflectionProperty() { }
-
-        private MemberInfo GetMemberInfo()
-        {
-            if (_propertyType == OSCReflectionType.Field)
-                return _fieldInfo;
-            if (_propertyType == OSCReflectionType.Property)
-                return _propertyInfo;
-            if (_propertyType == OSCReflectionType.Method)
-                return _methodInfo;
-
-            return null;
-        }
-
-        // FIELD
-        private object GetFieldValue()
-        {
-            if (_fieldInfo == null)
-                return null;
-
-            return _fieldInfo.GetValue(_target);
-        }
-
-        private void SetFieldValue(object value)
-        {
-            if (_fieldInfo == null)
-                return;
-
-            if (_fieldInfo.IsLiteral)
-                return;
-
-            if (value == null || _valueType.IsAssignableFrom(value.GetType()))
-            {
-                _fieldInfo.SetValue(_target, value);
-            }
-            else
-            {
-                _fieldInfo.SetValue(_target, Convert.ChangeType(value, _valueType));
-            }
-        }
-
-        // PROPERTY
-        private object GetPropertyValue()
-        {
-            if (_propertyGetter == null)
-                return null;
-
-            return _propertyGetter.Invoke(_target, null);
-        }
-
-        private void SetPropertyValue(object value)
-        {
-            if (_propertySetter == null)
-                return;
-
-            var parameters = new object[1];
-
-            if (value == null || _valueType.IsAssignableFrom(value.GetType()))
-            {
-                parameters[0] = value;
-            }
-            else
-            {
-                parameters[0] = Convert.ChangeType(value, _valueType);
-            }
-
-            _propertySetter.Invoke(_target, parameters);
-        }
-
-        // METHOD
-        private object GetMethodValue()
-        {
-            if (_methodInfo == null)
-                return null;
-
-            if (!OSCReflection.CheckAccess(_methodInfo, OSCReflectionAccess.Read))
-                return null;
-
-            return _methodInfo.Invoke(_target, null);
-        }
-
-        private void SetMethodValue(object value)
-        {
-            if (_methodInfo == null)
-                return;
-
-            if (!OSCReflection.CheckAccess(_methodInfo, OSCReflectionAccess.Write))
-                return;
-
-            var parameters = new object[1];
-
-            if (value == null || _methodWriteType.IsAssignableFrom(value.GetType()))
-            {
-                parameters[0] = value;
-            }
-            else
-            {
-                parameters[0] = Convert.ChangeType(value, _methodWriteType);
-            }
-
-            _methodInfo.Invoke(_target, parameters);
-        }
-
-        #endregion
-    }
+			_valueType = fieldInfo.FieldType;
+		}
+
+		private OSCReflectionProperty(object target, PropertyInfo propertyInfo)
+		{
+			_target = target;
+			_propertyType = OSCReflectionType.Property;
+
+			_propertyGetter = propertyInfo.GetGetMethod();
+			_propertySetter = propertyInfo.GetSetMethod();
+
+			_valueType = propertyInfo.PropertyType;
+		}
+
+		private OSCReflectionProperty(object target, MethodInfo methodInfo)
+		{
+			_target = target;
+			_propertyType = OSCReflectionType.Method;
+
+			_methodInfo = methodInfo;
+			_methodWriteType = OSCReflection.GetMethodWriteType(methodInfo);
+
+			_valueType = methodInfo.ReturnType;
+		}
+
+		// FIELD
+		private object GetFieldValue()
+		{
+			return _fieldInfo == null ? null : _fieldInfo.GetValue(_target);
+		}
+
+		private void SetFieldValue(object value)
+		{
+			if (_fieldInfo == null || _fieldInfo.IsLiteral)
+				return;
+
+			if (value == null || _valueType.IsInstanceOfType(value))
+			{
+				_fieldInfo.SetValue(_target, value);
+			}
+			else
+			{
+				_fieldInfo.SetValue(_target, Convert.ChangeType(value, _valueType));
+			}
+		}
+
+		// PROPERTY
+		private object GetPropertyValue()
+		{
+			if (_propertyGetter == null)
+				return null;
+
+			return _propertyGetter.Invoke(_target, null);
+		}
+
+		private void SetPropertyValue(object value)
+		{
+			if (_propertySetter == null)
+				return;
+
+			var parameters = new object[1];
+
+			if (value == null || _valueType.IsInstanceOfType(value))
+			{
+				parameters[0] = value;
+			}
+			else
+			{
+				parameters[0] = Convert.ChangeType(value, _valueType);
+			}
+
+			_propertySetter.Invoke(_target, parameters);
+		}
+
+		// METHOD
+		private object GetMethodValue()
+		{
+			if (_methodInfo == null || !OSCReflection.CheckAccess(_methodInfo, OSCReflectionAccess.Read))
+				return null;
+
+			return _methodInfo.Invoke(_target, null);
+		}
+
+		private void SetMethodValue(object value)
+		{
+			if (_methodInfo == null || !OSCReflection.CheckAccess(_methodInfo, OSCReflectionAccess.Write))
+				return;
+
+			var parameters = new object[1];
+
+			if (value == null || _methodWriteType.IsInstanceOfType(value))
+			{
+				parameters[0] = value;
+			}
+			else
+			{
+				parameters[0] = Convert.ChangeType(value, _methodWriteType);
+			}
+
+			_methodInfo.Invoke(_target, parameters);
+		}
+
+		#endregion
+	}
 }

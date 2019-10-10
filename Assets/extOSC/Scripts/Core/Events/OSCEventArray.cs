@@ -1,11 +1,10 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
-using System;
-using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [Serializable]
-    public class OSCEventArray : OSCEvent<List<OSCValue>>
+    [System.Serializable]
+    public class OSCEventArray : UnityEvent<System.Collections.Generic.List<OSCValue>>
     { }
 }

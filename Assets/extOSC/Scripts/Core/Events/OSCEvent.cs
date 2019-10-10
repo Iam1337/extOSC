@@ -6,106 +6,34 @@ using System;
 
 namespace extOSC.Core.Events
 {
+	[Obsolete]
     public interface IOSCEvent
-    {
-        Type EventType { get; }
-    }
+	{
+		Type EventType { get; }
+	}
 
-    [Serializable]
-    public class OSCEvent : UnityEvent, IOSCEvent
-    {
-        #region Public Vars
+	[Serializable]
+	[Obsolete]
+	public class OSCEvent : UnityEvent, IOSCEvent
+	{
+		#region Public Vars
 
-        public Type EventType
-        {
-            get { return null; }
-        }
+		public Type EventType
+		{
+			get { return null; }
+		}
 
-        #endregion
+		#endregion
+	}
 
-        #region Protected Vars
-
-        protected int _listenersCount;
-
-        #endregion
-
-        #region Public Methods
-
-        public int GetRuntimeEventCount()
-        {
-            return _listenersCount;
-        }
-
-        new public void AddListener(UnityAction callback)
-        {
-            base.AddListener(callback);
-
-            _listenersCount++;
-        }
-
-        new public void RemoveListener(UnityAction callback)
-        {
-            base.RemoveListener(callback);
-
-            _listenersCount--;
-        }
-
-        new public void RemoveAllListeners()
-        {
-            base.RemoveAllListeners();
-
-            _listenersCount = 0;
-        }
-
-        #endregion
-    }
-
-    [Serializable]
+	[Serializable]
+	[Obsolete]
     public class OSCEvent<T> : UnityEvent<T>, IOSCEvent
-    {
-        #region Public Vars
+	{
+		#region Public Vars
 
-        public Type EventType
-        {
-            get { return typeof(T); }
-        }
+		public Type EventType => typeof(T);
 
-        #endregion
-
-        #region Protected Vars
-
-        protected int _listenersCount;
-
-        #endregion
-
-        #region Public Methods
-
-        public int GetRuntimeEventCount()
-        {
-            return _listenersCount;
-        }
-
-        new public void AddListener(UnityAction<T> callback)
-        {
-            base.AddListener(callback);
-
-            _listenersCount++;
-        }
-
-        new public void RemoveListener(UnityAction<T> callback)
-        {
-            base.RemoveListener(callback);
-
-            _listenersCount--;
-        }
-
-        new public void RemoveAllListeners()
-        {
-            base.RemoveAllListeners();
-
-            _listenersCount = 0;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

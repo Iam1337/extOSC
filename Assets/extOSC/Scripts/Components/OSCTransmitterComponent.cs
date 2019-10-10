@@ -1,68 +1,75 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 using extOSC.Mapping;
 
 namespace extOSC.Components
 {
-    public abstract class OSCTransmitterComponent : MonoBehaviour, IOSCTransmitterComponent
-    {
-        #region Public Vars
+	public abstract class OSCTransmitterComponent : MonoBehaviour
+	{
+		#region Public Vars
 
-        public OSCTransmitter Transmitter {
-            get { return transmitter; }
-            set { transmitter = value; }
-        }
+		public OSCTransmitter Transmitter
+		{
+			get => _transmitter;
+			set => _transmitter = value;
+		}
 
-        public virtual string TransmitterAddress {
-            get { return address; }
-            set { address = value; }
-        }
+		public virtual string TransmitterAddress
+		{
+			get => _address;
+			set => _address = value;
+		}
 
-        public OSCMapBundle MapBundle {
-            get { return mapBundle; }
-            set { mapBundle = value; }
-        }
+		public OSCMapBundle MapBundle
+		{
+			get => _mapBundle;
+			set => _mapBundle = value;
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Private Vars
 
-        [OSCSelector]
-        [SerializeField]
-        protected OSCTransmitter transmitter;
+		[OSCSelector]
+		[SerializeField]
+		[FormerlySerializedAs("transmitter")]
+        private OSCTransmitter _transmitter;
 
-        [SerializeField]
-        protected string address = "/address";
+		[SerializeField]
+		[FormerlySerializedAs("address")]
+		private string _address = "/address";
 
-        [SerializeField]
-        protected OSCMapBundle mapBundle;
+		[SerializeField]
+		[FormerlySerializedAs("mapBundle")]
+		private OSCMapBundle _mapBundle;
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void Send()
-        {
-            var message = new OSCMessage(address);
+		public void Send()
+		{
+			var message = new OSCMessage(_address);
 
-            if (FillMessage(message))
-            {
-                if (mapBundle != null)
-                    mapBundle.Map(message);
+			if (FillMessage(message))
+			{
+				if (_mapBundle != null)
+					_mapBundle.Map(message);
 
-                if (transmitter != null)
-                    transmitter.Send(message);
-            }
-        }
+				if (_transmitter != null)
+					_transmitter.Send(message);
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected abstract bool FillMessage(OSCMessage message);
+		protected abstract bool FillMessage(OSCMessage message);
 
-        #endregion
-    }
+		#endregion
+	}
 }

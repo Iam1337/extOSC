@@ -1,76 +1,76 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 using System;
 using System.Collections.Generic;
 
 namespace extOSC.Mapping
 {
-    [Serializable]
-    public class OSCMapMessage
-    {
-        #region Public Vars
+	[Serializable]
+	public class OSCMapMessage
+	{
+		#region Public Vars
 
-        public string Address
-        {
-            get { return address; }
-            set { address = value; }
-        }
+		public string Address
+		{
+			get => _address;
+			set => _address = value;
+		}
 
-        public List<OSCMapValue> Values
-        {
-            get { return values; }
-            set { values = value; }
-        }
+		public List<OSCMapValue> Values
+		{
+			get => _values;
+			set => _values = value;
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Protected Vars
 
-        [SerializeField]
-        protected string address = "/address";
+		[SerializeField]
+		[FormerlySerializedAs("address")]
+        private string _address = "/address";
 
-        [SerializeField]
-        protected List<OSCMapValue> values = new List<OSCMapValue>();
+		[SerializeField]
+		[FormerlySerializedAs("values")]
+        private List<OSCMapValue> _values = new List<OSCMapValue>();
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void Map(OSCMessage message)
-        {
-            if (OSCUtilities.CompareAddresses(Address, message.Address) &&
-                        message.Values.Count == Values.Count)
-            {
-                var failed = false;
+		public void Map(OSCMessage message)
+		{
+			if (OSCUtilities.CompareAddresses(Address, message.Address) && message.Values.Count == Values.Count)
+			{
+				var failed = false;
 
-                for (int index = 0; index < message.Values.Count; index++)
-                {
-                    var mapMessageValue = Values[index];
-                    var messageValue = message.Values[index];
+				for (var i = 0; i < message.Values.Count; i++)
+				{
+					var messageValue = message.Values[i];
+					var valueType = messageValue.Type != OSCValueType.False ? messageValue.Type : OSCValueType.True;
 
-                    var valueType = messageValue.Type != OSCValueType.False ? messageValue.Type : OSCValueType.True;
+					if (messageValue.Type != valueType)
+					{
+						failed = true;
+						break;
+					}
+				}
 
-                    if (messageValue.Type != valueType)
-                    {
-                        failed = true;
-                        break;
-                    }
-                }
+				if (failed) return;
 
-                if (failed) return;
+				for (var i = 0; i < message.Values.Count; i++)
+				{
+					var messageValue = message.Values[i];
+					var mapMessageValue = Values[i];
 
-                for (int index = 0; index < message.Values.Count; index++)
-                {
-                    var messageValue = message.Values[index];
-                    var mapMessageValue = Values[index];
+					message.Values[i] = mapMessageValue.Map(messageValue);
+				}
+			}
+		}
 
-                    message.Values[index] = mapMessageValue.Map(messageValue);
-                }
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

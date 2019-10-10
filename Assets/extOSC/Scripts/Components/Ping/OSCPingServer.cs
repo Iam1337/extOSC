@@ -3,59 +3,48 @@ using UnityEngine;
 
 namespace extOSC.Components.Ping
 {
-    [AddComponentMenu("extOSC/Components/Ping/Ping Server")]
-    public class OSCPingServer : OSCComponent
-    {
-        #region Public Vars
+	[AddComponentMenu("extOSC/Components/Ping/Ping Server")]
+	public class OSCPingServer : OSCComponent
+	{
+		#region Protected Methods
 
-        public override string TransmitterAddress
-        {
-            get { return transmitterAddress; }
-        }
+		protected void Awake()
+		{
+			// Idk, how to make this better! Please, halp!11 
+			TransmitterAddress = "- None -";
+		}
 
-        #endregion
+		protected override bool FillMessage(OSCMessage message)
+		{
+			message.AddValue(OSCValue.Impulse());
 
-        #region Protected Methods
+			return true;
+		}
 
-        protected void Awake()
-        {
-            // Idk, how to make this better! Please, halp!11 
-            transmitterAddress = "- None -";
-        }
+		protected override void Invoke(OSCMessage message)
+		{
+			var host = message.Ip.ToString();
 
-        protected override bool FillMessage(OSCMessage message)
-        {
-            message.AddValue(OSCValue.Impulse());
+			if (message.ToString(out var address) && message.ToInt(out var port))
+			{
+				TransmitterAddress = address;
 
-            return true;
-        }
+				var backupUseBundle = Transmitter.UseBundle;
+				var backupRemoteHost = Transmitter.RemoteHost;
+				var backupRemotePort = Transmitter.RemotePort;
 
-        protected override void Invoke(OSCMessage message)
-        {
-            var address = string.Empty;
-            var host = message.Ip.ToString();
-            var port = 0;
+				Transmitter.UseBundle = false;
+				Transmitter.RemoteHost = host;
+				Transmitter.RemotePort = port;
 
-            if (message.ToString(out address) && message.ToInt(out port))
-            {
-                transmitterAddress = address;
+				Send();
 
-                var backupUseBundle = transmitter.UseBundle;
-                var backupRemoteHost = transmitter.RemoteHost;
-                var backupRemotePort = transmitter.RemotePort;
+				Transmitter.UseBundle = backupUseBundle;
+				Transmitter.RemoteHost = backupRemoteHost;
+				Transmitter.RemotePort = backupRemotePort;
+			}
+		}
 
-                transmitter.UseBundle = false;
-                transmitter.RemoteHost = host;
-                transmitter.RemotePort = port;
-
-                Send();
-
-                transmitter.UseBundle = backupUseBundle;
-                transmitter.RemoteHost = backupRemoteHost;
-                transmitter.RemotePort = backupRemotePort;
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -2,6 +2,7 @@
 
 namespace extOSC.Core
 {
+	// TODO: Move to Editor.
 	public enum OSCConsolePacketType
 	{
 		Received,
@@ -13,19 +14,19 @@ namespace extOSC.Core
 	{
 		#region Public Vars
 
-		public IOSCPacket IoscPacket
+		public IOSCPacket Packet
 		{
-			get { return _ioscPacket; }
+			get => _packet;
 			set
 			{
-				_ioscPacket = value;
+				_packet = value;
 				_description = null;
 			}
 		}
 
 		public OSCConsolePacketType PacketType
 		{
-			get { return _packetType; }
+			get => _packetType;
 			set
 			{
 				_packetType = value;
@@ -35,7 +36,7 @@ namespace extOSC.Core
 
 		public string Info
 		{
-			get { return _info; }
+			get => _info;
 			set
 			{
 				_info = value;
@@ -47,7 +48,7 @@ namespace extOSC.Core
 
 		#region Private Vars
 
-		private IOSCPacket _ioscPacket;
+		private IOSCPacket _packet;
 
 		private OSCConsolePacketType _packetType;
 
@@ -62,19 +63,18 @@ namespace extOSC.Core
 #if UNITY_EDITOR
 		public override string ToString()
 		{
-			if (_description == null && _ioscPacket != null)
+			if (_description == null && _packet != null)
 			{
 				var packetDescription = string.Empty;
-				if (!_ioscPacket.IsBundle())
+
+				if (!_packet.IsBundle())
 				{
-					packetDescription = string.Format("<color=orange>Message:</color> {0}", _ioscPacket.Address);
+					packetDescription = $"<color=orange>Message:</color> {_packet.Address}";
 				}
 
-				var bundle = _ioscPacket as OSCBundle;
-				if (bundle != null)
+				if (_packet is OSCBundle bundle)
 				{
-					packetDescription =
-						string.Format("<color=yellow>Bundle:</color> (Packets: {0})", bundle.Packets.Count);
+					packetDescription = $"<color=yellow>Bundle:</color> (Packets: {bundle.Packets.Count})";
 				}
 
 				_description = packetDescription + "\n" + _info;

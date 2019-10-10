@@ -4,14 +4,11 @@ using System;
 
 namespace extOSC.Core.Packers
 {
-    internal class OSCPackerInt : OSCPacker<int>
-    {
-        #region Public Methods
+	internal class OSCPackerInt : OSCPacker<int>
+	{
+		#region Public Methods
 
-        public override OSCValueType GetPackerType()
-        {
-            return OSCValueType.Int;
-        }
+		public override OSCValueType PackerType => OSCValueType.Int;
 
         #endregion
 
@@ -19,37 +16,37 @@ namespace extOSC.Core.Packers
 
         private readonly byte[] _data = new byte[sizeof(int)];
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override int BytesToValue(byte[] buffer, ref int index)
-        {
-            _data[0] = buffer[index++];
-            _data[1] = buffer[index++];
-            _data[2] = buffer[index++];
-            _data[3] = buffer[index++];
+		protected override int BytesToValue(byte[] buffer, ref int index)
+		{
+			_data[0] = buffer[index++];
+			_data[1] = buffer[index++];
+			_data[2] = buffer[index++];
+			_data[3] = buffer[index++];
 
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(_data);
+			if (BitConverter.IsLittleEndian)
+				Array.Reverse(_data);
 
-            return BitConverter.ToInt32(_data, 0);
-        }
+			return BitConverter.ToInt32(_data, 0);
+		}
 
-        protected override void ValueToBytes(byte[] buffer, ref int index, int value)
-        {
-            // TODO: To marshall structure
-            var data = BitConverter.GetBytes(value);
+		protected override void ValueToBytes(byte[] buffer, ref int index, int value)
+		{
+			// TODO: To marshall structure
+			var data = BitConverter.GetBytes(value);
 
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(data);
+			if (BitConverter.IsLittleEndian)
+				Array.Reverse(data);
 
-            buffer[index++] = data[0];
-            buffer[index++] = data[1];
-            buffer[index++] = data[2];
-            buffer[index++] = data[3];
-        }
+			buffer[index++] = data[0];
+			buffer[index++] = data[1];
+			buffer[index++] = data[2];
+			buffer[index++] = data[3];
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

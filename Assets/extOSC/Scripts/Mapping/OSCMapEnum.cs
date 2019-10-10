@@ -2,31 +2,31 @@
 
 namespace extOSC.Mapping
 {
-    public enum OSCMapType
-    {
-        Float,
+	public enum OSCMapType
+	{
+		Float,
 
-        Int,
+		Int,
 
-        FloatToBool,
+		FloatToBool,
 
-        BoolToFloat,
+		BoolToFloat,
 
-        IntToBool,
+		IntToBool,
 
-        BoolToInt
-    }
+		BoolToInt
+	}
 
-    public enum OSCMapLogic
-    {
-        GreaterOrEquals,
+	public enum OSCMapLogic
+	{
+		GreaterOrEquals,
 
-        Greater,
+		Greater,
 
-        LessOrEquals,
+		LessOrEquals,
 
-        Less,
+		Less,
 
-        Equals
-    }
+		Equals
+	}
 }

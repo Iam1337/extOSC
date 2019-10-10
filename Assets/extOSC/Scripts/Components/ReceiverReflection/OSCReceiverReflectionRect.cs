@@ -4,21 +4,13 @@ using UnityEngine;
 
 namespace extOSC.Components.ReceiverReflections
 {
-    [AddComponentMenu("extOSC/Components/Receiver/Rect Reflection")]
-    public class OSCReceiverReflectionRect : OSCReceiverReflection<Rect>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Receiver/Rect Reflection")]
+	public class OSCReceiverReflectionRect : OSCReceiverReflection<Rect>
+	{
+		#region Protected Methods
 
-        protected override bool ProcessMessage(OSCMessage message, out Rect value)
-        {
-            value = new Rect();
+		protected override bool ProcessMessage(OSCMessage message, out Rect value) => message.ToRect(out value);
 
-            if (message.ToRect(out value))
-                return true;
-
-            return false;
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

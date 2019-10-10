@@ -6,16 +6,13 @@ using System.Collections.Generic;
 
 namespace extOSC.Components.Informers
 {
-    [AddComponentMenu("extOSC/Components/Transmitter/Array Informer")]
-    public class OSCTransmitterInformerArray : OSCTransmitterInformer<List<OSCValue>>
-    {
-        #region Protected Methods
+	[AddComponentMenu("extOSC/Components/Transmitter/Array Informer")]
+	public class OSCTransmitterInformerArray : OSCTransmitterInformer<List<OSCValue>>
+	{
+		#region Protected Methods
 
-        protected override void FillMessage(OSCMessage message, List<OSCValue> value)
-        {
-            message.AddValue(OSCValue.Array(value.ToArray()));
-        }
+		protected override void FillMessage(OSCMessage message, List<OSCValue> value) => message.AddValue(OSCValue.Array(value.ToArray()));
 
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -8,182 +8,176 @@ using extOSC.Core.Reflection;
 
 namespace extOSC.Components.Informers
 {
-    public abstract class OSCTransmitterInformer : OSCTransmitterComponent
-    {
-        #region Public Vars
+	public abstract class OSCTransmitterInformer : OSCTransmitterComponent
+	{
+		#region Public Vars
 
-        public abstract Type InformerType { get; }
+		public abstract Type InformerType { get; }
 
-        public bool InformOnChanged
-        {
-            get { return informOnChanged; }
-            set { informOnChanged = value; }
-        }
+		public bool InformOnChanged
+		{
+			get { return informOnChanged; }
+			set { informOnChanged = value; }
+		}
 
-        public float InformInterval
-        {
-            get { return informInterval; }
-            set { informInterval = Mathf.Max(value, 0); }
-        }
+		public float InformInterval
+		{
+			get { return informInterval; }
+			set { informInterval = Mathf.Max(value, 0); }
+		}
 
-        public OSCReflectionMember ReflectionTarget
-        {
-            get { return reflectionMember; }
-            set
-            {
-                if (reflectionMember == value)
-                    return;
+		public OSCReflectionMember ReflectionTarget
+		{
+			get { return reflectionMember; }
+			set
+			{
+				if (reflectionMember == value)
+					return;
 
-                reflectionMember = value;
+				reflectionMember = value;
 
-                UpdateCachedReferences();
-            }
-        }
+				UpdateCachedReferences();
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Protected Vars
 
-        [SerializeField]
-        protected OSCReflectionMember reflectionMember;
+		[SerializeField]
+		protected OSCReflectionMember reflectionMember;
 
-        [SerializeField]
-        protected bool informOnChanged = true;
+		[SerializeField]
+		protected bool informOnChanged = true;
 
-        [SerializeField]
-        protected float informInterval = 0;
+		[SerializeField]
+		protected float informInterval = 0;
 
-        protected OSCReflectionProperty cachedProperty
-        {
-            get
-            {
-                return _cachedProperty;
-            }
-        }
+		protected OSCReflectionProperty cachedProperty
+		{
+			get { return _cachedProperty; }
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private OSCReflectionProperty _cachedProperty;
+		private OSCReflectionProperty _cachedProperty;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected virtual void Awake()
-        {
-            UpdateCachedReferences();
-        }
+		protected virtual void Awake()
+		{
+			UpdateCachedReferences();
+		}
 
 #if UNITY_EDITOR
-        protected void OnValidate()
-        {
-            UpdateCachedReferences();
-        }
+		protected void OnValidate()
+		{
+			UpdateCachedReferences();
+		}
 #endif
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void UpdateCachedReferences()
-        {
-            if (reflectionMember != null && reflectionMember.IsValid())
-            {
-                _cachedProperty = reflectionMember.GetProperty();
-            }
-            else
-            {
-                _cachedProperty = null;
-            }
-        }
+		private void UpdateCachedReferences()
+		{
+			if (reflectionMember != null && reflectionMember.IsValid())
+			{
+				_cachedProperty = reflectionMember.GetProperty();
+			}
+			else
+			{
+				_cachedProperty = null;
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 
-    public abstract class OSCTransmitterInformer<T> : OSCTransmitterInformer
-    {
-        #region Public Vars
+	public abstract class OSCTransmitterInformer<T> : OSCTransmitterInformer
+	{
+		#region Public Vars
 
-        public override Type InformerType
-        {
-            get { return typeof(T); }
-        }
+		public override Type InformerType => typeof(T);
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private T _previousValue;
+		private T _previousValue;
 
-        private float _sendTimer;
+		private float _sendTimer;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void Awake()
-        {
-            base.Awake();
+		protected override void Awake()
+		{
+			base.Awake();
 
-            if (cachedProperty != null)
-                _previousValue = (T)cachedProperty.GetValue();
-        }
+			if (cachedProperty != null)
+				_previousValue = (T) cachedProperty.GetValue();
+		}
 
-        protected virtual void Update()
-        {
-            if (cachedProperty == null) return;
+		protected virtual void Update()
+		{
+			if (cachedProperty == null) return;
 
-            if (informOnChanged)
-            {
-                var currentValue = (T)cachedProperty.Value;
+			if (informOnChanged)
+			{
+				var currentValue = (T) cachedProperty.Value;
 
-                if (!currentValue.Equals(_previousValue))
-                {
-                    Send();
+				if (!currentValue.Equals(_previousValue))
+				{
+					Send();
 
-                    _previousValue = currentValue;
-                }
-            }
-            else
-            {
-	            informInterval = Mathf.Max(informInterval, 0);
+					_previousValue = currentValue;
+				}
+			}
+			else
+			{
+				informInterval = Mathf.Max(informInterval, 0);
 				if (informInterval < float.Epsilon)
-                {
-                    Send();
-                }
-                else
-                {
-                    _sendTimer += Time.deltaTime;
+				{
+					Send();
+				}
+				else
+				{
+					_sendTimer += Time.deltaTime;
 
-                    if (informInterval < _sendTimer)
-                    {
-                        Send();
+					if (informInterval < _sendTimer)
+					{
+						Send();
 
-                        _sendTimer = 0;
-                    }
-                }
-            }
-        }
+						_sendTimer = 0;
+					}
+				}
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override bool FillMessage(OSCMessage message)
-        {
-            if (cachedProperty != null)
-            {
-                FillMessage(message, (T)cachedProperty.GetValue());
-                return true;
-            }
+		protected override bool FillMessage(OSCMessage message)
+		{
+			if (cachedProperty != null)
+			{
+				FillMessage(message, (T) cachedProperty.GetValue());
+				return true;
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        protected abstract void FillMessage(OSCMessage message, T value);
+		protected abstract void FillMessage(OSCMessage message, T value);
 
-        #endregion
-    }
+		#endregion
+	}
 }

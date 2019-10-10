@@ -1,159 +1,162 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace extOSC.Components
 {
-    public abstract class OSCComponent : MonoBehaviour, IOSCReceiverComponent, IOSCTransmitterComponent
-    {
-        #region Public Vars
+	public abstract class OSCComponent : MonoBehaviour
+	{
+		#region Public Vars
 
-        public OSCReceiver Receiver {
-            get { return receiver; }
-            set {
-                if (receiver == value)
-                    return;
+		public OSCReceiver Receiver
+		{
+			get => _receiver;
+			set
+			{
+				if (_receiver == value)
+					return;
 
-                Unbind();
+				Unbind();
+				_receiver = value;
+				Bind();
+			}
+		}
 
-                receiver = value;
+		public virtual string ReceiverAddress
+		{
+			get => _receiverAddress;
+			set
+			{
+				if (_receiverAddress == value)
+					return;
 
-                Bind();
-            }
-        }
+				Unbind();
+				_receiverAddress = value;
+				Bind();
+			}
+		}
 
-        public virtual string ReceiverAddress {
-            get { return receiverAddress; }
-            set {
-                if (receiverAddress == value)
-                    return;
+		public OSCTransmitter Transmitter
+		{
+			get => _transmitter;
+			set => _transmitter = value;
+		}
 
-                Unbind();
+		public virtual string TransmitterAddress
+		{
+			get => _transmitterAddress;
+			set => _transmitterAddress = value;
+		}
 
-                receiverAddress = value;
+		#endregion
 
-                Bind();
-            }
-        }
+		#region Private Vars
 
-        public OSCTransmitter Transmitter {
-            get { return transmitter; }
-            set { transmitter = value; }
-        }
+		[OSCSelector]
+		[SerializeField]
+		[FormerlySerializedAs("receiver")]
+		private OSCReceiver _receiver;
 
-        public virtual string TransmitterAddress {
-            get { return transmitterAddress; }
-            set { transmitterAddress = value; }
-        }
+		[OSCSelector]
+		[SerializeField]
+		[FormerlySerializedAs("transmitter")]
+		private OSCTransmitter _transmitter;
 
-        #endregion
+		[SerializeField]
+		[FormerlySerializedAs("receiverAddress")]
+		private string _receiverAddress = "/address/receiver";
 
-        #region Protected Vars
+		[SerializeField]
+		[FormerlySerializedAs("transmitterAddress")]
+		private string _transmitterAddress = "/address/transmitter";
 
-        [OSCSelector]
-        [SerializeField]
-        protected OSCReceiver receiver;
+		private OSCBind _receiverBind;
 
-        [OSCSelector]
-        [SerializeField]
-        protected OSCTransmitter transmitter;
+		private OSCReceiver _bindedReceiver;
 
-        [SerializeField]
-        protected string receiverAddress = "/address/receiver";
+		#endregion
 
-        [SerializeField]
-        protected string transmitterAddress = "/address/transmitter";
+		#region Unity Methods
 
-        protected OSCBind receiverBind;
+		protected virtual void OnEnable()
+		{
+			Bind();
+		}
 
-        protected OSCReceiver bindedReceiver;
-
-        #endregion
-
-        #region Private Vars
-
-        #endregion
-
-        #region Unity Methods
-
-        protected virtual void OnEnable()
-        {
-            Bind();
-        }
-
-        protected virtual void OnDisable()
-        {
-            Unbind();
-        }
+		protected virtual void OnDisable()
+		{
+			Unbind();
+		}
 
 #if UNITY_EDITOR
-        protected virtual void OnValidate()
-        {
-            if (Application.isPlaying)
-            {
-                Unbind();
-                Bind();
-            }
-        }
+		protected virtual void OnValidate()
+		{
+			if (Application.isPlaying)
+			{
+				Unbind();
+				Bind();
+			}
+		}
 #endif
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void Send()
-        {
-            var message = new OSCMessage(transmitterAddress);
+		public void Send()
+		{
+			var message = new OSCMessage(_transmitterAddress);
 
-            if (FillMessage(message))
-            {
-                if (transmitter != null)
-                    transmitter.Send(message);
-            }
-        }
+			if (FillMessage(message))
+			{
+				if (_transmitter != null)
+					_transmitter.Send(message);
+			}
+		}
 
-        public void Bind()
-        {
-            if (receiverBind == null || receiverBind.ReceiverAddress != receiverAddress)
-            {
-                Unbind();
+		public void Bind()
+		{
+			if (_receiverBind == null || _receiverBind.ReceiverAddress != _receiverAddress)
+			{
+				Unbind();
 
-                receiverBind = new OSCBind(receiverAddress, InvokeMessage);
-            }
+				_receiverBind = new OSCBind(_receiverAddress, InvokeMessage);
+			}
 
-            bindedReceiver = receiver;
+			_bindedReceiver = _receiver;
 
-            if (bindedReceiver != null)
-                bindedReceiver.Bind(receiverBind);
-        }
+			if (_bindedReceiver != null)
+				_bindedReceiver.Bind(_receiverBind);
+		}
 
-        public void Unbind()
-        {
-            if (bindedReceiver != null && receiverBind != null)
-                bindedReceiver.Unbind(receiverBind);
+		public void Unbind()
+		{
+			if (_bindedReceiver != null && _receiverBind != null)
+				_bindedReceiver.Unbind(_receiverBind);
 
-            bindedReceiver = null;
-        }
+			_bindedReceiver = null;
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected abstract void Invoke(OSCMessage message);
+		protected abstract void Invoke(OSCMessage message);
 
-        protected abstract bool FillMessage(OSCMessage message);
+		protected abstract bool FillMessage(OSCMessage message);
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void InvokeMessage(OSCMessage message)
-        {
-            if (!enabled) return;
+		private void InvokeMessage(OSCMessage message)
+		{
+			if (!enabled) return;
 
-            Invoke(message);
-        }
+			Invoke(message);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

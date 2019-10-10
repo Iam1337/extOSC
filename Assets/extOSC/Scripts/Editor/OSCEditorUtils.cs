@@ -15,54 +15,54 @@ using Object = UnityEngine.Object;
 
 namespace extOSC.Editor
 {
-    public static class OSCEditorUtils
-    {
-        #region Static Public Vars
+	public static class OSCEditorUtils
+	{
+		#region Static Public Vars
 
-        public static string DebugFolder
-        {
-            get
-            {
-                if (!Directory.Exists(_debugFolder))
-                    Directory.CreateDirectory(_debugFolder);
+		public static string DebugFolder
+		{
+			get
+			{
+				if (!Directory.Exists(_debugFolder))
+					Directory.CreateDirectory(_debugFolder);
 
-                return _debugFolder;
-            }
-        }
+				return _debugFolder;
+			}
+		}
 
-        public static string BackupFolder
-        {
-            get
-            {
-                if (!Directory.Exists(_backupFolder))
-                    Directory.CreateDirectory(_backupFolder);
+		public static string BackupFolder
+		{
+			get
+			{
+				if (!Directory.Exists(_backupFolder))
+					Directory.CreateDirectory(_backupFolder);
 
-                return _backupFolder;
-            }
-        }
+				return _backupFolder;
+			}
+		}
 
-        public static string LogsFilePath
-        {
-            get
-            {
-                if (!Directory.Exists(Path.GetDirectoryName(_logsFilePath)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(_logsFilePath));
+		public static string LogsFilePath
+		{
+			get
+			{
+				if (!Directory.Exists(Path.GetDirectoryName(_logsFilePath)))
+					Directory.CreateDirectory(Path.GetDirectoryName(_logsFilePath));
 
-                return _logsFilePath; ;
-            }
-        }
+				return _logsFilePath;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Static Private Vars
+		#region Static Private Vars
 
-        private static string _debugFolder = "./extOSC/Debug/";
+		private static string _debugFolder = "./extOSC/Debug/";
 
-        private static string _backupFolder = "./extOSC/";
+		private static string _backupFolder = "./extOSC/";
 
-        private static string _logsFilePath = "./extOSC/logs.xml";
+		private static string _logsFilePath = "./extOSC/logs.xml";
 
-        private static OSCControls.Resources _defaultResources;
+		private static OSCControls.Resources _defaultResources;
 
 		#endregion
 
@@ -100,235 +100,240 @@ namespace extOSC.Editor
 		}
 
 		public static OSCReceiver FindReceiver(int localPort)
-        {
-            var receivers = GameObject.FindObjectsOfType<OSCReceiver>();
+		{
+			var receivers = Object.FindObjectsOfType<OSCReceiver>();
 
-            foreach (var receiver in receivers)
-            {
-                if (receiver.LocalPort == localPort)
-                    return receiver;
-            }
+			foreach (var receiver in receivers)
+			{
+				if (receiver.LocalPort == localPort)
+					return receiver;
+			}
 
-            return null;
-        }
+			return null;
+		}
 
-        public static OSCTransmitter FindTransmitter(string remoteHost, int remotePort)
-        {
-            var transmitters = GameObject.FindObjectsOfType<OSCTransmitter>();
+		public static OSCTransmitter FindTransmitter(string remoteHost, int remotePort)
+		{
+			var transmitters = Object.FindObjectsOfType<OSCTransmitter>();
 
-            foreach (var transmitter in transmitters)
-            {
-                if (transmitter.RemoteHost == remoteHost &&
-                    transmitter.RemotePort == remotePort)
-                    return transmitter;
-            }
+			foreach (var transmitter in transmitters)
+			{
+				if (transmitter.RemoteHost == remoteHost &&
+					transmitter.RemotePort == remotePort)
+					return transmitter;
+			}
 
-            return null;
-        }
+			return null;
+		}
 
 		public static List<OSCConsolePacket> LoadConsoleMessages(string filePath)
-        {
-            var list = new List<OSCConsolePacket>();
+		{
+			var list = new List<OSCConsolePacket>();
 
-            if (!File.Exists(filePath))
-            {
-                SaveConsoleMessages(filePath, list);
+			if (!File.Exists(filePath))
+			{
+				SaveConsoleMessages(filePath, list);
 
-                return list;
-            }
+				return list;
+			}
 
-            var document = new XmlDocument();
-            try
-            {
-                document.Load(filePath);
+			var document = new XmlDocument();
+			try
+			{
+				document.Load(filePath);
 
-                var rootElement = document.FirstChild;
+				var rootElement = document.FirstChild;
 
-                foreach (XmlNode messageElement in rootElement.ChildNodes)
-                {
-                    var consoleMessage = new OSCConsolePacket();
+				foreach (XmlNode messageElement in rootElement.ChildNodes)
+				{
+					var consoleMessage = new OSCConsolePacket();
 
-                    var instanceAttribute = messageElement.Attributes["info"];
-                    consoleMessage.Info = instanceAttribute.InnerText;
+					var instanceAttribute = messageElement.Attributes["info"];
+					consoleMessage.Info = instanceAttribute.InnerText;
 
-                    var typeAttribute = messageElement.Attributes["type"];
-                    consoleMessage.PacketType = (OSCConsolePacketType)Enum.Parse(typeof(OSCConsolePacketType), typeAttribute.InnerText);
+					var typeAttribute = messageElement.Attributes["type"];
+					consoleMessage.PacketType = (OSCConsolePacketType) Enum.Parse(typeof(OSCConsolePacketType), typeAttribute.InnerText);
 
-                    var packetElement = messageElement["ioscPacket"];
-                    consoleMessage.IoscPacket = OSCUtilities.FromBase64String(packetElement.InnerText);
+					var packetElement = messageElement["ioscPacket"];
+					consoleMessage.Packet = OSCUtilities.FromBase64String(packetElement.InnerText);
 
-                    list.Add(consoleMessage);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogFormat("[OSCConsole] Error: {0}", e);
-                list.Clear();
-            }
+					list.Add(consoleMessage);
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.LogFormat("[OSCConsole] Error: {0}", e);
+				list.Clear();
+			}
 
-            return list;
-        }
+			return list;
+		}
 
-        public static void SaveConsoleMessages(string filePath, List<OSCConsolePacket> list)
-        {
-            var document = new XmlDocument();
-            var rootElement = (XmlElement)document.AppendChild(document.CreateElement("root"));
+		public static void SaveConsoleMessages(string filePath, List<OSCConsolePacket> list)
+		{
+			var document = new XmlDocument();
+			var rootElement = (XmlElement) document.AppendChild(document.CreateElement("root"));
 
-            foreach (var consoleMessage in list)
-            {
-                var messageElement = rootElement.AppendChild(document.CreateElement("message"));
+			foreach (var consoleMessage in list)
+			{
+				var messageElement = rootElement.AppendChild(document.CreateElement("message"));
 
-                var instanceAttribute = document.CreateAttribute("info");
-                instanceAttribute.InnerText = consoleMessage.Info;
+				var instanceAttribute = document.CreateAttribute("info");
+				instanceAttribute.InnerText = consoleMessage.Info;
 
-                var typeAttribute = document.CreateAttribute("type");
-                typeAttribute.InnerText = consoleMessage.PacketType.ToString();
+				var typeAttribute = document.CreateAttribute("type");
+				typeAttribute.InnerText = consoleMessage.PacketType.ToString();
 
-                messageElement.Attributes.Append(instanceAttribute);
-                messageElement.Attributes.Append(typeAttribute);
+				messageElement.Attributes.Append(instanceAttribute);
+				messageElement.Attributes.Append(typeAttribute);
 
-                var packetElement = document.CreateElement("ioscPacket");
-                packetElement.InnerText = OSCUtilities.ToBase64String(consoleMessage.IoscPacket);
+				var packetElement = document.CreateElement("ioscPacket");
+				packetElement.InnerText = OSCUtilities.ToBase64String(consoleMessage.Packet);
 
-                messageElement.AppendChild(packetElement);
-            }
+				messageElement.AppendChild(packetElement);
+			}
 
-            document.Save(filePath);
-        }
+			document.Save(filePath);
+		}
 
-        public static IOSCPacket LoadPacket(string filePath)
-        {
-            if (!File.Exists(filePath))
-                return null;
+		public static IOSCPacket LoadPacket(string filePath)
+		{
+			if (!File.Exists(filePath))
+				return null;
 
-            try
-            {
-                return OSCConverter.Unpack(File.ReadAllBytes(filePath));
-            }
-            catch (Exception e)
-            {
-                Debug.LogFormat("[OSCEditorUtils] Load IoscPacket error: {0}", e);
+			try
+			{
+				return OSCConverter.Unpack(File.ReadAllBytes(filePath));
+			}
+			catch (Exception e)
+			{
+				Debug.LogFormat("[OSCEditorUtils] Load IoscPacket error: {0}", e);
 
-                try
-                {
-                    var document = new XmlDocument();
-                    document.Load(filePath);
+				try
+				{
+					var document = new XmlDocument();
+					document.Load(filePath);
 
-                    return OSCUtilities.FromBase64String(document.FirstChild.InnerText);
-                }
-                catch (Exception e2)
-                {
-                    Debug.LogFormat("[OSCEditorUtils] Load Old Format IoscPacket Error: {0}", e2);
-                }
-            }
+					return OSCUtilities.FromBase64String(document.FirstChild.InnerText);
+				}
+				catch (Exception e2)
+				{
+					Debug.LogFormat("[OSCEditorUtils] Load Old Format IoscPacket Error: {0}", e2);
+				}
+			}
 
-            return null;
-        }
+			return null;
+		}
 
-        public static void SavePacket(string filePath, IOSCPacket ioscPacket)
-        {
-            using (var fileWriter = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
-            {
-                var size = 0;
-                var buffer = OSCConverter.Pack(ioscPacket, out size);
+		public static void SavePacket(string filePath, IOSCPacket packet)
+		{
+			using (var fileWriter = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite))
+			{
+				var length = OSCConverter.Pack(packet, out var buffer);
+				fileWriter.Write(buffer, 0, length);
+			}
+		}
 
-                fileWriter.Write(buffer, 0, size);
-            }
-        }
+		public static OSCControls.Resources GetStandardResources()
+		{
+			if (_defaultResources.PanelFilled == null)
+			{
+				_defaultResources.PanelFilled = OSCEditorSprites.PanelFilled;
+				_defaultResources.PanelBorder = OSCEditorSprites.PanelBorder;
+				_defaultResources.RotaryFilled = OSCEditorSprites.RotaryFilled;
+				_defaultResources.RotaryFilledMask = OSCEditorSprites.RotaryFilledMask;
+				_defaultResources.RotaryBorder = OSCEditorSprites.RotaryBorder;
+			}
 
-        public static OSCControls.Resources GetStandardResources()
-        {
-            if (_defaultResources.PanelFilled == null)
-            {
-                _defaultResources.PanelFilled = OSCEditorSprites.PanelFilled;
-                _defaultResources.PanelBorder = OSCEditorSprites.PanelBorder;
-                _defaultResources.RotaryFilled = OSCEditorSprites.RotaryFilled;
-                _defaultResources.RotaryFilledMask = OSCEditorSprites.RotaryFilledMask;
-                _defaultResources.RotaryBorder = OSCEditorSprites.RotaryBorder;
-            }
+			return _defaultResources;
+		}
 
-            return _defaultResources;
-        }
+		public static OSCValue CreateValue(OSCValueType valueType)
+		{
+			switch (valueType)
+			{
+				case OSCValueType.Unknown:
+					return null;
+				case OSCValueType.Int:
+					return OSCValue.Int(0);
+				case OSCValueType.Long:
+					return OSCValue.Long(0);
+				case OSCValueType.True:
+					return OSCValue.Bool(true);
+				case OSCValueType.False:
+					return OSCValue.Bool(false);
+				case OSCValueType.Float:
+					return OSCValue.Float(0);
+				case OSCValueType.Double:
+					return OSCValue.Double(0);
+				case OSCValueType.String:
+					return OSCValue.String("");
+				case OSCValueType.Null:
+					return OSCValue.Null();
+				case OSCValueType.Impulse:
+					return OSCValue.Impulse();
+				case OSCValueType.Blob:
+					return OSCValue.Blob(new byte[0]);
+				case OSCValueType.Char:
+					return OSCValue.Char(' ');
+				case OSCValueType.Color:
+					return OSCValue.Color(Color.white);
+				case OSCValueType.TimeTag:
+					return OSCValue.TimeTag(DateTime.Now);
+				case OSCValueType.Midi:
+					return OSCValue.Midi(new OSCMidi(0, 0, 0, 0));
+				case OSCValueType.Array:
+					return OSCValue.Array();
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
 
-        //TODO: To OSCValue class?
-        public static OSCValue CreateOSCValue(OSCValueType valueType)
-        {
-            switch (valueType)
-            {
-                case OSCValueType.Unknown:
-                    return null;
-                case OSCValueType.Int:
-                    return OSCValue.Int(0);
-                case OSCValueType.Long:
-                    return OSCValue.Long(0);
-                case OSCValueType.True:
-                    return OSCValue.Bool(true);
-                case OSCValueType.False:
-                    return OSCValue.Bool(false);
-                case OSCValueType.Float:
-                    return OSCValue.Float(0);
-                case OSCValueType.Double:
-                    return OSCValue.Double(0);
-                case OSCValueType.String:
-                    return OSCValue.String("");
-                case OSCValueType.Null:
-                    return OSCValue.Null();
-                case OSCValueType.Impulse:
-                    return OSCValue.Impulse();
-                case OSCValueType.Blob:
-                    return OSCValue.Blob(new byte[0]);
-                case OSCValueType.Char:
-                    return OSCValue.Char(' ');
-                case OSCValueType.Color:
-                    return OSCValue.Color(Color.white);
-                case OSCValueType.TimeTag:
-                    return OSCValue.TimeTag(DateTime.Now);
-                case OSCValueType.Midi:
-                    return OSCValue.Midi(new OSCMidi(0, 0, 0, 0));
-                case OSCValueType.Array:
-                    return OSCValue.Array();
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+		public static string MemberName(MemberInfo memberInfo)
+		{
+			var prefix = string.Empty;
+			var postfix = string.Empty;
 
-        public static string MemberName(MemberInfo memberInfo)
-        {
-            var prefix = string.Empty;
-            var postfix = string.Empty;
+			if (memberInfo is FieldInfo fieldInfo)
+			{
+				prefix = "[F] " + fieldInfo.FieldType.Name;
+			}
+			else if (memberInfo is PropertyInfo propertyInfo)
+			{
+				prefix = "[P] " + propertyInfo.PropertyType.Name;
+			}
+			else if (memberInfo is MethodInfo methodInfo)
+			{
+				var parameters = methodInfo.GetParameters();
 
-            if (memberInfo is FieldInfo)
-            {
-                var fieldInfo = (FieldInfo)memberInfo;
+				foreach (var parameter in parameters)
+				{
+					postfix += parameter.ParameterType.Name + ", ";
+				}
 
-                prefix = "[F] " + fieldInfo.FieldType.Name;
-            }
-            else if (memberInfo is PropertyInfo)
-            {
-                var propertyInfo = (PropertyInfo)memberInfo;
+				if (postfix.Length > 2)
+					postfix = postfix.Remove(postfix.Length - 2);
 
-                prefix = "[P] " + propertyInfo.PropertyType.Name;
-            }
-            else if (memberInfo is MethodInfo)
-            {
-                var methodInfo = (MethodInfo)memberInfo;
-                var parameters = methodInfo.GetParameters();
+				prefix = "[M] " + methodInfo.ReturnType.Name;
+				postfix = $"({postfix})";
+			}
 
-                foreach (var parameter in parameters)
-                {
-                    postfix += parameter.ParameterType.Name + ", ";
-                }
+			return $"{prefix} \t{memberInfo.Name}{postfix}";
+		}
 
-                if (postfix.Length > 2)
-                    postfix = postfix.Remove(postfix.Length - 2);
+		public static string GetValueTags(OSCMessage message)
+		{
+			var values = message.Values;
+			var tags = string.Empty;
 
-                prefix = "[M] " + methodInfo.ReturnType.Name;
-                postfix = string.Format("({0})", postfix);
-            }
+			foreach (var value in values)
+			{
+				tags += value.Tag;
+			}
 
-            return string.Format("{0} \t{1}{2}", prefix, memberInfo.Name, postfix);
-        }
+			return tags;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

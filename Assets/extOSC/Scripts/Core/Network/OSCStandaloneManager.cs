@@ -4,8 +4,8 @@
 
 using System;
 using System.Net;
-using System.Net.Sockets;
 using System.Linq;
+using System.Net.Sockets;
 using System.Collections.Generic;
 
 namespace extOSC.Core.Network
@@ -25,7 +25,7 @@ namespace extOSC.Core.Network
 
 		#region Static Private Vars
 
-        private static List<ClientInfo> _clientsList = new List<ClientInfo>();
+        private static readonly List<ClientInfo> _clientsList = new List<ClientInfo>();
 
 		#endregion
 
