@@ -223,5 +223,5 @@ v1.18
 -----
 
 - Removed .NET 3.5 support.
-- Removed many reducant methods and classes.
+- Removed many redundant methods and classes.
 - Removed Serialization extension.
