@@ -5,21 +5,21 @@ using UnityEngine.UI;
 
 namespace extOSC.Examples
 {
-    public class PingExample : MonoBehaviour
-    {
-        #region Public Vars
+	public class PingExample : MonoBehaviour
+	{
+		#region Public Vars
 
-        public Text IntervalText;
+		public Text IntervalText;
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void ChangeInterval(float value)
-        {
-            IntervalText.text = value.ToString(); 
-        }
+		public void ChangeInterval(float value)
+		{
+			IntervalText.text = value.ToString();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

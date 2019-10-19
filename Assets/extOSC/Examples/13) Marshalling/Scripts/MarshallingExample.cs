@@ -6,80 +6,80 @@ using System.Runtime.InteropServices;
 
 namespace extOSC.Examples
 {
-    // Marshalling works only with structures
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    public struct MarshallingStructure
-    {
-        public int IntValue;
+	// Marshalling works only with structures
+	[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+	public struct MarshallingStructure
+	{
+		public int IntValue;
 
-        [MarshalAs(UnmanagedType.LPStr, SizeConst = 20)]
-        public string StringValue;
+		[MarshalAs(UnmanagedType.LPStr, SizeConst = 20)]
+		public string StringValue;
 
-        public float FloatValue;
-    }
+		public float FloatValue;
+	}
 
-    public class MarshallingExample : MonoBehaviour
-    {
-        #region Public Vars
+	public class MarshallingExample : MonoBehaviour
+	{
+		#region Public Vars
 
-        [Header("OSC Settings")]
-        public OSCReceiver Receiver;
+		[Header("OSC Settings")]
+		public OSCReceiver Receiver;
 
-        public OSCTransmitter Transmitter;
+		public OSCTransmitter Transmitter;
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private const string _address = "/example/14/";
+		private const string _address = "/example/14/";
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        public void Start()
-        {
-            Receiver.Bind(_address, ReceiveMessage);
+		public void Start()
+		{
+			Receiver.Bind(_address, ReceiveMessage);
 
-            // Create Message
-            var message = new OSCMessage(_address);
+			// Create Message
+			var message = new OSCMessage(_address);
 
-            // Create structure
-            var structure = new MarshallingStructure();
-            structure.IntValue = 1337;
-            structure.StringValue = "Hello, OSC World!";
-            structure.FloatValue = 13.37f;
+			// Create structure
+			var structure = new MarshallingStructure();
+			structure.IntValue = 1337;
+			structure.StringValue = "Hello, OSC World!";
+			structure.FloatValue = 13.37f;
 
-            // Convert structure to bytes by marshalling!
-            // Marshalling can sometimes be quicker, than any other form of conversion of data in OSC
-            var bytes = OSCUtilities.StructToByte(structure);
+			// Convert structure to bytes by marshalling!
+			// Marshalling can sometimes be quicker, than any other form of conversion of data in OSC
+			var bytes = OSCUtilities.StructToByte(structure);
 
-            // Add bytes to message
-            message.AddValue(OSCValue.Blob(bytes));
+			// Add bytes to message
+			message.AddValue(OSCValue.Blob(bytes));
 
-            // Send message
-            Transmitter.Send(message);
-        }
+			// Send message
+			Transmitter.Send(message);
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void ReceiveMessage(OSCMessage message)
-        {
-            byte[] bytes;
+		public void ReceiveMessage(OSCMessage message)
+		{
+			byte[] bytes;
 
-            // Get bytes from message
-            if (!message.ToBlob(out bytes))
-                return;
+			// Get bytes from message
+			if (!message.ToBlob(out bytes))
+				return;
 
-            // Convert bytes to structure!
-            var structure = OSCUtilities.ByteToStruct<MarshallingStructure>(bytes);
+			// Convert bytes to structure!
+			var structure = OSCUtilities.ByteToStruct<MarshallingStructure>(bytes);
 
-            Debug.LogFormat("Received structure with data:\nIntValue: {0}\nStringValue: {1}\nFloatValue: {2}",
-                            structure.IntValue, structure.StringValue, structure.FloatValue);
-        }
+			Debug.LogFormat("Received structure with data:\nIntValue: {0}\nStringValue: {1}\nFloatValue: {2}",
+							structure.IntValue, structure.StringValue, structure.FloatValue);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

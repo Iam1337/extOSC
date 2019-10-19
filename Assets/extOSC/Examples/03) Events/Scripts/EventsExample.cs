@@ -5,67 +5,67 @@ using UnityEngine.UI;
 
 namespace extOSC.Examples
 {
-    public class EventsExample : MonoBehaviour
-    {
-        #region Public Vars
+	public class EventsExample : MonoBehaviour
+	{
+		#region Public Vars
 
-        public OSCTransmitter Transmitter;
+		public OSCTransmitter Transmitter;
 
-        [Header("UI Settings")]
-        public Text TextRotate;
+		[Header("UI Settings")]
+		public Text TextRotate;
 
-        public Text TextScale;
+		public Text TextScale;
 
-        public Text TextPosition;
+		public Text TextPosition;
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private const string _rotateAddress = "/example/3/rotate";
+		private const string _rotateAddress = "/example/3/rotate";
 
-        private const string _scaleAddress = "/example/3/scale";
+		private const string _scaleAddress = "/example/3/scale";
 
-        private const string _positionAddress = "/example/3/position";
+		private const string _positionAddress = "/example/3/position";
 
-        private Vector3 _position = Vector3.zero;
+		private Vector3 _position = Vector3.zero;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected virtual void Start()
-        {
-            TextScale.text = Vector3.one.ToString();
-            TextRotate.text = Vector3.zero.ToString();
-            TextPosition.text = Vector3.zero.ToString();
-        }
+		protected virtual void Start()
+		{
+			TextScale.text = Vector3.one.ToString();
+			TextRotate.text = Vector3.zero.ToString();
+			TextPosition.text = Vector3.zero.ToString();
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void SendRotate(float value)
-        {
-            value = OSCUtilities.Map(value, 0, 1, 0, 360);
+		public void SendRotate(float value)
+		{
+			value = OSCUtilities.Map(value, 0, 1, 0, 360);
 
-            var vector = new Vector3(0, 0, value);
+			var vector = new Vector3(0, 0, value);
 
-            SendVector(_rotateAddress, vector);
+			SendVector(_rotateAddress, vector);
 
-            TextRotate.text = vector.ToString();
-        }
+			TextRotate.text = vector.ToString();
+		}
 
 		public void SendScale(float value)
-        {
-            value = OSCUtilities.Map(value, 0, 1, 1, 5);
+		{
+			value = OSCUtilities.Map(value, 0, 1, 1, 5);
 
-            var vector = new Vector3(value, value, value);
+			var vector = new Vector3(value, value, value);
 
-            SendVector(_scaleAddress, vector);
+			SendVector(_scaleAddress, vector);
 
-            TextScale.text = vector.ToString();
-        }
+			TextScale.text = vector.ToString();
+		}
 
 		public void SendPosition(Vector2 value)
 		{
@@ -74,25 +74,25 @@ namespace extOSC.Examples
 
 			SendVector(_positionAddress, _position);
 
-            TextPosition.text = _position.ToString();
+			TextPosition.text = _position.ToString();
 		}
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void SendVector(string address, Vector3 vector)
-        {
-            var message = new OSCMessage(address);
+		private void SendVector(string address, Vector3 vector)
+		{
+			var message = new OSCMessage(address);
 
-            message.AddValue(OSCValue.Float(vector.x));
-            message.AddValue(OSCValue.Float(vector.y));
-            message.AddValue(OSCValue.Float(vector.z));
+			message.AddValue(OSCValue.Float(vector.x));
+			message.AddValue(OSCValue.Float(vector.y));
+			message.AddValue(OSCValue.Float(vector.z));
 
-            if (Transmitter != null)
-                Transmitter.Send(message);
-        }
+			if (Transmitter != null)
+				Transmitter.Send(message);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
