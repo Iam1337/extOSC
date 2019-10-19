@@ -7,96 +7,96 @@ using extOSC.Components.Ping;
 
 namespace extOSC.Editor.Components
 {
-    [CustomEditor(typeof(OSCPingServer), true)]
-    public class OSCPingServerEditor : OSCComponentEditor
-    {
-        #region Static Private Vars
+	[CustomEditor(typeof(OSCPingServer), true)]
+	public class OSCPingServerEditor : OSCComponentEditor
+	{
+		#region Static Private Vars
 
-        private static readonly GUIContent _transmitterContent = new GUIContent("OSC Transmitter:");
+		private static readonly GUIContent _transmitterContent = new GUIContent("OSC Transmitter:");
 
-        private static readonly GUIContent _transmitterAddressContent = new GUIContent("OSC Transmitter Address:");
+		private static readonly GUIContent _transmitterAddressContent = new GUIContent("OSC Transmitter Address:");
 
-        private static readonly GUIContent _transmitterAddressContentSmall = new GUIContent("Transmitter Address:");
+		private static readonly GUIContent _transmitterAddressContentSmall = new GUIContent("Transmitter Address:");
 
-        private static readonly GUIContent _transmitterComponentSettingsContent = new GUIContent("Transmitter Settings:");
+		private static readonly GUIContent _transmitterComponentSettingsContent = new GUIContent("Transmitter Settings:");
 
-        private static readonly GUIContent _receiverComponentSettingsContent = new GUIContent("Receiver Settings:");
+		private static readonly GUIContent _receiverComponentSettingsContent = new GUIContent("Receiver Settings:");
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private SerializedProperty _transmitterProperty;
+		private SerializedProperty _transmitterProperty;
 
-        private SerializedProperty _receiverProperty;
+		private SerializedProperty _receiverProperty;
 
-        private SerializedProperty _receiverAddressProperty;
+		private SerializedProperty _receiverAddressProperty;
 
-        private OSCPingServer _ping;
+		private OSCPingServer _ping;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void OnEnable()
-        {
-            _ping = target as OSCPingServer;
+		protected override void OnEnable()
+		{
+			_ping = target as OSCPingServer;
 
-            _transmitterProperty = serializedObject.FindProperty("transmitter");
-            _receiverProperty = serializedObject.FindProperty("receiver");
-            _receiverAddressProperty = serializedObject.FindProperty("receiverAddress");
-        }
+			_transmitterProperty = serializedObject.FindProperty("transmitter");
+			_receiverProperty = serializedObject.FindProperty("receiver");
+			_receiverAddressProperty = serializedObject.FindProperty("receiverAddress");
+		}
 
-        protected override void OnDisable()
-        { }
+		protected override void OnDisable()
+		{ }
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
+		public override void OnInspectorGUI()
+		{
+			serializedObject.Update();
 
-            EditorGUI.BeginChangeCheck();
+			EditorGUI.BeginChangeCheck();
 
-            // LOGO
-            OSCEditorInterface.LogoLayout();
+			// LOGO
+			OSCEditorInterface.LogoLayout();
 
-            EditorGUILayout.LabelField(string.Format("{0} Settings:", target.GetType().Name), EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
+			EditorGUILayout.LabelField($"{target.GetType().Name} Settings:", EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
 				EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
-		        OSCEditorInterface.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
+				OSCEditorInterface.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
 
-		        EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
-		        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-		        {
-			        EditorGUILayout.PropertyField(_transmitterProperty, _transmitterContent);
+				EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
+				using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+				{
+					EditorGUILayout.PropertyField(_transmitterProperty, _transmitterContent);
 
-			        var transmitterAddress = "- None -";
+					var transmitterAddress = "- None -";
 
-			        if (Application.isPlaying)
-			        {
-				        transmitterAddress = _ping.TransmitterAddress;
-			        }
+					if (Application.isPlaying)
+					{
+						transmitterAddress = _ping.TransmitterAddress;
+					}
 
-			        EditorGUILayout.LabelField(EditorGUIUtility.currentViewWidth > 410
-				                                   ? _transmitterAddressContent.text
-				                                   : _transmitterAddressContentSmall.text,
-			                                   transmitterAddress);
-		        }
+					EditorGUILayout.LabelField(EditorGUIUtility.currentViewWidth > 410
+												   ? _transmitterAddressContent.text
+												   : _transmitterAddressContentSmall.text,
+											   transmitterAddress);
+				}
 
-		        DrawSettings();
-	        }
+				DrawSettings();
+			}
 
-	        if (EditorGUI.EndChangeCheck())
-                serializedObject.ApplyModifiedProperties();
-        }
+			if (EditorGUI.EndChangeCheck())
+				serializedObject.ApplyModifiedProperties();
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void DrawSettings()
-        { }
+		protected override void DrawSettings()
+		{ }
 
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -17,15 +17,14 @@ namespace extOSC.Editor.Drawers
 
 		private static readonly Type _receiverType = typeof(OSCReceiver);
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			if (property.propertyType != SerializedPropertyType.ObjectReference)
 			{
-				// TODO: Exception.
 				return;
 			}
 
@@ -35,29 +34,25 @@ namespace extOSC.Editor.Drawers
 				OSCEditorUtils.FindObjects(TransmitterCallback, true, out var content, out OSCTransmitter[] objects);
 
 				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
-				                                                      (OSCTransmitter) property.objectReferenceValue,
-				                                                      content,
-				                                                      objects);
+																		 (OSCTransmitter) property.objectReferenceValue,
+																		 content,
+																		 objects);
 			}
 			else if (fieldType == _receiverType)
 			{
 				OSCEditorUtils.FindObjects(ReceiverCallback, true, out var content, out OSCReceiver[] objects);
 
 				property.objectReferenceValue = OSCEditorInterface.Popup(position, label,
-				                                                      (OSCReceiver) property.objectReferenceValue,
-				                                                      content,
-				                                                      objects);
-			}
-			else
-			{
-				// TODO: Exception.
+																		 (OSCReceiver) property.objectReferenceValue,
+																		 content,
+																		 objects);
 			}
 		}
 
 		#endregion
 
 		#region Private Methods
-		
+
 		private string TransmitterCallback(OSCTransmitter transmitter)
 		{
 			return $"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}";

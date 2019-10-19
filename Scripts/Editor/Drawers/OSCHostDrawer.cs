@@ -15,10 +15,9 @@ namespace extOSC.Editor.Drawers
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
 			var defaultColor = GUI.color;
-		    var tempAddress = (IPAddress) null;
 
 			// REMOTE HOST
-			GUI.color = IPAddress.TryParse(property.stringValue, out tempAddress) ? defaultColor : Color.red;
+			GUI.color = IPAddress.TryParse(property.stringValue, out _) ? defaultColor : Color.red;
 			EditorGUI.PropertyField(position, property, label);
 			GUI.color = defaultColor;
 		}

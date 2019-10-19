@@ -6,48 +6,48 @@ using extOSC.Editor.Windows;
 
 namespace extOSC.Editor.Panels
 {
-    public class OSCPanel
-    {
-        #region Public Vars
+	public class OSCPanel
+	{
+		#region Public Vars
 
-        public Rect Rect { get; set; }
+		public Rect Rect;
 
-        public OSCWindow Window { get; private set; }
+		public readonly OSCWindow Window;
 
-	    public string PanelId { get; private set; }
+		public readonly string PanelId;
 
-	    #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public OSCPanel(OSCWindow window, string panelId)
-        {
-            PanelId = panelId;
-	        Window = window;
-        }
+		public OSCPanel(OSCWindow window, string panelId)
+		{
+			PanelId = panelId;
+			Window = window;
+		}
 
-        public virtual void Draw()
-        {
-	        using (new GUILayout.AreaScope(Rect))
-	        {
-		        var contentRect = Rect;
+		public virtual void Draw()
+		{
+			using (new GUILayout.AreaScope(Rect))
+			{
+				var contentRect = Rect;
 				contentRect.x = contentRect.y = 0;
 
-		        DrawContent(ref contentRect);
-		        PostDrawContent();
-	        }
-        }
+				DrawContent(ref contentRect);
+				PostDrawContent();
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected virtual void DrawContent(ref Rect contentRect)
-        { }
+		protected virtual void DrawContent(ref Rect contentRect)
+		{ }
 
-        protected virtual void PostDrawContent()
-        { }
+		protected virtual void PostDrawContent()
+		{ }
 
-        #endregion
-    }
+		#endregion
+	}
 }

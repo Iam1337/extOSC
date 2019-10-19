@@ -17,7 +17,7 @@ namespace extOSC.Core.Network
 {
     internal class OSCReceiverWindowsStoreBackend : OSCReceiverBackend
     {
-        #region Public Vars
+#region Public Vars
 
         public override OSCReceivedCallback ReceivedCallback 
         {
@@ -35,9 +35,9 @@ namespace extOSC.Core.Network
             get { return _isRunning; }
         }
 
-        #endregion
+#endregion
 
-        #region Private Vars
+#region Private Vars
 
         private bool _isRunning;
 
@@ -49,9 +49,9 @@ namespace extOSC.Core.Network
 
         private OSCReceivedCallback _receivedCallback;
 
-        #endregion
+#endregion
 
-        #region Public Methods
+#region Public Methods
 
         public override void Connect(string localHost, int localPort)
         {
@@ -70,9 +70,9 @@ namespace extOSC.Core.Network
             _isRunning = false;
         }
 
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
 
         private async void ConnectAsync(int localPort)
         {
@@ -132,12 +132,12 @@ namespace extOSC.Core.Network
                     var data = new byte[dataReader.UnconsumedBufferLength];
                     dataReader.ReadBytes(data);
 
-                    var ioscPacket = OSCConverter.Unpack(data);
-                    ioscPacket.Ip = IPAddress.Parse(args.RemoteAddress.ToString());
-                    ioscPacket.Port = int.Parse(args.RemotePort);
+                    var packet = OSCConverter.Unpack(data);
+                    packet.Ip = IPAddress.Parse(args.RemoteAddress.ToString());
+                    packet.Port = int.Parse(args.RemotePort);
 
                     if (_receivedCallback != null)
-                        _receivedCallback.Invoke(ioscPacket);
+                        _receivedCallback.Invoke(packet);
                 }
             }
             catch (Exception e)
@@ -146,7 +146,7 @@ namespace extOSC.Core.Network
             }
 		}
 
-        #endregion
+#endregion
     }
 }
 

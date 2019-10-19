@@ -7,88 +7,88 @@ using extOSC.Components;
 
 namespace extOSC.Editor.Components
 {
-    [CustomEditor(typeof(OSCComponent), true)]
-    public class OSCComponentEditor : UnityEditor.Editor
-    {
-        #region Static Private Vars
+	[CustomEditor(typeof(OSCComponent), true)]
+	public class OSCComponentEditor : UnityEditor.Editor
+	{
+		#region Static Private Vars
 
-        private static readonly GUIContent _transmitterComponentSettingsContent = new GUIContent("Transmitter Settings:");
+		private static readonly GUIContent _transmitterComponentSettingsContent = new GUIContent("Transmitter Settings:");
 
-        private static readonly GUIContent _receiverComponentSettingsContent = new GUIContent("Receiver Settings:");
+		private static readonly GUIContent _receiverComponentSettingsContent = new GUIContent("Receiver Settings:");
 
-        private static readonly GUIContent _otherSettingsContent = new GUIContent("Other Settings:");
+		private static readonly GUIContent _otherSettingsContent = new GUIContent("Other Settings:");
 
-        private static readonly GUIContent _settingsTitleContent = new GUIContent("Settings:");
+		private static readonly GUIContent _settingsTitleContent = new GUIContent("Settings:");
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private SerializedProperty _transmitterProperty;
+		private SerializedProperty _transmitterProperty;
 
-        private SerializedProperty _transmitterAddressProperty;
+		private SerializedProperty _transmitterAddressProperty;
 
-        private SerializedProperty _receiverProperty;
+		private SerializedProperty _receiverProperty;
 
-        private SerializedProperty _receiverAddressProperty;
+		private SerializedProperty _receiverAddressProperty;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected virtual void OnEnable()
-        {
-            _transmitterProperty = serializedObject.FindProperty("transmitter");
-            _transmitterAddressProperty = serializedObject.FindProperty("transmitterAddress");
-            _receiverProperty = serializedObject.FindProperty("receiver");
-            _receiverAddressProperty = serializedObject.FindProperty("receiverAddress");
-            _settingsTitleContent.text = string.Format("{0} Settings:", target.GetType().Name);
-        }
+		protected virtual void OnEnable()
+		{
+			_transmitterProperty = serializedObject.FindProperty("transmitter");
+			_transmitterAddressProperty = serializedObject.FindProperty("transmitterAddress");
+			_receiverProperty = serializedObject.FindProperty("receiver");
+			_receiverAddressProperty = serializedObject.FindProperty("receiverAddress");
+			_settingsTitleContent.text = $"{target.GetType().Name} Settings:";
+		}
 
-        protected virtual void OnDisable()
-        { }
+		protected virtual void OnDisable()
+		{ }
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
+		public override void OnInspectorGUI()
+		{
+			serializedObject.Update();
 
-            EditorGUI.BeginChangeCheck();
+			EditorGUI.BeginChangeCheck();
 
-            // LOGO
-            OSCEditorInterface.LogoLayout();
+			// LOGO
+			OSCEditorInterface.LogoLayout();
 
 			EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
-		        EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
-		        OSCEditorInterface.TransmitterSettings(_transmitterProperty, _transmitterAddressProperty);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
+				EditorGUILayout.LabelField(_transmitterComponentSettingsContent, EditorStyles.boldLabel);
+				OSCEditorInterface.TransmitterSettings(_transmitterProperty, _transmitterAddressProperty);
 
-		        EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
-		        OSCEditorInterface.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
+				EditorGUILayout.LabelField(_receiverComponentSettingsContent, EditorStyles.boldLabel);
+				OSCEditorInterface.ReceiverSettings(_receiverProperty, _receiverAddressProperty);
 
-		        DrawSettings();
-	        }
+				DrawSettings();
+			}
 
-	        if (EditorGUI.EndChangeCheck())
-                serializedObject.ApplyModifiedProperties();
-        }
+			if (EditorGUI.EndChangeCheck())
+				serializedObject.ApplyModifiedProperties();
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-	    protected virtual void DrawSettings()
-	    {
-		    // CUSTOM SETTINGS
-		    EditorGUILayout.LabelField(_otherSettingsContent, EditorStyles.boldLabel);
-		    using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-		    {
+		protected virtual void DrawSettings()
+		{
+			// CUSTOM SETTINGS
+			EditorGUILayout.LabelField(_otherSettingsContent, EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
 				OSCEditorInterface.DrawProperties(serializedObject, _transmitterAddressProperty.name,
-			                                      _transmitterProperty.name, _receiverAddressProperty.name,
-			                                      _receiverProperty.name);
-		    }
-	    }
+												  _transmitterProperty.name, _receiverAddressProperty.name,
+												  _receiverProperty.name);
+			}
+		}
 
-	    #endregion
-    }
+		#endregion
+	}
 }

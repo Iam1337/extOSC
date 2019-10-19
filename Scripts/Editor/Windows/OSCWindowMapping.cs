@@ -8,87 +8,87 @@ using extOSC.Editor.Panels;
 
 namespace extOSC.Editor.Windows
 {
-    public class OSCWindowMapping : OSCWindow<OSCWindowMapping, OSCPanelMapping>
-    {
-        #region Static Public Methods
+	public class OSCWindowMapping : OSCWindow<OSCWindowMapping, OSCPanelMapping>
+	{
+		#region Static Public Methods
 
-        public static void Open()
-        {
-            Instance.titleContent = new GUIContent("OSC Mapping", OSCEditorTextures.IronWallSmall);
-            Instance.minSize = new Vector2(550, 200);
-            Instance.Show();
-	        Instance.Focus();
-        }
+		public static void Open()
+		{
+			Instance.titleContent = new GUIContent("OSC Mapping", OSCEditorTextures.IronWallSmall);
+			Instance.minSize = new Vector2(550, 200);
+			Instance.Show();
+			Instance.Focus();
+		}
 
-        public static void OpenBundle(OSCMapBundle bundle)
-        {
-            Open();
+		public static void OpenBundle(OSCMapBundle bundle)
+		{
+			Open();
 
-            Instance.rootPanel.CurrentMapBundle = bundle;
-        }
+			Instance.rootPanel.CurrentMapBundle = bundle;
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private readonly string _lastFileSettings = OSCEditorSettings.Mapping + "lastfile";
+		private readonly string _lastFileSettings = OSCEditorSettings.Mapping + "lastfile";
 
-	    private int _frameCounter = 0;
+		private int _frameCounter = 0;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected void Update()
-	    {
-		    if (!EditorApplication.isPlaying)
-		    {
-			    _frameCounter++;
+		protected void Update()
+		{
+			if (!EditorApplication.isPlaying)
+			{
+				_frameCounter++;
 
-			    if (_frameCounter > 200)
-			    {
-				    _frameCounter = 0;
+				if (_frameCounter > 200)
+				{
+					_frameCounter = 0;
 
-				    rootPanel.SaveCurrentMapBundle();
-			    }
-		    }
-	    }
+					rootPanel.SaveCurrentMapBundle();
+				}
+			}
+		}
 
-        protected override void OnDestroy()
-        {
-            SaveWindowSettings();
+		protected override void OnDestroy()
+		{
+			SaveWindowSettings();
 
-            base.OnDestroy();
-        }
+			base.OnDestroy();
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void LoadWindowSettings()
-        {
-            var assetPath = OSCEditorSettings.GetString(_lastFileSettings, "");
+		protected override void LoadWindowSettings()
+		{
+			var assetPath = OSCEditorSettings.GetString(_lastFileSettings, "");
 
-            if (!string.IsNullOrEmpty(assetPath))
-            {
-                rootPanel.CurrentMapBundle = AssetDatabase.LoadAssetAtPath<OSCMapBundle>(assetPath);
-            }
-        }
+			if (!string.IsNullOrEmpty(assetPath))
+			{
+				rootPanel.CurrentMapBundle = AssetDatabase.LoadAssetAtPath<OSCMapBundle>(assetPath);
+			}
+		}
 
-        protected override void SaveWindowSettings()
-        {
-            rootPanel.SaveCurrentMapBundle();
+		protected override void SaveWindowSettings()
+		{
+			rootPanel.SaveCurrentMapBundle();
 
-            if (rootPanel.CurrentMapBundle != null)
-            {
-                OSCEditorSettings.SetString(_lastFileSettings, AssetDatabase.GetAssetPath(rootPanel.CurrentMapBundle));
-            }
-            else
-            {
-                OSCEditorSettings.SetString(_lastFileSettings, "");
-            }
-        }
+			if (rootPanel.CurrentMapBundle != null)
+			{
+				OSCEditorSettings.SetString(_lastFileSettings, AssetDatabase.GetAssetPath(rootPanel.CurrentMapBundle));
+			}
+			else
+			{
+				OSCEditorSettings.SetString(_lastFileSettings, "");
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

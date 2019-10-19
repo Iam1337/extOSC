@@ -9,81 +9,75 @@ using extOSC.Editor.Windows;
 
 namespace extOSC.Editor.Panels
 {
-    public class OSCPanelPacket : OSCPanel
-    {
-        #region Static Public Vars
+	public class OSCPanelPacket : OSCPanel
+	{
+		#region Static Public Vars
 
-        private static readonly GUIContent _packetNotSelectedContent = new GUIContent("IoscPacket is not selected!");
+		private static readonly GUIContent _packetNotSelectedContent = new GUIContent("Packet is not selected!");
 
-        private static readonly GUIContent _openInDebugContent = new GUIContent("Open in debug");
+		private static readonly GUIContent _openInDebugContent = new GUIContent("Open in debug");
 
-        #endregion
+		#endregion
 
-        #region Public Vars
+		#region Public Vars
 
-        public OSCConsolePacket SelecedMessage
-        {
-            get { return _selectedMessage; }
-            set { _selectedMessage = value; }
-        }
+		public OSCConsolePacket SelectedMessage;
 
         #endregion
 
         #region Private Vars
 
-        private OSCConsolePacket _selectedMessage;
+		private readonly OSCPacketDrawer _packetDrawer;
 
         private Vector2 _scrollPosition;
+		
+		#endregion
 
-        private OSCPacketDrawer _packetDrawer;
+		#region Public Methods
 
-        #endregion
+		public OSCPanelPacket(OSCWindow window, string panelId) : base(window, panelId)
+		{
+			_packetDrawer = new OSCPacketDrawer();
+		}
 
-        #region Public Methods
+		#endregion
 
-        public OSCPanelPacket(OSCWindow window, string panelId) : base(window, panelId)
-        {
-            _packetDrawer = new OSCPacketDrawer();
-        }
+		#region Protected Methods
 
-        #endregion
+		protected override void DrawContent(ref Rect contentRect)
+		{
+			if (SelectedMessage == null)
+			{
+				GUILayout.BeginHorizontal(EditorStyles.toolbar);
+				GUILayout.FlexibleSpace();
+				GUILayout.EndHorizontal();
 
-        #region Protected Methods
+				EditorGUILayout.LabelField(_packetNotSelectedContent, OSCEditorStyles.CenterLabel, GUILayout.Height(contentRect.height));
 
-        protected override void DrawContent(ref Rect contentRect)
-        {
-            if (_selectedMessage == null)
-            {
-                GUILayout.BeginHorizontal(EditorStyles.toolbar);
-                GUILayout.FlexibleSpace();
-                GUILayout.EndHorizontal();
+				return;
+			}
 
-                EditorGUILayout.LabelField(_packetNotSelectedContent, OSCEditorStyles.CenterLabel, GUILayout.Height(contentRect.height));
+			if (SelectedMessage != null)
+			{
+				GUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-                return;
-            }
+				GUILayout.FlexibleSpace();
 
-            if (_selectedMessage != null)
-            {
-                GUILayout.BeginHorizontal(EditorStyles.toolbar);
+				var debugButton = GUILayout.Button(_openInDebugContent, EditorStyles.toolbarButton);
+				if (debugButton)
+				{
+					OSCWindowDebug.OpenPacket(SelectedMessage.Packet);
+				}
 
-                GUILayout.FlexibleSpace();
+				GUILayout.EndHorizontal();
 
-                var debugButton = GUILayout.Button(_openInDebugContent, EditorStyles.toolbarButton);
-                if (debugButton)
-                {
-                    OSCWindowDebug.OpenPacket(SelecedMessage.Packet);
-                }
+				_scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+				_packetDrawer.DrawLayout(SelectedMessage.Packet);
 
-                GUILayout.EndHorizontal();
+				EditorGUILayout.EndScrollView();
+			}
+		}
 
-                _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
-                _packetDrawer.DrawLayout(_selectedMessage.Packet);
-
-                EditorGUILayout.EndScrollView();
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

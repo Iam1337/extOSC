@@ -113,6 +113,7 @@ namespace extOSC.Editor.Drawers
 				{
 					bundle.AddPacket(new OSCMessage("/address"));
 				}
+
 				GUI.color = defaultColor;
 			}
 		}
@@ -239,7 +240,7 @@ namespace extOSC.Editor.Drawers
 					{
 						using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
 						{
-							EditorGUILayout.LabelField( $"{value.Type}:", GUILayout.Width(secondColumn));
+							EditorGUILayout.LabelField($"{value.Type}:", GUILayout.Width(secondColumn));
 						}
 
 						using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
@@ -295,6 +296,7 @@ namespace extOSC.Editor.Drawers
 					{
 						removeValue = value;
 					}
+
 					GUI.color = defaultValue;
 				}
 			}

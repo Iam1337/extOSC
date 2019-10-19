@@ -13,136 +13,136 @@ using extOSC.Editor.Drawers;
 
 namespace extOSC.Editor.Components
 {
-    [CustomEditor(typeof(OSCReceiverReflection), true)]
-    public class OSCReceiverReflectionEditor : OSCReceiverComponentEditor
-    {
-        #region Static Private Vars
+	[CustomEditor(typeof(OSCReceiverReflection), true)]
+	public class OSCReceiverReflectionEditor : OSCReceiverComponentEditor
+	{
+		#region Static Private Vars
 
-        private static readonly GUIContent _targetTitleContent = new GUIContent("Target:");
+		private static readonly GUIContent _targetTitleContent = new GUIContent("Target:");
 
-        private static readonly GUIContent _reflectionReceiverContent = new GUIContent("Receiver Reflection Settings:");
-        
-        #endregion
+		private static readonly GUIContent _reflectionReceiverContent = new GUIContent("Receiver Reflection Settings:");
 
-        #region Private Vars
+		#endregion
 
-        private List<OSCReflectionMemberDrawer> _reflectionDrawers = new List<OSCReflectionMemberDrawer>();
+		#region Private Vars
 
-        private OSCReceiverReflection _receiverReflection;
+		private readonly List<OSCReflectionMemberDrawer> _reflectionDrawers = new List<OSCReflectionMemberDrawer>();
 
-        private SerializedProperty _reflectionMembersProperty;
+		private OSCReceiverReflection _receiverReflection;
 
-        private ReorderableList _reflectionMembersList;
+		private SerializedProperty _reflectionMembersProperty;
 
-        #endregion
+		private ReorderableList _reflectionMembersList;
 
-        #region Unity Methods
+		#endregion
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+		#region Unity Methods
 
-            _receiverReflection = target as OSCReceiverReflection;
-            _targetTitleContent.text = string.Format("Target ({0}):", _receiverReflection.ReceiverType.Name);
-            _reflectionMembersProperty = serializedObject.FindProperty("reflectionMembers");
-            
-            // Setup list.
-            _reflectionMembersList = new ReorderableList(serializedObject, _reflectionMembersProperty);
-            _reflectionMembersList.drawElementCallback += DrawElementCallback;
-            _reflectionMembersList.elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 6;
-            _reflectionMembersList.onAddCallback += AddCallback;
-            _reflectionMembersList.onRemoveCallback += RemoveCallback;
-            _reflectionMembersList.drawHeaderCallback += DrawHeaderCallback;
-        }
+		protected override void OnEnable()
+		{
+			base.OnEnable();
 
-        #endregion
+			_receiverReflection = target as OSCReceiverReflection;
+			_targetTitleContent.text = $"Target ({_receiverReflection.ReceiverType.Name}):";
+			_reflectionMembersProperty = serializedObject.FindProperty("reflectionMembers");
 
-        #region Protected Methods
+			// Setup list.
+			_reflectionMembersList = new ReorderableList(serializedObject, _reflectionMembersProperty);
+			_reflectionMembersList.drawElementCallback += DrawElementCallback;
+			_reflectionMembersList.elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 6;
+			_reflectionMembersList.onAddCallback += AddCallback;
+			_reflectionMembersList.onRemoveCallback += RemoveCallback;
+			_reflectionMembersList.drawHeaderCallback += DrawHeaderCallback;
+		}
 
-        protected override void DrawSettings()
-        {
-            // MEMBERS LIST
-            EditorGUILayout.LabelField(_reflectionReceiverContent, EditorStyles.boldLabel);
+		#endregion
 
-            _reflectionMembersList.DoLayoutList();
-        }
+		#region Protected Methods
 
-        #endregion
+		protected override void DrawSettings()
+		{
+			// MEMBERS LIST
+			EditorGUILayout.LabelField(_reflectionReceiverContent, EditorStyles.boldLabel);
 
-        #region Private Methods
+			_reflectionMembersList.DoLayoutList();
+		}
 
-        private void AddCallback(ReorderableList list)
-        {
-            _reflectionMembersProperty.InsertArrayElementAtIndex(_reflectionMembersProperty.arraySize);
+		#endregion
 
-            var reflectionMember = _reflectionMembersProperty.GetArrayElementAtIndex(_reflectionMembersProperty.arraySize - 1);
-            reflectionMember.FindPropertyRelative("Target").objectReferenceValue = null;
-            reflectionMember.FindPropertyRelative("MemberName").stringValue = string.Empty;
-        }
+		#region Private Methods
 
-        private void RemoveCallback(ReorderableList list)
-        {
-            RemoveDrawer();
-        }
+		private void AddCallback(ReorderableList list)
+		{
+			_reflectionMembersProperty.InsertArrayElementAtIndex(_reflectionMembersProperty.arraySize);
 
-        private void DrawElementCallback(Rect position, int index, bool isActive, bool isFocus)
-        {
-            var space = EditorGUIUtility.standardVerticalSpacing;
+			var reflectionMember = _reflectionMembersProperty.GetArrayElementAtIndex(_reflectionMembersProperty.arraySize - 1);
+			reflectionMember.FindPropertyRelative("Target").objectReferenceValue = null;
+			reflectionMember.FindPropertyRelative("MemberName").stringValue = string.Empty;
+		}
 
-            // Decorate elements.
-            position.y += space * 0.5f;
-            position.height -= space * 2;
+		private void RemoveCallback(ReorderableList list)
+		{
+			RemoveDrawer();
+		}
 
-            GUI.Box(position, GUIContent.none);
+		private void DrawElementCallback(Rect position, int index, bool isActive, bool isFocus)
+		{
+			var space = EditorGUIUtility.standardVerticalSpacing;
 
-            position.y += space * 2;
-            position.x += space * 2;
-            position.height -= space * 2;
-            position.width -= space * 4;
+			// Decorate elements.
+			position.y += space * 0.5f;
+			position.height -= space * 2;
 
-            // Get and setup property drawer.
-            var drawer = CreateDrawer(index);
-            drawer.SerializedProperty = _reflectionMembersProperty.GetArrayElementAtIndex(index);
+			GUI.Box(position, GUIContent.none);
 
-            // Draw
-            drawer.Draw(position);
-        }
-        
-        private void DrawHeaderCallback(Rect rect)
-        {
-            GUI.Label(rect, _targetTitleContent);
-        }
+			position.y += space * 2;
+			position.x += space * 2;
+			position.height -= space * 2;
+			position.width -= space * 4;
 
-        private OSCReflectionMemberDrawer CreateDrawer(int index)
-        {
-            var drawer = (OSCReflectionMemberDrawer) null;
+			// Get and setup property drawer.
+			var drawer = CreateDrawer(index);
+			drawer.SerializedProperty = _reflectionMembersProperty.GetArrayElementAtIndex(index);
 
-	        if (_reflectionDrawers.Count <= index)
-	        {
-		        var property = _reflectionMembersProperty.GetArrayElementAtIndex(index);
+			// Draw
+			drawer.Draw(position);
+		}
 
-		        // Create drawer.
-		        drawer = new OSCReflectionMemberDrawer(property,
-		                                               _receiverReflection.ReceiverType,
-		                                               OSCReflectionAccess.Write,
-		                                               OSCReflectionType.All);
+		private void DrawHeaderCallback(Rect rect)
+		{
+			GUI.Label(rect, _targetTitleContent);
+		}
 
-		        _reflectionDrawers.Add(drawer);
-	        }
-	        else
-            {
-                drawer = _reflectionDrawers[index];
-            }
+		private OSCReflectionMemberDrawer CreateDrawer(int index)
+		{
+			var drawer = (OSCReflectionMemberDrawer) null;
 
-            return drawer;
-        }
+			if (_reflectionDrawers.Count <= index)
+			{
+				var property = _reflectionMembersProperty.GetArrayElementAtIndex(index);
 
-        private void RemoveDrawer()
-        {
-            if (_reflectionDrawers.Count > 0)
-                _reflectionDrawers.RemoveAt(0);
-        }
+				// Create drawer.
+				drawer = new OSCReflectionMemberDrawer(property,
+													   _receiverReflection.ReceiverType,
+													   OSCReflectionAccess.Write,
+													   OSCReflectionType.All);
 
-        #endregion
-    }
+				_reflectionDrawers.Add(drawer);
+			}
+			else
+			{
+				drawer = _reflectionDrawers[index];
+			}
+
+			return drawer;
+		}
+
+		private void RemoveDrawer()
+		{
+			if (_reflectionDrawers.Count > 0)
+				_reflectionDrawers.RemoveAt(0);
+		}
+
+		#endregion
+	}
 }

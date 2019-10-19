@@ -10,125 +10,111 @@ using extOSC.Editor.Panels;
 namespace extOSC.Editor.Windows
 {
 	public abstract class OSCWindow : EditorWindow
-    {
-        #region Public Vars
+	{
+		#region Public Vars
 
-        public abstract OSCPanel RootPanel { get; }
-
-        #endregion
-
-        #region Unity Methods
-
-        protected virtual void Awake()
-        { }
-
-        protected virtual void OnEnable()
-        {
-            LoadWindowSettings();
-        }
-
-        protected virtual void OnDisable()
-        {
-            SaveWindowSettings();
-        }
-
-        protected virtual void OnDestroy()
-        { }
-
-        protected abstract void OnGUI();
-
-        #endregion
-
-        #region Protected Methods
-
-        protected virtual void LoadWindowSettings()
-        { }
-
-        protected virtual void SaveWindowSettings()
-        { }
+		public abstract OSCPanel RootPanel { get; }
 
 		#endregion
-    }
 
-    public class OSCWindow<TWindow, TPanel> : OSCWindow where TWindow : OSCWindow where TPanel : OSCPanel
-    {
-        #region Public Vars
+		#region Unity Methods
 
-        public static TWindow Instance
-        {
-            get { return GetWindow<TWindow>(false, "", false); }
-        }
+		protected virtual void Awake()
+		{ }
 
-        public override OSCPanel RootPanel
-        {
-            get { return rootPanel; }
-        }
+		protected virtual void OnEnable()
+		{
+			LoadWindowSettings();
+		}
 
-        #endregion
+		protected virtual void OnDisable()
+		{
+			SaveWindowSettings();
+		}
 
-        #region Protected Vars
+		protected virtual void OnDestroy()
+		{ }
 
-        protected TPanel rootPanel
-        {
-            get
-            {
-                if (_rootPanel == null)
-                    _rootPanel = CreateRoot();
+		protected abstract void OnGUI();
 
-                return _rootPanel;
-            }
-        }
+		#endregion
 
-        #endregion
+		#region Protected Methods
 
-        #region Private Vars
+		protected virtual void LoadWindowSettings()
+		{ }
 
-        private TPanel _rootPanel;
+		protected virtual void SaveWindowSettings()
+		{ }
 
-        #endregion
+		#endregion
+	}
 
-        #region Unity Methods
+	public class OSCWindow<TWindow, TPanel> : OSCWindow where TWindow : OSCWindow where TPanel : OSCPanel
+	{
+		#region Public Vars
 
-        protected override void OnGUI()
-        {
-            DrawRootPanel(new Rect(0, 0, position.width, position.height));
-        }
+		public static TWindow Instance => GetWindow<TWindow>(false, "", false);
 
-        #endregion
+		public override OSCPanel RootPanel => rootPanel;
 
-        #region Protected Methods
+		#endregion
 
-        protected virtual T CreatePanel<T>(string panelId) where T : OSCPanel
-        {
-            var panel = (T)Activator.CreateInstance(typeof(T), panelId, this);
-            if (panel == null) return null;
-            
-            return panel;
-        }
+		#region Protected Vars
 
-        protected TPanel CreateRoot()
-        {
-            if (_rootPanel != null)
-            {
-                Debug.LogErrorFormat("[{0}] Already has root panel!", GetType());
-                return default(TPanel);
-            }
+		protected TPanel rootPanel
+		{
+			get
+			{
+				if (_rootPanel == null)
+					_rootPanel = CreateRoot();
 
-            var panel = (TPanel)Activator.CreateInstance(typeof(TPanel), this, "root" + name);
+				return _rootPanel;
+			}
+		}
 
-            _rootPanel = panel;
+		#endregion
 
-            return panel;
-        }
+		#region Private Vars
 
-        protected void DrawRootPanel(Rect contentRect)
-        {
-            if (rootPanel == null) return;
+		private TPanel _rootPanel;
 
-            rootPanel.Rect = contentRect;
-            rootPanel.Draw();
-        }
+		#endregion
 
-        #endregion
-    }
+		#region Unity Methods
+
+		protected override void OnGUI()
+		{
+			DrawRootPanel(new Rect(0, 0, position.width, position.height));
+		}
+
+		#endregion
+
+		#region Protected Methods
+
+		protected TPanel CreateRoot()
+		{
+			if (_rootPanel != null)
+			{
+				Debug.LogErrorFormat("[{0}] Already has root panel!", GetType());
+				return default(TPanel);
+			}
+
+			var panel = (TPanel) Activator.CreateInstance(typeof(TPanel), this, "root" + name);
+
+			_rootPanel = panel;
+
+			return panel;
+		}
+
+		protected void DrawRootPanel(Rect contentRect)
+		{
+			if (rootPanel == null) return;
+
+			rootPanel.Rect = contentRect;
+			rootPanel.Draw();
+		}
+
+		#endregion
+	}
 }

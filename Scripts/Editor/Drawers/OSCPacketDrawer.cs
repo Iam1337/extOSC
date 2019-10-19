@@ -29,15 +29,15 @@ namespace extOSC.Editor.Drawers
 
 		#region Public 
 
-		public void DrawLayout(IOSCPacket ioscPacket)
+		public void DrawLayout(IOSCPacket packet)
 		{
-			if (ioscPacket.IsBundle())
+			if (packet.IsBundle())
 			{
-				DrawBundle((OSCBundle) ioscPacket);
+				DrawBundle((OSCBundle) packet);
 			}
 			else
 			{
-				DrawMessage((OSCMessage) ioscPacket);
+				DrawMessage((OSCMessage) packet);
 			}
 		}
 
@@ -130,7 +130,7 @@ namespace extOSC.Editor.Drawers
 			{
 				using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 				{
-					EditorGUILayout.LabelField(string.Format("Tag: {0}", value.Tag), OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
+					EditorGUILayout.LabelField($"Tag: {value.Tag}", OSCEditorStyles.CenterLabel, GUILayout.Width(firstColumn));
 				}
 
 				using (new GUILayout.HorizontalScope())

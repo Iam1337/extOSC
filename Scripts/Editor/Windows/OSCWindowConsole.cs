@@ -9,203 +9,199 @@ using extOSC.Editor.Panels;
 
 namespace extOSC.Editor.Windows
 {
-    public class OSCWindowConsole : OSCWindow<OSCWindowConsole, OSCSplitPanel>
-    {
-        #region Static Public Vars
+	public class OSCWindowConsole : OSCWindow<OSCWindowConsole, OSCSplitPanel>
+	{
+		#region Static Public Vars
 
-        public static List<OSCConsolePacket> ConsoleBuffer;
+		public static List<OSCConsolePacket> ConsoleBuffer;
 
-        #endregion
+		#endregion
 
-        #region Static Private Vars
+		#region Static Private Vars
 
-        private static OSCConsolePacket[] _tempBuffer = new OSCConsolePacket[0];
+		private static OSCConsolePacket[] _tempBuffer = new OSCConsolePacket[0];
 
-        private static OSCConsolePacket _lastMessage;
+		private static OSCConsolePacket _lastMessage;
 
-        private static bool _previousTransmitted;
+		private static bool _previousTransmitted;
 
-        private static bool _previousReceived;
+		private static bool _previousReceived;
 
-        private static string _previousFilter;
+		private static string _previousFilter;
 
-        private static int _maxBufferCapacity = 256;
+		private static int _maxBufferCapacity = 256;
 
-        private static OSCConsolePacket[] _emptyBuffer = new OSCConsolePacket[0];
+		private static readonly OSCConsolePacket[] _emptyBuffer = new OSCConsolePacket[0];
 
-        #endregion
+		#endregion
 
-        #region Public Static Methods
+		#region Public Static Methods
 
-        public static void Open()
-        {
-            Instance.titleContent = new GUIContent("OSC Console", OSCEditorTextures.IronWallSmall);
-            Instance.minSize = new Vector2(610, 200);
-            Instance.Show();
+		public static void Open()
+		{
+			Instance.titleContent = new GUIContent("OSC Console", OSCEditorTextures.IronWallSmall);
+			Instance.minSize = new Vector2(610, 200);
+			Instance.Show();
 			Instance.Focus();
-        }
+		}
 
-        public static OSCConsolePacket[] GetConsoleBuffer(bool transmitted, bool received, string filter)
-        {
-            if (ConsoleBuffer == null || (ConsoleBuffer != null && ConsoleBuffer.Count == 0))
-                return _emptyBuffer;
+		public static OSCConsolePacket[] GetConsoleBuffer(bool transmitted, bool received, string filter)
+		{
+			if (ConsoleBuffer == null || (ConsoleBuffer != null && ConsoleBuffer.Count == 0))
+				return _emptyBuffer;
 
-            var requireRebuild = false;
+			var requireRebuild = false;
 
-            if (_previousTransmitted != transmitted ||
-                _previousReceived != received ||
-                _previousFilter != filter)
-            {
-                _previousTransmitted = transmitted;
-                _previousReceived = received;
-                _previousFilter = filter;
+			if (_previousTransmitted != transmitted ||
+				_previousReceived != received ||
+				_previousFilter != filter)
+			{
+				_previousTransmitted = transmitted;
+				_previousReceived = received;
+				_previousFilter = filter;
 
-                requireRebuild = true;
-            }
-            else if (ConsoleBuffer.Count > 0)
-            {
-                requireRebuild = ConsoleBuffer[0] != _lastMessage;
-            }
+				requireRebuild = true;
+			}
+			else if (ConsoleBuffer.Count > 0)
+			{
+				requireRebuild = ConsoleBuffer[0] != _lastMessage;
+			}
 
-            if (!requireRebuild)
-                return _tempBuffer;
+			if (!requireRebuild)
+				return _tempBuffer;
 
-            _lastMessage = ConsoleBuffer.Count > 0 ? ConsoleBuffer[0] : null;
+			_lastMessage = ConsoleBuffer.Count > 0 ? ConsoleBuffer[0] : null;
 
-            var consoleList = new List<OSCConsolePacket>();
-            
-            var inverse = filter.StartsWith("!");
-            if (inverse)
-            {
-                filter = filter.Remove(0, 1);
-            }
-            
-            foreach (var consoleMessage in ConsoleBuffer)
-            {
-                if (transmitted && consoleMessage.PacketType == OSCConsolePacketType.Transmitted ||
-                    received && consoleMessage.PacketType == OSCConsolePacketType.Received)
-                {
-                    if (!string.IsNullOrEmpty(filter))
-                    {
-                        var address = consoleMessage.Packet.Address;
-                        var compare = OSCUtilities.CompareAddresses(filter, address);
+			var consoleList = new List<OSCConsolePacket>();
 
-                        if ((inverse && compare) ||
-                            (!inverse && !compare))
-                            continue;
-                    }
+			var inverse = filter.StartsWith("!");
+			if (inverse)
+			{
+				filter = filter.Remove(0, 1);
+			}
 
-                    consoleList.Add(consoleMessage);
-                }
-            }
+			foreach (var consoleMessage in ConsoleBuffer)
+			{
+				if (transmitted && consoleMessage.PacketType == OSCConsolePacketType.Transmitted ||
+					received && consoleMessage.PacketType == OSCConsolePacketType.Received)
+				{
+					if (!string.IsNullOrEmpty(filter))
+					{
+						var address = consoleMessage.Packet.Address;
+						var compare = OSCUtilities.CompareAddresses(filter, address);
 
-            _tempBuffer = consoleList.ToArray();
+						if (inverse && compare ||
+							!inverse && !compare)
+							continue;
+					}
 
-            return _tempBuffer;
-        }
+					consoleList.Add(consoleMessage);
+				}
+			}
 
-        public static void Clear()
-        {
-            if (ConsoleBuffer != null)
-            {
-                ConsoleBuffer.Clear();
+			_tempBuffer = consoleList.ToArray();
+
+			return _tempBuffer;
+		}
+
+		public static void Clear()
+		{
+			if (ConsoleBuffer != null)
+			{
+				ConsoleBuffer.Clear();
 				OSCEditorUtils.SaveConsoleMessages(OSCEditorUtils.LogsFilePath, ConsoleBuffer);
-            }
-        }
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Private Vars
 
-        private OSCPanelConsole logPanel;
+		private readonly string _showReceivedSettings = OSCEditorSettings.Console + "showreceived";
 
-        private OSCPanelPacket packetPanel;
+		private readonly string _showTransmittedSettings = OSCEditorSettings.Console + "showtransmitted";
 
-        #endregion
+		private readonly string _trackLastSettings = OSCEditorSettings.Console + "tracklast";
 
-        #region Private Vars
+		private readonly string _filterSettings = OSCEditorSettings.Console + "filter";
 
-        private readonly string _showReceivedSettings = OSCEditorSettings.Console + "showreceived";
+		private OSCPanelConsole _logPanel;
 
-        private readonly string _showTransmittedSettings = OSCEditorSettings.Console + "showtransmitted";
-
-        private readonly string _trackLastSettings = OSCEditorSettings.Console + "tracklast";
-
-        private readonly string _filterSettings = OSCEditorSettings.Console + "filter";
+		private OSCPanelPacket _packetPanel;
 
         #endregion
 
         #region Unity Methods
 
         protected override void OnEnable()
-        {
-            logPanel = new OSCPanelConsole(this, "oscLogPanel1");
-            packetPanel = new OSCPanelPacket(this, "oscPacketPanel1");
+		{
+			_logPanel = new OSCPanelConsole(this, "oscLogPanel1");
+			_packetPanel = new OSCPanelPacket(this, "oscPacketPanel1");
 
-            rootPanel.AddPanel(logPanel, 350, 0.6f);
-            rootPanel.AddPanel(packetPanel, 300, 0.4f);
+			rootPanel.AddPanel(_logPanel, 350, 0.6f);
+			rootPanel.AddPanel(_packetPanel, 300, 0.4f);
 
-            base.OnEnable();
-        }
+			base.OnEnable();
+		}
 
-        protected void Update()
-        {
-            if (ConsoleBuffer == null)
-            {
-                ConsoleBuffer = OSCEditorUtils.LoadConsoleMessages(OSCEditorUtils.LogsFilePath);
+		protected void Update()
+		{
+			if (ConsoleBuffer == null)
+			{
+				ConsoleBuffer = OSCEditorUtils.LoadConsoleMessages(OSCEditorUtils.LogsFilePath);
 				Repaint();
-            }
+			}
 
-            if (OSCConsole.ConsoleBuffer.Count > 0)
-            {
-                foreach (var message in OSCConsole.ConsoleBuffer)
-                {
-                    if (ConsoleBuffer.Count >= _maxBufferCapacity)
-                        ConsoleBuffer.RemoveAt(ConsoleBuffer.Count - 1);
+			if (OSCConsole.ConsoleBuffer.Count > 0)
+			{
+				foreach (var message in OSCConsole.ConsoleBuffer)
+				{
+					if (ConsoleBuffer.Count >= _maxBufferCapacity)
+						ConsoleBuffer.RemoveAt(ConsoleBuffer.Count - 1);
 
-                    ConsoleBuffer.Insert(0, message);
-                }
+					ConsoleBuffer.Insert(0, message);
+				}
 
-                OSCEditorUtils.SaveConsoleMessages(OSCEditorUtils.LogsFilePath, ConsoleBuffer);
-                OSCConsole.ConsoleBuffer.Clear();
+				OSCEditorUtils.SaveConsoleMessages(OSCEditorUtils.LogsFilePath, ConsoleBuffer);
+				OSCConsole.ConsoleBuffer.Clear();
 				Repaint();
-            }
+			}
 
-            if (packetPanel.SelecedMessage != logPanel.SelectedMessage)
-            {
-                packetPanel.SelecedMessage = logPanel.SelectedMessage;
+			if (_packetPanel.SelectedMessage != _logPanel.SelectedMessage)
+			{
+				_packetPanel.SelectedMessage = _logPanel.SelectedMessage;
 				Repaint();
-            }
-        }
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void LoadWindowSettings()
-        {
-            base.LoadWindowSettings();
+		protected override void LoadWindowSettings()
+		{
+			base.LoadWindowSettings();
 
-            if (logPanel == null) return;
+			if (_logPanel == null) return;
 
-            logPanel.ShowReceived = OSCEditorSettings.GetBool(_showReceivedSettings, true);
-            logPanel.ShowTransmitted = OSCEditorSettings.GetBool(_showTransmittedSettings, true);
-            logPanel.TrackLast = OSCEditorSettings.GetBool(_trackLastSettings, false);
-            logPanel.Filter = OSCEditorSettings.GetString(_filterSettings, string.Empty);
-        }
+			_logPanel.ShowReceived = OSCEditorSettings.GetBool(_showReceivedSettings, true);
+			_logPanel.ShowTransmitted = OSCEditorSettings.GetBool(_showTransmittedSettings, true);
+			_logPanel.TrackLast = OSCEditorSettings.GetBool(_trackLastSettings, false);
+			_logPanel.Filter = OSCEditorSettings.GetString(_filterSettings, string.Empty);
+		}
 
-        protected override void SaveWindowSettings()
-        {
-            base.SaveWindowSettings();
+		protected override void SaveWindowSettings()
+		{
+			base.SaveWindowSettings();
 
-            if (logPanel == null) return;
+			if (_logPanel == null) return;
 
-            OSCEditorSettings.SetBool(_showReceivedSettings, logPanel.ShowReceived);
-            OSCEditorSettings.SetBool(_showTransmittedSettings, logPanel.ShowTransmitted);
-            OSCEditorSettings.SetBool(_trackLastSettings, logPanel.TrackLast);
-            OSCEditorSettings.SetString(_filterSettings, logPanel.Filter);
-        }
+			OSCEditorSettings.SetBool(_showReceivedSettings, _logPanel.ShowReceived);
+			OSCEditorSettings.SetBool(_showTransmittedSettings, _logPanel.ShowTransmitted);
+			OSCEditorSettings.SetBool(_trackLastSettings, _logPanel.TrackLast);
+			OSCEditorSettings.SetString(_filterSettings, _logPanel.Filter);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
