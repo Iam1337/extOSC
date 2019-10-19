@@ -108,9 +108,7 @@ Debug.Log(value);
 ```
 or
 ```c#
-var value = 0f;
-
-if (message.ToFloat(out value))  
+if (message.ToFloat(out var value))  
 {
 	// Any code...
 	Debug.Log(value);
