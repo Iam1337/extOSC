@@ -4,27 +4,27 @@ using UnityEngine;
 
 namespace extOSC.Examples
 {
-    public class SimpleMessageTransmitter : MonoBehaviour
-    {
-        #region Public Vars
+	public class SimpleMessageTransmitter : MonoBehaviour
+	{
+		#region Public Vars
 
-        public string Address = "/example/1";
+		public string Address = "/example/1";
 
-        [Header("OSC Settings")]
-        public OSCTransmitter Transmitter;
+		[Header("OSC Settings")]
+		public OSCTransmitter Transmitter;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected virtual void Start()
-        {
-            var message = new OSCMessage(Address);
-            message.AddValue(OSCValue.String("Hello, world!"));
+		protected virtual void Start()
+		{
+			var message = new OSCMessage(Address);
+			message.AddValue(OSCValue.String("Hello, world!"));
 
-            Transmitter.Send(message);
-        }
+			Transmitter.Send(message);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

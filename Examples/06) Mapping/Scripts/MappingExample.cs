@@ -7,100 +7,100 @@ using System;
 
 namespace extOSC.Examples
 {
-    public class MappingExample : MonoBehaviour
-    {
-        #region Public Vars
+	public class MappingExample : MonoBehaviour
+	{
+		#region Public Vars
 
-        public OSCTransmitter Transmitter;
+		public OSCTransmitter Transmitter;
 
-        [Header("UI Settings")]
-        public Text TextRotate;
+		[Header("UI Settings")]
+		public Text TextRotate;
 
-        public Text TextScale;
+		public Text TextScale;
 
-        public Text TextPositionX;
+		public Text TextPositionX;
 
-        public Text TextPositionY;
+		public Text TextPositionY;
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private const string _rotateAddress = "/example/6/rotate";
+		private const string _rotateAddress = "/example/6/rotate";
 
-        private const string _scaleAddress = "/example/6/scale";
+		private const string _scaleAddress = "/example/6/scale";
 
-        private const string _positionAddress = "/example/6/position";
+		private const string _positionAddress = "/example/6/position";
 
-        private Vector3 _position = Vector3.zero;
+		private Vector3 _position = Vector3.zero;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected virtual void Start()
-        {
-            TextScale.text = string.Format("<color=grey>{0}</color>", Vector3.one);
-            TextRotate.text = string.Format("<color=grey>{0}</color>", Vector3.zero);
-        }
+		protected virtual void Start()
+		{
+			TextScale.text = $"<color=grey>{Vector3.one}</color>";
+			TextRotate.text = $"<color=grey>{Vector3.zero}</color>";
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public void SendRotate(float value)
-        {
-            var vector = new Vector3(0, 0, value);
+		public void SendRotate(float value)
+		{
+			var vector = new Vector3(0, 0, value);
 
-            SendVector(_rotateAddress, vector);
+			SendVector(_rotateAddress, vector);
 
-            TextRotate.text = vector.ToString();
-        }
+			TextRotate.text = vector.ToString();
+		}
 
-        public void SendScale(float value)
-        {
-            var vector = new Vector3(value, value, value);
+		public void SendScale(float value)
+		{
+			var vector = new Vector3(value, value, value);
 
-            SendVector(_scaleAddress, vector);
+			SendVector(_scaleAddress, vector);
 
-            TextScale.text = vector.ToString();
-        }
+			TextScale.text = vector.ToString();
+		}
 
-        public void SendPositionX(float value)
-        {
-            _position.x = value;
+		public void SendPositionX(float value)
+		{
+			_position.x = value;
 
-            SendVector(_positionAddress, _position);
+			SendVector(_positionAddress, _position);
 
-            TextPositionX.text = _position.x.ToString();
-        }
+			TextPositionX.text = _position.x.ToString();
+		}
 
-        public void SendPositionY(float value)
-        {
-            _position.y = value;
+		public void SendPositionY(float value)
+		{
+			_position.y = value;
 
-            SendVector(_positionAddress, _position);
+			SendVector(_positionAddress, _position);
 
-            TextPositionX.text = _position.y.ToString();
-        }
+			TextPositionY.text = _position.y.ToString();
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void SendVector(string address, Vector3 vector)
-        {
-            var message = new OSCMessage(address);
+		private void SendVector(string address, Vector3 vector)
+		{
+			var message = new OSCMessage(address);
 
-            // Sending vector value
-            message.AddValue(OSCValue.Float(vector.x));
-            message.AddValue(OSCValue.Float(vector.y));
-            message.AddValue(OSCValue.Float(vector.z));
+			// Sending vector value
+			message.AddValue(OSCValue.Float(vector.x));
+			message.AddValue(OSCValue.Float(vector.y));
+			message.AddValue(OSCValue.Float(vector.z));
 
-            if (Transmitter != null)
-                Transmitter.Send(message);
-        }
+			if (Transmitter != null)
+				Transmitter.Send(message);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
