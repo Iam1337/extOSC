@@ -42,12 +42,12 @@ namespace extOSC
 			AddRange(packets);
 		}
 
-		public void AddPacket(IOSCPacket ioscPacket)
+		public void AddPacket(IOSCPacket packet)
         {
-			if (ioscPacket == null)
-				throw new NullReferenceException(nameof(ioscPacket));
+			if (packet == null)
+				throw new NullReferenceException(nameof(packet));
 
-			Packets.Add(ioscPacket);
+			Packets.Add(packet);
 		}
 
 		public void AddRange(IEnumerable<IOSCPacket> packets)

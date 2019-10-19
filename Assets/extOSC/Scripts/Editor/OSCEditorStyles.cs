@@ -5,201 +5,164 @@ using UnityEngine;
 
 namespace extOSC.Editor
 {
-    public static class OSCEditorStyles
-    {
-        #region Static Private Vars
+	public static class OSCEditorStyles
+	{
+		#region Static Private Vars
 
-        private static GUIStyle _windowTitle;
+		private static GUIStyle _windowTitle;
 
-	    private static GUIStyle _box;
+		private static GUIStyle _box;
 
-        private static GUIStyle _segmentTitle;
+		private static GUIStyle _segmentTitle;
 
-        private static GUIStyle _consoleItemBackEven;
+		private static GUIStyle _consoleItemBackEven;
 
-        private static GUIStyle _consoleItemBackOdd;
+		private static GUIStyle _consoleItemBackOdd;
 
-        private static GUIStyle _consoleLabel;
+		private static GUIStyle _consoleLabel;
 
-        private static GUIStyle _consoleBoldLabel;
+		private static GUIStyle _consoleBoldLabel;
 
-        private static GUIStyle _centerLabel;
+		private static GUIStyle _centerLabel;
 
-        private static GUIStyle _centerBoldLabel;
+		private static GUIStyle _centerBoldLabel;
 
-        private static GUIStyle _searchField;
+		private static GUIStyle _searchField;
 
-        private static GUIStyle _searchFieldPlaceholder;
+		private static GUIStyle _searchFieldPlaceholder;
 
-        #endregion
+		#endregion
 
-        #region Static Public Vars
+		#region Static Public Vars
 
-		/*
-        public static GUIStyle OSCTitle
-        {
-            get
-            {
-                if (_windowTitle == null)
-                {
-                    _windowTitle = new GUIStyle(EditorStyles.label)
-                    {
-                        fixedHeight = OSCEditorTextures.IronWall.height
-                    };
-                }
-
-                return _windowTitle;
-            }
-        }
-		*/
-
-	    public static GUIStyle Box
-	    {
-		    get
-		    {
-			    if (_box == null)
-			    {
+		public static GUIStyle Box
+		{
+			get
+			{
+				if (_box == null)
+				{
 					_box = new GUIStyle("box");
-			    }
+				}
 
-			    return _box;
-		    }
-	    }
+				return _box;
+			}
+		}
 
-        public static GUIStyle CenterLabel
-        {
-            get
-            {
-                if (_centerLabel == null)
-                {
-                    _centerLabel = new GUIStyle(EditorStyles.label)
-                    {
-                        alignment = TextAnchor.MiddleCenter
-                    };
-                }
+		public static GUIStyle CenterLabel
+		{
+			get
+			{
+				if (_centerLabel == null)
+				{
+					_centerLabel = new GUIStyle(EditorStyles.label)
+					{
+						alignment = TextAnchor.MiddleCenter
+					};
+				}
 
-                return _centerLabel;
-            }
-        }
+				return _centerLabel;
+			}
+		}
 
-        public static GUIStyle CenterBoldLabel
-        {
-            get
-            {
-                if (_centerBoldLabel == null)
-                {
-                    _centerBoldLabel = new GUIStyle(EditorStyles.label)
-                    {
-                        alignment = TextAnchor.MiddleCenter,
-                        fontStyle = FontStyle.Bold
-                    };
-                }
+		public static GUIStyle CenterBoldLabel
+		{
+			get
+			{
+				if (_centerBoldLabel == null)
+				{
+					_centerBoldLabel = new GUIStyle(EditorStyles.label)
+					{
+						alignment = TextAnchor.MiddleCenter,
+						fontStyle = FontStyle.Bold
+					};
+				}
 
-                return _centerBoldLabel;
-            }
-        }
+				return _centerBoldLabel;
+			}
+		}
 
-		/*
-        public static GUIStyle SegmentTitle
-        {
-            get
-            {
-                if (_segmentTitle == null)
-                {
-                    _segmentTitle = new GUIStyle(EditorStyles.toolbar)
-                    {
-                        fontSize = 1,
-                        fixedHeight = 30
-                    };
-                }
+		public static GUIStyle ConsoleItemBackEven
+		{
+			get
+			{
+				if (_consoleItemBackEven == null)
+				{
+					_consoleItemBackEven = new GUIStyle("CN EntryBackEven");
+				}
 
-                return _segmentTitle;
-            }
-        }
-		*/
+				return _consoleItemBackEven;
+			}
+		}
 
-        public static GUIStyle ConsoleItemBackEven
-        {
-            get
-            {
-                if (_consoleItemBackEven == null)
-                {
-                    _consoleItemBackEven = new GUIStyle("CN EntryBackEven");
-                }
+		public static GUIStyle ConsoleItemBackOdd
+		{
+			get
+			{
+				if (_consoleItemBackOdd == null)
+				{
+					_consoleItemBackOdd = new GUIStyle("CN EntryBackOdd");
+				}
 
-                return _consoleItemBackEven;
-            }
-        }
+				return _consoleItemBackOdd;
+			}
+		}
 
-        public static GUIStyle ConsoleItemBackOdd
-        {
-            get
-            {
-                if (_consoleItemBackOdd == null)
-                {
-                    _consoleItemBackOdd = new GUIStyle("CN EntryBackOdd");
-                }
+		public static GUIStyle ConsoleLabel
+		{
+			get
+			{
+				if (_consoleLabel == null)
+				{
+					_consoleLabel = new GUIStyle(EditorStyles.label);
+					_consoleLabel.richText = true;
+				}
 
-                return _consoleItemBackOdd;
-            }
-        }
+				return _consoleLabel;
+			}
+		}
 
-        public static GUIStyle ConsoleLabel
-        {
-            get
-            {
-                if (_consoleLabel == null)
-                {
-                    _consoleLabel = new GUIStyle(EditorStyles.label);
-                    _consoleLabel.richText = true;
-                }
+		public static GUIStyle ConsoleBoldLabel
+		{
+			get
+			{
+				if (_consoleBoldLabel == null)
+				{
+					_consoleBoldLabel = new GUIStyle(EditorStyles.boldLabel);
+					_consoleBoldLabel.richText = true;
+				}
 
-                return _consoleLabel;
-            }
-        }
+				return _consoleBoldLabel;
+			}
+		}
 
-        public static GUIStyle ConsoleBoldLabel
-        {
-            get
-            {
-                if (_consoleBoldLabel == null)
-                {
-                    _consoleBoldLabel = new GUIStyle(EditorStyles.boldLabel);
-                    _consoleBoldLabel.richText = true;
-                }
+		public static GUIStyle SearchField
+		{
+			get
+			{
+				if (_searchField == null)
+				{
+					_searchField = new GUIStyle("toolbarTextField");
+				}
 
-                return _consoleBoldLabel;
-            }
-        }
+				return _searchField;
+			}
+		}
 
-        public static GUIStyle SearchField
-        {
-            get
-            {
-                if (_searchField == null)
-                {
-                    _searchField = new GUIStyle("toolbarTextField");
-                }
+		public static GUIStyle SearchFieldPlaceholder
+		{
+			get
+			{
+				if (_searchFieldPlaceholder == null)
+				{
+					_searchFieldPlaceholder = new GUIStyle("toolbarTextField");
+					_searchFieldPlaceholder.active.textColor = Color.gray;
+					_searchFieldPlaceholder.normal.textColor = Color.gray;
+				}
 
-                return _searchField;
-            }
-        }
+				return _searchFieldPlaceholder;
+			}
+		}
 
-        public static GUIStyle SearchFieldPlaceholder
-        {
-            get
-            {
-                if (_searchFieldPlaceholder == null)
-                {
-                    _searchFieldPlaceholder = new GUIStyle("toolbarTextField");
-                    _searchFieldPlaceholder.active.textColor = Color.gray;
-                    _searchFieldPlaceholder.normal.textColor = Color.gray;
-                }
-
-                return _searchFieldPlaceholder;
-            }
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

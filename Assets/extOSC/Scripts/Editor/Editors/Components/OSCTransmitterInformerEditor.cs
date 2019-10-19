@@ -8,100 +8,100 @@ using extOSC.Editor.Drawers;
 
 namespace extOSC.Editor.Components
 {
-    [CustomEditor(typeof(OSCTransmitterInformer), true)]
-    public class OSCTransmitterInformerEditor : OSCTransmitterComponentEditor
-    {
-        #region Static Private Vars
+	[CustomEditor(typeof(OSCTransmitterInformer), true)]
+	public class OSCTransmitterInformerEditor : OSCTransmitterComponentEditor
+	{
+		#region Static Private Vars
 
-        private static readonly GUIContent _targetTitleContent = new GUIContent("Target:");
+		private static readonly GUIContent _targetTitleContent = new GUIContent("Target:");
 
-        private static readonly GUIContent _settingsTitleContent = new GUIContent("Informer Settings:");
+		private static readonly GUIContent _settingsTitleContent = new GUIContent("Informer Settings:");
 
-        private static readonly GUIContent _informOnChangedContent = new GUIContent("Inform on changed");
+		private static readonly GUIContent _informOnChangedContent = new GUIContent("Inform on changed");
 
-        private static readonly GUIContent _informIntervalContent = new GUIContent("Send interval:");
+		private static readonly GUIContent _informIntervalContent = new GUIContent("Send interval:");
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private SerializedProperty _reflectionMemberProperty;
+		private SerializedProperty _reflectionMemberProperty;
 
-        private SerializedProperty _informOnChangedProperty;
+		private SerializedProperty _informOnChangedProperty;
 
-        private SerializedProperty _informIntervalProperty;
+		private SerializedProperty _informIntervalProperty;
 
-        private OSCTransmitterInformer _informer;
+		private OSCTransmitterInformer _informer;
 
-        private OSCReflectionMemberDrawer _reflectionDrawer;
+		private OSCReflectionMemberDrawer _reflectionDrawer;
 
-	    private Color _defaultColor;
+		private Color _defaultColor;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+		protected override void OnEnable()
+		{
+			base.OnEnable();
 
-            _informer = target as OSCTransmitterInformer;
+			_informer = target as OSCTransmitterInformer;
 
-            _targetTitleContent.text = string.Format("Target ({0}):", _informer.InformerType.Name);
+			_targetTitleContent.text = $"Target ({_informer.InformerType.Name}):";
 
-            _reflectionMemberProperty = serializedObject.FindProperty("reflectionMember");
-            _informOnChangedProperty = serializedObject.FindProperty("informOnChanged");
-            _informIntervalProperty = serializedObject.FindProperty("informInterval");
+			_reflectionMemberProperty = serializedObject.FindProperty("reflectionMember");
+			_informOnChangedProperty = serializedObject.FindProperty("informOnChanged");
+			_informIntervalProperty = serializedObject.FindProperty("informInterval");
 
-            // Create reflection member editor.
-            _reflectionDrawer = new OSCReflectionMemberDrawer(_reflectionMemberProperty, _informer.InformerType);
-            _reflectionDrawer.ReflectionAccess = OSCReflectionAccess.Read;
-        }
+			// Create reflection member editor.
+			_reflectionDrawer = new OSCReflectionMemberDrawer(_reflectionMemberProperty, _informer.InformerType);
+			_reflectionDrawer.ReflectionAccess = OSCReflectionAccess.Read;
+		}
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void DrawSettings()
-        {
-	        _defaultColor = GUI.color;
+		protected override void DrawSettings()
+		{
+			_defaultColor = GUI.color;
 
-            // TARGET
-            EditorGUILayout.LabelField(_targetTitleContent, EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
+			// TARGET
+			EditorGUILayout.LabelField(_targetTitleContent, EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
 
-		        _reflectionDrawer.DrawLayout();
-	        }
+				_reflectionDrawer.DrawLayout();
+			}
 
-	        //SETTINGS
-            EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
-		        GUI.color = _informOnChangedProperty.boolValue ? Color.green : Color.red;
-		        if (GUILayout.Button(_informOnChangedContent))
-		        {
-			        _informOnChangedProperty.boolValue = !_informOnChangedProperty.boolValue;
-		        }
+			//SETTINGS
+			EditorGUILayout.LabelField(_settingsTitleContent, EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
+				GUI.color = _informOnChangedProperty.boolValue ? Color.green : Color.red;
+				if (GUILayout.Button(_informOnChangedContent))
+				{
+					_informOnChangedProperty.boolValue = !_informOnChangedProperty.boolValue;
+				}
 
-		        GUI.color = _defaultColor;
+				GUI.color = _defaultColor;
 
-		        if (!_informOnChangedProperty.boolValue)
-		        {
-			        EditorGUILayout.PropertyField(_informIntervalProperty, _informIntervalContent);
+				if (!_informOnChangedProperty.boolValue)
+				{
+					EditorGUILayout.PropertyField(_informIntervalProperty, _informIntervalContent);
 
-			        if (_informIntervalProperty.floatValue < 0)
-				        _informIntervalProperty.floatValue = 0;
+					if (_informIntervalProperty.floatValue < 0)
+						_informIntervalProperty.floatValue = 0;
 
-			        EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
-		        }
-	        }
-        }
+					EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
+				}
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

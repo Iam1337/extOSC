@@ -222,6 +222,6 @@ v1.17
 v1.18
 -----
 
-- Total refactored.
+- Removed .NET 3.5 support.
 - Removed many reducant methods and classes.
 - Removed Serialization extension.

@@ -154,7 +154,7 @@ namespace extOSC.Editor
 					var typeAttribute = messageElement.Attributes["type"];
 					consoleMessage.PacketType = (OSCConsolePacketType) Enum.Parse(typeof(OSCConsolePacketType), typeAttribute.InnerText);
 
-					var packetElement = messageElement["ioscPacket"];
+					var packetElement = messageElement["packet"];
 					consoleMessage.Packet = OSCUtilities.FromBase64String(packetElement.InnerText);
 
 					list.Add(consoleMessage);
@@ -187,7 +187,7 @@ namespace extOSC.Editor
 				messageElement.Attributes.Append(instanceAttribute);
 				messageElement.Attributes.Append(typeAttribute);
 
-				var packetElement = document.CreateElement("ioscPacket");
+				var packetElement = document.CreateElement("packet");
 				packetElement.InnerText = OSCUtilities.ToBase64String(consoleMessage.Packet);
 
 				messageElement.AppendChild(packetElement);
@@ -207,7 +207,7 @@ namespace extOSC.Editor
 			}
 			catch (Exception e)
 			{
-				Debug.LogFormat("[OSCEditorUtils] Load IoscPacket error: {0}", e);
+				Debug.LogFormat("[OSCEditorUtils] Load packet error: {0}", e);
 
 				try
 				{
@@ -218,7 +218,7 @@ namespace extOSC.Editor
 				}
 				catch (Exception e2)
 				{
-					Debug.LogFormat("[OSCEditorUtils] Load Old Format IoscPacket Error: {0}", e2);
+					Debug.LogFormat("[OSCEditorUtils] Load old format packet error: {0}", e2);
 				}
 			}
 

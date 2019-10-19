@@ -7,46 +7,46 @@ using extOSC.Components.Events;
 
 namespace extOSC.Editor.Components
 {
-    [CustomEditor(typeof(OSCReceiverEvent<>), true)]
-    public class OSCReceiverEventEditor : OSCReceiverComponentEditor
-    {
-        #region Static Private Vars
+	[CustomEditor(typeof(OSCReceiverEvent<>), true)]
+	public class OSCReceiverEventEditor : OSCReceiverComponentEditor
+	{
+		#region Static Private Vars
 
-        private static readonly GUIContent _onReceiveContent = new GUIContent("On Receive:");
+		private static readonly GUIContent _onReceiveContent = new GUIContent("On Receive:");
 
-        private static readonly GUIContent _eventsSettingsContent = new GUIContent("Events Settings:");
+		private static readonly GUIContent _eventsSettingsContent = new GUIContent("Events Settings:");
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private SerializedProperty _onReceiveProperty;
+		private SerializedProperty _onReceiveProperty;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+		protected override void OnEnable()
+		{
+			base.OnEnable();
 
-            _onReceiveProperty = serializedObject.FindProperty("onReceive");
-        }
+			_onReceiveProperty = serializedObject.FindProperty("onReceive");
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void DrawSettings()
-        {
-            EditorGUILayout.LabelField(_eventsSettingsContent, EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope())
-	        {
+		protected override void DrawSettings()
+		{
+			EditorGUILayout.LabelField(_eventsSettingsContent, EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope())
+			{
 
-		        EditorGUILayout.PropertyField(_onReceiveProperty, _onReceiveContent);
-	        }
-        }
+				EditorGUILayout.PropertyField(_onReceiveProperty, _onReceiveContent);
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

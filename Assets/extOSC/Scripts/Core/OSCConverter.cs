@@ -84,13 +84,13 @@ namespace extOSC.Core
 			}
 		}
 
-		/// <summary>
-		/// Serializes a IOSCPacket and writes it to a buffer, returning the size of the ioscPacket.
-		/// </summary>
-		/// <param name="packet">IoscPacket</param>
-		/// <param name="size">Serialized ioscPacket size</param>
-		/// <returns>Buffer with a fixed value.</returns>
-		public static int Pack(IOSCPacket packet, out byte[] buffer)
+        /// <summary>
+        /// Serializes a IOSCPacket and writes it to a buffer, returning the size of the ioscPacket.
+        /// </summary>
+        /// <param name="packet">packet</param>
+        /// <param name="size">Serialized packet size</param>
+        /// <returns>Buffer with a fixed value.</returns>
+        public static int Pack(IOSCPacket packet, out byte[] buffer)
 		{
 			lock (_lock)
 			{
@@ -100,12 +100,12 @@ namespace extOSC.Core
 			}
 		}
 
-		/// <summary>
-		/// Serializes a ioscPacket and returns the ioscPacket data in byte array.
-		/// </summary>
-		/// <param name="packet">IoscPacket</param>
-		/// <returns>IoscPacket data</returns>
-		public static byte[] Pack(IOSCPacket packet)
+        /// <summary>
+        /// Serializes a packet and returns the packet data in byte array.
+        /// </summary>
+        /// <param name="packet">packet</param>
+        /// <returns>packet data</returns>
+        public static byte[] Pack(IOSCPacket packet)
 		{
 			lock (_lock)
 			{

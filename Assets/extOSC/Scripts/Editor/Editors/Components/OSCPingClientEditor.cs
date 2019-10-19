@@ -7,163 +7,163 @@ using extOSC.Components.Ping;
 
 namespace extOSC.Editor.Components
 {
-    [CustomEditor(typeof(OSCPingClient), true)]
-    public class OSCPingClientEditor : OSCComponentEditor
-    {
-        #region Static Private Vars
+	[CustomEditor(typeof(OSCPingClient), true)]
+	public class OSCPingClientEditor : OSCComponentEditor
+	{
+		#region Static Private Vars
 
-        private static readonly GUIContent _pingSettingsContent = new GUIContent("Ping Client Settings:");
+		private static readonly GUIContent _pingSettingsContent = new GUIContent("Ping Client Settings:");
 
-        private static readonly GUIContent _pingStatusContent = new GUIContent("Ping Client Status:");
+		private static readonly GUIContent _pingStatusContent = new GUIContent("Ping Client Status:");
 
-        private static readonly GUIContent _intervalContent = new GUIContent("Interval:");
+		private static readonly GUIContent _intervalContent = new GUIContent("Interval:");
 
-        private static readonly GUIContent _timeoutContent = new GUIContent("Timeout:");
+		private static readonly GUIContent _timeoutContent = new GUIContent("Timeout:");
 
-        private static readonly GUIContent _autoStartContent = new GUIContent("Auto Start");
+		private static readonly GUIContent _autoStartContent = new GUIContent("Auto Start");
 
-        private static readonly GUIContent _inGameContent = new GUIContent("In Game Controls:");
+		private static readonly GUIContent _inGameContent = new GUIContent("In Game Controls:");
 
-        private static readonly GUIContent _startContent = new GUIContent("Start");
+		private static readonly GUIContent _startContent = new GUIContent("Start");
 
-        private static readonly GUIContent _stopContent = new GUIContent("Stop");
+		private static readonly GUIContent _stopContent = new GUIContent("Stop");
 
-        private static readonly GUIContent _pauseContent = new GUIContent("Pause");
+		private static readonly GUIContent _pauseContent = new GUIContent("Pause");
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private OSCPingClient _ping;
+		private OSCPingClient _ping;
 
-        private SerializedProperty _intervalProperty;
+		private SerializedProperty _intervalProperty;
 
-        private SerializedProperty _timeoutProperty;
+		private SerializedProperty _timeoutProperty;
 
-        private SerializedProperty _autoStartProperty;
+		private SerializedProperty _autoStartProperty;
 
-        private bool _drawedState;
+		private bool _drawedState;
 
-	    private Color _defaultColor;
+		private Color _defaultColor;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void OnEnable()
-        {
-            base.OnEnable();
+		protected override void OnEnable()
+		{
+			base.OnEnable();
 
-            _ping = target as OSCPingClient;
+			_ping = target as OSCPingClient;
 
-            _intervalProperty = serializedObject.FindProperty("interval");
-            _timeoutProperty = serializedObject.FindProperty("timeout");
-            _autoStartProperty = serializedObject.FindProperty("autoStart");
+			_intervalProperty = serializedObject.FindProperty("interval");
+			_timeoutProperty = serializedObject.FindProperty("timeout");
+			_autoStartProperty = serializedObject.FindProperty("autoStart");
 
-            EditorApplication.update += Update;
-        }
+			EditorApplication.update += Update;
+		}
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
+		protected override void OnDisable()
+		{
+			base.OnDisable();
 
-            EditorApplication.update -= Update;
-        }
+			EditorApplication.update -= Update;
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void DrawSettings()
-        {
-	        _defaultColor = GUI.color;
+		protected override void DrawSettings()
+		{
+			_defaultColor = GUI.color;
 
-            // PING SETTINGS
-            EditorGUILayout.LabelField(_pingSettingsContent, EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
+			// PING SETTINGS
+			EditorGUILayout.LabelField(_pingSettingsContent, EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
 				EditorGUILayout.PropertyField(_intervalProperty, _intervalContent);
-		        EditorGUILayout.PropertyField(_timeoutProperty, _timeoutContent);
-	        }
+				EditorGUILayout.PropertyField(_timeoutProperty, _timeoutContent);
+			}
 
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
-		        GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
-		        if (GUILayout.Button(_autoStartContent))
-		        {
-			        _autoStartProperty.boolValue = !_autoStartProperty.boolValue;
-		        }
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
+				GUI.color = _autoStartProperty.boolValue ? Color.green : Color.red;
+				if (GUILayout.Button(_autoStartContent))
+				{
+					_autoStartProperty.boolValue = !_autoStartProperty.boolValue;
+				}
 
-		        GUI.color = _defaultColor;
-	        }
+				GUI.color = _defaultColor;
+			}
 
-	        GUI.enabled = Application.isPlaying;
+			GUI.enabled = Application.isPlaying;
 
-            EditorGUILayout.LabelField(_inGameContent, EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
-		        if ((!_ping.IsRunning && !Application.isPlaying && !_ping.AutoStart) ||
-		            (Application.isPlaying && !_ping.IsRunning))
-		        {
-			        GUI.color = Color.green;
-			        if (GUILayout.Button(_startContent))
-			        {
-				        _ping.StartPing();
-			        }
+			EditorGUILayout.LabelField(_inGameContent, EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
+				if ((!_ping.IsRunning && !Application.isPlaying && !_ping.AutoStart) ||
+					(Application.isPlaying && !_ping.IsRunning))
+				{
+					GUI.color = Color.green;
+					if (GUILayout.Button(_startContent))
+					{
+						_ping.StartPing();
+					}
 
-			        GUI.color = _defaultColor;
-		        }
-		        else
-		        {
-			        using (new GUILayout.HorizontalScope())
-			        {
-				        GUI.color = Color.yellow;
-				        if (GUILayout.Button(_pauseContent))
-				        {
-					        _ping.PausePing();
-				        }
+					GUI.color = _defaultColor;
+				}
+				else
+				{
+					using (new GUILayout.HorizontalScope())
+					{
+						GUI.color = Color.yellow;
+						if (GUILayout.Button(_pauseContent))
+						{
+							_ping.PausePing();
+						}
 
-				        GUI.color = Color.red;
-				        if (GUILayout.Button(_stopContent))
-				        {
-					        _ping.StopPing();
-				        }
+						GUI.color = Color.red;
+						if (GUILayout.Button(_stopContent))
+						{
+							_ping.StopPing();
+						}
 
-				        GUI.color = _defaultColor;
-			        }
-		        }
-	        }
+						GUI.color = _defaultColor;
+					}
+				}
+			}
 
-	        GUI.enabled = true;
+			GUI.enabled = true;
 
-            EditorGUILayout.LabelField(_pingStatusContent, EditorStyles.boldLabel);
-	        using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
-	        {
+			EditorGUILayout.LabelField(_pingStatusContent, EditorStyles.boldLabel);
+			using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+			{
 				_drawedState = _ping.IsAvailable;
 
-		        GUI.color = _drawedState ? Color.green : Color.red;
-		        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-		        {
-			        EditorGUILayout.LabelField(_drawedState ? "Available" : "Not Available", OSCEditorStyles.CenterLabel);
-		        }
+				GUI.color = _drawedState ? Color.green : Color.red;
+				using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+				{
+					EditorGUILayout.LabelField(_drawedState ? "Available" : "Not Available", OSCEditorStyles.CenterLabel);
+				}
 
-		        GUI.color = _defaultColor;
-	        }
-        }
+				GUI.color = _defaultColor;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Methods
+		#region Private Methods
 
-        private void Update()
-        {
-            if (_ping == null)
-                return;
+		private void Update()
+		{
+			if (_ping == null)
+				return;
 
-            if (_ping.IsAvailable != _drawedState)
-                Repaint();
-        }
+			if (_ping.IsAvailable != _drawedState)
+				Repaint();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

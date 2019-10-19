@@ -6,78 +6,73 @@ using System;
 
 namespace extOSC.Editor
 {
-    [InitializeOnLoad]
-    public static class OSCDefinesManager
-    {
-        #region Static Private Vars
+	[InitializeOnLoad]
+	public static class OSCDefinesManager
+	{
+		#region Static Private Vars
 
-        private const string DefaultDefine = "EXTOSC";
+		private const string DefaultDefine = "EXTOSC";
 
-        #endregion
+		#endregion
 
-        #region Constructor Methods
+		#region Constructor Methods
 
-        static OSCDefinesManager()
-        {
-            if (!HasDefine(DefaultDefine))
-                SetDefine(DefaultDefine, true);
-        }
+		static OSCDefinesManager()
+		{
+			if (!HasDefine(DefaultDefine))
+				SetDefine(DefaultDefine, true);
+		}
 
-        #endregion
-        
-        #region Static Public Methods
+		#endregion
 
-        public static void SetDefine(string define, bool active)
-        {
-            var buildTargets = (BuildTargetGroup[]) Enum.GetValues(typeof(BuildTargetGroup));
-            foreach (var targetGroup in buildTargets)
-            {
-                if (!CheckBuildTarget(targetGroup)) continue;
+		#region Static Public Methods
 
-                var scriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup);
-                if (!scriptingDefines.Contains(define) && active)
-                {
-                    scriptingDefines += ";" + define;
-                }
-                else if (!active)
-                {
-                    scriptingDefines = scriptingDefines.Replace(define, string.Empty);
-                }
+		public static void SetDefine(string define, bool active)
+		{
+			var buildTargets = (BuildTargetGroup[]) Enum.GetValues(typeof(BuildTargetGroup));
+			foreach (var targetGroup in buildTargets)
+			{
+				if (!CheckBuildTarget(targetGroup)) continue;
 
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, scriptingDefines);
-            }
-        }
+				var scriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup);
+				if (!scriptingDefines.Contains(define) && active)
+				{
+					scriptingDefines += ";" + define;
+				}
+				else if (!active)
+				{
+					scriptingDefines = scriptingDefines.Replace(define, string.Empty);
+				}
 
-        public static bool HasDefine(string define)
-        {
-            // Get current define group.
-            var currentBuildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
+				PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, scriptingDefines);
+			}
+		}
 
-            // Check.
-            return PlayerSettings.GetScriptingDefineSymbolsForGroup(currentBuildTarget).Contains(define);
-        }
+		public static bool HasDefine(string define)
+		{
+			// Get current define group.
+			var currentBuildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
 
-        #endregion
+			// Check.
+			return PlayerSettings.GetScriptingDefineSymbolsForGroup(currentBuildTarget).Contains(define);
+		}
 
-        #region Static Private Methods
+		#endregion
 
-        private static bool CheckBuildTarget(BuildTargetGroup buildTarget)
-        {
-            // Not available id Unknown.
-            if (buildTarget == BuildTargetGroup.Unknown)
-                return false;
+		#region Static Private Methods
 
-            // Or Obsolete.
-            var buildTargetString = buildTarget.ToString();
-            var field = typeof(BuildTargetGroup).GetField(buildTargetString);
-            if (Attribute.IsDefined(field, typeof(ObsoleteAttribute), true))
-            {
-                return false;
-            }
+		private static bool CheckBuildTarget(BuildTargetGroup buildTarget)
+		{
+			// Not available id Unknown.
+			if (buildTarget == BuildTargetGroup.Unknown)
+				return false;
 
-            return true;
-        }
+			// Or Obsolete.
+			var buildTargetString = buildTarget.ToString();
+			var field = typeof(BuildTargetGroup).GetField(buildTargetString);
+			return !Attribute.IsDefined(field, typeof(ObsoleteAttribute), true);
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

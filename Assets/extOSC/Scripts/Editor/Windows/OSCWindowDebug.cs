@@ -7,117 +7,117 @@ using extOSC.Editor.Panels;
 
 namespace extOSC.Editor.Windows
 {
-    public class OSCWindowDebug : OSCWindow<OSCWindowDebug, OSCSplitPanel>
-    {
-        #region Static Public Vars
+	public class OSCWindowDebug : OSCWindow<OSCWindowDebug, OSCSplitPanel>
+	{
+		#region Static Public Vars
 
-        public static IOSCPacket CurrentIoscPacket
-        {
-            get
-            {
-                if (Instance != null && 
-                    Instance._packetEditorPanel != null && 
-                    Instance._packetEditorPanel.CurrentIoscPacket != null)
-                    return Instance._packetEditorPanel.CurrentIoscPacket;
+		public static IOSCPacket CurrentPacket
+		{
+			get
+			{
+				if (Instance != null &&
+					Instance._packetEditorPanel != null &&
+					Instance._packetEditorPanel.CurrentPacket != null)
+					return Instance._packetEditorPanel.CurrentPacket;
 
-                return null;
-            }
-        }
+				return null;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Static Public Methods
+		#region Static Public Methods
 
-        public static void Open()
-        {
-            Instance.titleContent = new GUIContent("OSC Debug", OSCEditorTextures.IronWallSmall);
-            Instance.minSize = new Vector2(550, 200);
-            Instance.Show();
-	        Instance.Focus();
-        }
+		public static void Open()
+		{
+			Instance.titleContent = new GUIContent("OSC Debug", OSCEditorTextures.IronWallSmall);
+			Instance.minSize = new Vector2(550, 200);
+			Instance.Show();
+			Instance.Focus();
+		}
 
-        public static void OpenPacket(IOSCPacket ioscPacket)
-        {
-            Open();
+		public static void OpenPacket(IOSCPacket packet)
+		{
+			Open();
 
-	        Instance._packetEditorPanel.CurrentIoscPacket = ioscPacket.Copy(); //OSCEditorUtils.CopyPacket(ioscPacket);
-        }
+			Instance._packetEditorPanel.CurrentPacket = packet.Copy();
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
 		private readonly string _lastFileSettings = OSCEditorSettings.Debug + "lastfile";
 
-	    protected OSCPanelPacketEditor _packetEditorPanel;
+		private OSCPanelPacketEditor _packetEditorPanel;
 
-	    protected OSCPanelControllers _controllersPanel;
+		private OSCPanelControllers _controllersPanel;
 
 		#endregion
 
 		#region Unity Methods
 
 		protected override void OnEnable()
-        {
-            _packetEditorPanel = new OSCPanelPacketEditor(this, "debugPacketEditor");
-            _controllersPanel = new OSCPanelControllers(this, "debugOSCControllers");
+		{
+			_packetEditorPanel = new OSCPanelPacketEditor(this, "debugPacketEditor");
+			_controllersPanel = new OSCPanelControllers(this, "debugOSCControllers");
 
-            rootPanel.AddPanel(_packetEditorPanel, 300);
-            rootPanel.AddPanel(_controllersPanel, 250);
+			rootPanel.AddPanel(_packetEditorPanel, 300);
+			rootPanel.AddPanel(_controllersPanel, 250);
 
-            base.OnEnable();
-        }
+			base.OnEnable();
+		}
 
-        protected void OnInspectorUpdate()
-        {
-            if (_controllersPanel != null)
-                _controllersPanel.Refresh();
+		protected void OnInspectorUpdate()
+		{
+			if (_controllersPanel != null)
+				_controllersPanel.Refresh();
 
-            Repaint();
-        }
+			Repaint();
+		}
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override void SaveWindowSettings()
-        {
-            if (_packetEditorPanel == null) return;
+		protected override void SaveWindowSettings()
+		{
+			if (_packetEditorPanel == null) return;
 
-            var debugPacket = _packetEditorPanel.CurrentIoscPacket;
-            if (debugPacket != null)
-            {
-                if (string.IsNullOrEmpty(_packetEditorPanel.FilePath))
-                {
-                    _packetEditorPanel.FilePath = OSCEditorUtils.BackupFolder + "unsaved.eod";
-                }
+			var debugPacket = _packetEditorPanel.CurrentPacket;
+			if (debugPacket != null)
+			{
+				if (string.IsNullOrEmpty(_packetEditorPanel.FilePath))
+				{
+					_packetEditorPanel.FilePath = OSCEditorUtils.BackupFolder + "unsaved.eod";
+				}
 
-                OSCEditorUtils.SavePacket(_packetEditorPanel.FilePath, debugPacket);
-                OSCEditorSettings.SetString(_lastFileSettings, _packetEditorPanel.FilePath);
+				OSCEditorUtils.SavePacket(_packetEditorPanel.FilePath, debugPacket);
+				OSCEditorSettings.SetString(_lastFileSettings, _packetEditorPanel.FilePath);
 
-                return;
-            }
+				return;
+			}
 
-            OSCEditorSettings.SetString(_lastFileSettings, "");
-        }
+			OSCEditorSettings.SetString(_lastFileSettings, "");
+		}
 
-        protected override void LoadWindowSettings()
-        {
-            if (_packetEditorPanel == null) return;
+		protected override void LoadWindowSettings()
+		{
+			if (_packetEditorPanel == null) return;
 
-            var lastOpenedFile = OSCEditorSettings.GetString(_lastFileSettings, "");
+			var lastOpenedFile = OSCEditorSettings.GetString(_lastFileSettings, "");
 
-            if (!string.IsNullOrEmpty(lastOpenedFile))
-            {
-                var debugPacket = OSCEditorUtils.LoadPacket(lastOpenedFile);
-                if (debugPacket != null)
-                {
-                    _packetEditorPanel.CurrentIoscPacket = debugPacket;
-                    _packetEditorPanel.FilePath = lastOpenedFile;
-                }
-            }
-        }
+			if (!string.IsNullOrEmpty(lastOpenedFile))
+			{
+				var debugPacket = OSCEditorUtils.LoadPacket(lastOpenedFile);
+				if (debugPacket != null)
+				{
+					_packetEditorPanel.CurrentPacket = debugPacket;
+					_packetEditorPanel.FilePath = lastOpenedFile;
+				}
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

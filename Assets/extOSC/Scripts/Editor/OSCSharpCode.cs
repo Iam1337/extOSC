@@ -8,178 +8,175 @@ using extOSC.Core;
 
 namespace extOSC.Editor
 {
-    public static class OSCSharpCode
-    {
-        #region Static Public Methods
+	public static class OSCSharpCode
+	{
+		#region Static Public Methods
 
-        public static string GeneratePacket(IOSCPacket ioscPacket)
-        {
-            if (ioscPacket.IsBundle())
-                return GenerateBundle(ioscPacket as OSCBundle);
-            else
-                return GenerateMessage(ioscPacket as OSCMessage);
-        }
+		public static string GeneratePacket(IOSCPacket packet)
+		{
+			return packet.IsBundle() ? GenerateBundle(packet as OSCBundle) : GenerateMessage(packet as OSCMessage);
+		}
 
-        public static string GenerateBundle(OSCBundle bundle)
-        {
-            return GenerateBundle(bundle, "bundle", true);
-        }
+		public static string GenerateBundle(OSCBundle bundle)
+		{
+			return GenerateBundle(bundle, "bundle", true);
+		}
 
-        public static string GenerateMessage(OSCMessage message)
-        {
-            return GenerateMessage(message, "message", true);
-        }
+		public static string GenerateMessage(OSCMessage message)
+		{
+			return GenerateMessage(message, "message", true);
+		}
 
-        public static string GenerateBundle(OSCBundle bundle, string name, bool init)
-        {
-            var prefix = init ? "var " : string.Empty;
-            var sharpCode = string.Format("{0}{1} = new OSCBundle();\n", prefix, name);
-            var bundleInit = true;
-            var packetInit = true;
+		public static string GenerateBundle(OSCBundle bundle, string name, bool init)
+		{
+			var prefix = init ? "var " : string.Empty;
+			var sharpCode = $"{prefix}{name} = new OSCBundle();\n";
+			var bundleInit = true;
+			var packetInit = true;
 
-            for (var i = 0; i < bundle.Packets.Count; i++)
-            {
-                var packetName = string.Empty;
-                var packet = bundle.Packets[i];
+			for (var i = 0; i < bundle.Packets.Count; i++)
+			{
+				var packetName = string.Empty;
+				var packet = bundle.Packets[i];
 
-                if (packet is OSCBundle)
-                {
-                    packetName = string.Format("{0}Bundle", name);
-                    sharpCode += GenerateBundle(packet as OSCBundle, packetName, bundleInit);
-                    bundleInit = false;
-                }
+				if (packet is OSCBundle packetBundle)
+				{
+					packetName = $"{name}Bundle";
+					sharpCode += GenerateBundle(packetBundle, packetName, bundleInit);
+					bundleInit = false;
+				}
 
-                if (packet is OSCMessage)
-                {
-                    packetName = string.Format("{0}Message", name);
-                    sharpCode += GenerateMessage(packet as OSCMessage, packetName, packetInit);
-                    packetInit = false;
-                }
+				if (packet is OSCMessage packetMessage)
+				{
+					packetName = $"{name}Message";
+					sharpCode += GenerateMessage(packetMessage, packetName, packetInit);
+					packetInit = false;
+				}
 
-                if (string.IsNullOrEmpty(packetName))
-                    continue;
+				if (string.IsNullOrEmpty(packetName))
+					continue;
 
-                sharpCode += string.Format("{0}.Add({1});\n\n", name, packetName);
-            }
+				sharpCode += $"{name}.Add({packetName});\n\n";
+			}
 
-            if (sharpCode.EndsWith("\n\n", StringComparison.Ordinal))
-                sharpCode = sharpCode.Remove(sharpCode.Length - 1);
+			if (sharpCode.EndsWith("\n\n", StringComparison.Ordinal))
+				sharpCode = sharpCode.Remove(sharpCode.Length - 1);
 
-            return sharpCode;
-        }
+			return sharpCode;
+		}
 
-        public static string GenerateMessage(OSCMessage message, string name, bool init)
-        {
-            var prefix = init ? "var " : string.Empty;
-            var sharpCode = string.Format("{0}{1} = new OSCMessage(\"{2}\");\n", prefix, name, message.Address);
+		public static string GenerateMessage(OSCMessage message, string name, bool init)
+		{
+			var prefix = init ? "var " : string.Empty;
+			var sharpCode = $"{prefix}{name} = new OSCMessage(\"{message.Address}\");\n";
 
-            foreach (var value in message.Values)
-            {
-                sharpCode += string.Format("{0}.AddValue({1});\n", name, GenerateValue(value));
-            }
+			foreach (var value in message.Values)
+			{
+				sharpCode += $"{name}.AddValue({GenerateValue(value)});\n";
+			}
 
-            return sharpCode;
-        }
+			return sharpCode;
+		}
 
-        public static string GenerateValue(OSCValue value)
-        {
-            var type = value.Type;
+		public static string GenerateValue(OSCValue value)
+		{
+			var type = value.Type;
 
-            if (type == OSCValueType.Unknown)
-                return string.Empty;
+			if (type == OSCValueType.Unknown)
+				return string.Empty;
 
-            if (type == OSCValueType.Array)
-            {
-                var stringValues = string.Empty;
+			if (type == OSCValueType.Array)
+			{
+				var stringValues = string.Empty;
 
-                foreach (var arrayValue in value.ArrayValue)
-                {
-                    stringValues += GenerateValue(arrayValue) + ", ";
-                }
+				foreach (var arrayValue in value.ArrayValue)
+				{
+					stringValues += GenerateValue(arrayValue) + ", ";
+				}
 
-                if (stringValues.Length > 2)
-                    stringValues = stringValues.Remove(stringValues.Length - 2);
+				if (stringValues.Length > 2)
+					stringValues = stringValues.Remove(stringValues.Length - 2);
 
-                return string.Format("OSCValue.Array({0})", stringValues);
-            }
+				return $"OSCValue.Array({stringValues})";
+			}
 
-            return GenerateValue(type, value.Value);
-        }
+			return GenerateValue(type, value.Value);
+		}
 
-        #endregion
+		#endregion
 
-        #region Static Private Methods
+		#region Static Private Methods
 
-        private static string GenerateValue(OSCValueType type, object value)
-        {
+		private static string GenerateValue(OSCValueType type, object value)
+		{
 
-            if (type == OSCValueType.Impulse || type == OSCValueType.Null)
-            {
-                return string.Format("OSCValue.{0}()", type);
-            }
+			if (type == OSCValueType.Impulse || type == OSCValueType.Null)
+			{
+				return $"OSCValue.{type}()";
+			}
 
-            if (type == OSCValueType.True || type == OSCValueType.False)
-            {
-                return string.Format("OSCValue.Bool({0})", value.ToString().ToLower());
-            }
+			if (type == OSCValueType.True || type == OSCValueType.False)
+			{
+				return $"OSCValue.Bool({value.ToString().ToLower()})";
+			}
 
-            if (type == OSCValueType.Float)
-            {
-                return string.Format("OSCValue.Float({0}f)", value);
-            }
+			if (type == OSCValueType.Float)
+			{
+				return $"OSCValue.Float({value}f)";
+			}
 
-            if (type == OSCValueType.Char)
-            {
-                return string.Format("OSCValue.Char(\'{0}\')", value);
-            }
+			if (type == OSCValueType.Char)
+			{
+				return $"OSCValue.Char(\'{value}\')";
+			}
 
-            if (type == OSCValueType.String)
-            {
-                return string.Format("OSCValue.String(\"{0}\")", value);
-            }
+			if (type == OSCValueType.String)
+			{
+				return $"OSCValue.String(\"{value}\")";
+			}
 
-            if (type == OSCValueType.TimeTag)
-            {
-                return string.Format("OSCValue.TimeTag(DateTime.Parse(\"{0}\"))", value);
-            }
+			if (type == OSCValueType.TimeTag)
+			{
+				return $"OSCValue.TimeTag(DateTime.Parse(\"{value}\"))";
+			}
 
-            if (type == OSCValueType.Color)
-            {
-                var color = (Color)value;
+			if (type == OSCValueType.Color)
+			{
+				var color = (Color) value;
 
-                return string.Format("OSCValue.Color(new Color({0}f, {1}f, {2}f, {3}f))", color.r, color.g, color.b, color.a);
-            }
+				return $"OSCValue.Color(new Color({color.r}f, {color.g}f, {color.b}f, {color.a}f))";
+			}
 
-            if (type == OSCValueType.Midi)
-            {
-                var midi = (OSCMidi)value;
+			if (type == OSCValueType.Midi)
+			{
+				var midi = (OSCMidi) value;
 
-                return string.Format("OSCValue.Midi(new OSCMidi({0}, {1}, {2}, {3}))", midi.Channel, midi.Status, midi.Data1, midi.Data2);
-            }
+				return $"OSCValue.Midi(new OSCMidi({midi.Channel}, {midi.Status}, {midi.Data1}, {midi.Data2}))";
+			}
 
-            if (type == OSCValueType.Blob)
-            {
-                var stringValue = "new byte[] {";
-                var datas = (byte[])value;
+			if (type == OSCValueType.Blob)
+			{
+				var stringValue = "new byte[] {";
+				var datas = (byte[]) value;
 
-                if (datas.Length > 0)
-                {
-                    foreach (var data in datas)
-                    {
-                        stringValue += string.Format("{0:x2}, ", data);
-                    }
+				if (datas.Length > 0)
+				{
+					foreach (var data in datas)
+					{
+						stringValue += $"{data:x2}, ";
+					}
 
-                    stringValue = stringValue.Remove(stringValue.Length - 2);
-                }
+					stringValue = stringValue.Remove(stringValue.Length - 2);
+				}
 
-                stringValue += "}";
+				stringValue += "}";
 
-                return string.Format("OSCValue.Blob({0})", stringValue);
-            }
+				return $"OSCValue.Blob({stringValue})";
+			}
 
-            return string.Format("OSCValue.{0}({1})", type, value);
-        }
+			return $"OSCValue.{type}({value})";
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
