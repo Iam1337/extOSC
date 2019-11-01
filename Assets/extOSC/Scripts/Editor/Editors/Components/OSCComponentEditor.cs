@@ -38,10 +38,10 @@ namespace extOSC.Editor.Components
 
 		protected virtual void OnEnable()
 		{
-			_transmitterProperty = serializedObject.FindProperty("transmitter");
-			_transmitterAddressProperty = serializedObject.FindProperty("transmitterAddress");
-			_receiverProperty = serializedObject.FindProperty("receiver");
-			_receiverAddressProperty = serializedObject.FindProperty("receiverAddress");
+			_transmitterProperty = serializedObject.FindProperty("_transmitter");
+			_transmitterAddressProperty = serializedObject.FindProperty("_transmitterAddress");
+			_receiverProperty = serializedObject.FindProperty("_receiver");
+			_receiverAddressProperty = serializedObject.FindProperty("_receiverAddress");
 			_settingsTitleContent.text = $"{target.GetType().Name} Settings:";
 		}
 

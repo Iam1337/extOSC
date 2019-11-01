@@ -42,9 +42,9 @@ namespace extOSC.Editor.Components
 		{
 			_ping = target as OSCPingServer;
 
-			_transmitterProperty = serializedObject.FindProperty("transmitter");
-			_receiverProperty = serializedObject.FindProperty("receiver");
-			_receiverAddressProperty = serializedObject.FindProperty("receiverAddress");
+			_transmitterProperty = serializedObject.FindProperty("_transmitter");
+			_receiverProperty = serializedObject.FindProperty("_receiver");
+			_receiverAddressProperty = serializedObject.FindProperty("_receiverAddress");
 		}
 
 		protected override void OnDisable()

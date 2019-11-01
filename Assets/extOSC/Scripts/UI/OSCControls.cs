@@ -3,6 +3,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+using System;
 using System.Reflection;
 
 namespace extOSC.UI
@@ -389,6 +390,13 @@ namespace extOSC.UI
 
 		private static GameObject CreateUIElementRoot(string name, Vector2 size)
 		{
+
+#if UNITY_2019_2_OR_NEWER
+			var gameObject = DefaultControls.factory.CreateGameObject(name);
+			gameObject.AddComponent<RectTransform>().sizeDelta = size;
+
+			return gameObject;
+#else
 			if (_createUIElementRootMethod == null)
 			{
 				var defaultControlsType = typeof(DefaultControls);
@@ -396,7 +404,8 @@ namespace extOSC.UI
 			}
 
 			return (GameObject) _createUIElementRootMethod.Invoke(null, new object[] {name, size});
-		}
+#endif
+        }
 
 		private static GameObject CreateUIObject(string name, GameObject parent)
 		{
@@ -406,7 +415,13 @@ namespace extOSC.UI
 				_createUIObjectMethod = defaultControls.GetMethod("CreateUIObject", BindingFlags.Static | BindingFlags.NonPublic);
 			}
 
+#if UNITY_2019_2_OR_NEWER
+			var gameObject = (GameObject) _createUIObjectMethod.Invoke(null, new object[] {name, parent, new Type[0]});
+			gameObject.AddComponent<RectTransform>();
+			return gameObject;
+#else
 			return (GameObject) _createUIObjectMethod.Invoke(null, new object[] {name, parent});
+#endif
 		}
 
 		private static void SetDefaultColorTransitionValues(Selectable slider)
@@ -420,6 +435,6 @@ namespace extOSC.UI
 			_setDefaultColorTransitionMethod.Invoke(null, new object[] {slider});
 		}
 
-		#endregion
+#endregion
 	}
 }

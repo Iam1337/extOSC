@@ -48,8 +48,8 @@ namespace extOSC.Editor.Components
 
 			_ping = target as OSCTransmitterPing;
 
-			_intervalProperty = serializedObject.FindProperty("interval");
-			_autoStartProperty = serializedObject.FindProperty("autoStart");
+			_intervalProperty = serializedObject.FindProperty("_interval");
+			_autoStartProperty = serializedObject.FindProperty("_autoStart");
 		}
 
 		protected override void DrawSettings()
