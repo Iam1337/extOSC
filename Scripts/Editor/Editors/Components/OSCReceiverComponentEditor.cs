@@ -38,9 +38,9 @@ namespace extOSC.Editor.Components
 		{
 			_receiverComponent = target as OSCReceiverComponent;
 
-			_receiverProperty = serializedObject.FindProperty("receiver");
-			_addressProperty = serializedObject.FindProperty("address");
-			_mapBundleProperty = serializedObject.FindProperty("mapBundle");
+			_receiverProperty = serializedObject.FindProperty("_receiver");
+			_addressProperty = serializedObject.FindProperty("_address");
+			_mapBundleProperty = serializedObject.FindProperty("_mapBundle");
 		}
 
 		public override void OnInspectorGUI()

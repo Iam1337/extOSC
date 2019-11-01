@@ -56,9 +56,9 @@ namespace extOSC.Editor.Components
 
 			_ping = target as OSCPingClient;
 
-			_intervalProperty = serializedObject.FindProperty("interval");
-			_timeoutProperty = serializedObject.FindProperty("timeout");
-			_autoStartProperty = serializedObject.FindProperty("autoStart");
+			_intervalProperty = serializedObject.FindProperty("_interval");
+			_timeoutProperty = serializedObject.FindProperty("_timeout");
+			_autoStartProperty = serializedObject.FindProperty("_autoStart");
 
 			EditorApplication.update += Update;
 		}

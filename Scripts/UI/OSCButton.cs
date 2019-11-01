@@ -196,7 +196,7 @@ namespace extOSC.UI
 		public void Rebuild(CanvasUpdate executing)
 		{
 #if UNITY_EDITOR
-			if (executing == CanvasUpdate.Prelayout)
+			if (executing == CanvasUpdate.Prelayout && _onValueChanged != null)
 				_onValueChanged.Invoke(_value);
 #endif
 		}

@@ -38,9 +38,9 @@ namespace extOSC.Editor.Components
 		{
 			_transmitterComponent = target as OSCTransmitterComponent;
 
-			_transmitterProperty = serializedObject.FindProperty("transmitter");
-			_addressProperty = serializedObject.FindProperty("address");
-			_mapBundleProperty = serializedObject.FindProperty("mapBundle");
+			_transmitterProperty = serializedObject.FindProperty("_transmitter");
+			_addressProperty = serializedObject.FindProperty("_address");
+			_mapBundleProperty = serializedObject.FindProperty("_mapBundle");
 		}
 
 		protected virtual void OnDisable()

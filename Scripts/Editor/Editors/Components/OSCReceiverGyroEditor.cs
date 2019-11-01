@@ -47,8 +47,8 @@ namespace extOSC.Editor.Components
 		{
 			base.OnEnable();
 
-			_speedProperty = serializedObject.FindProperty("speed");
-			_modeProperty = serializedObject.FindProperty("mode");
+			_speedProperty = serializedObject.FindProperty("_speed");
+			_modeProperty = serializedObject.FindProperty("_mode");
 		}
 
 		protected override void DrawSettings()

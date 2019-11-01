@@ -44,7 +44,7 @@ namespace extOSC.Editor.Components
 
 			_receiverReflection = target as OSCReceiverReflection;
 			_targetTitleContent.text = $"Target ({_receiverReflection.ReceiverType.Name}):";
-			_reflectionMembersProperty = serializedObject.FindProperty("reflectionMembers");
+			_reflectionMembersProperty = serializedObject.FindProperty("_reflectionMembers");
 
 			// Setup list.
 			_reflectionMembersList = new ReorderableList(serializedObject, _reflectionMembersProperty);
