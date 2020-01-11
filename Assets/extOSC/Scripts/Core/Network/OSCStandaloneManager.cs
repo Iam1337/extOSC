@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace extOSC.Core.Network
 {
-    internal static class OSCStandaloneManager
+	internal static class OSCStandaloneManager
 	{
 		#region Extensions
 
@@ -25,7 +25,7 @@ namespace extOSC.Core.Network
 
 		#region Static Private Vars
 
-        private static readonly List<ClientInfo> _clientsList = new List<ClientInfo>();
+		private static readonly List<ClientInfo> _clientsList = new List<ClientInfo>();
 
 		#endregion
 
@@ -33,30 +33,30 @@ namespace extOSC.Core.Network
 
 		public static UdpClient Create(string localHost, int localPort)
 		{
-            var localEndPoint = new IPEndPoint(IPAddress.Parse(localHost), localPort);
-		    var clientInfo = _clientsList.FirstOrDefault(c => c.Client.Client.LocalEndPoint != null &&
-		                                                      c.Client.Client.LocalEndPoint.Equals(localEndPoint));
+			var localEndPoint = new IPEndPoint(IPAddress.Parse(localHost), localPort);
+			var clientInfo = _clientsList.FirstOrDefault(c => c.Client.Client.LocalEndPoint != null &&
+															  c.Client.Client.LocalEndPoint.Equals(localEndPoint));
 
-            if (clientInfo == null)
-		    {
-		        clientInfo = new ClientInfo();
-                clientInfo.Client = new UdpClient(localEndPoint);
-		        clientInfo.Client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-		        clientInfo.Client.DontFragment = true;
+			if (clientInfo == null)
+			{
+				clientInfo = new ClientInfo();
+				clientInfo.Client = new UdpClient(localEndPoint);
+				clientInfo.Client.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+				clientInfo.Client.DontFragment = true;
 
-		        _clientsList.Add(clientInfo);
-            }
+				_clientsList.Add(clientInfo);
+			}
 
-		    clientInfo.Links++;
+			clientInfo.Links++;
 
-            return clientInfo.Client;
+			return clientInfo.Client;
 		}
 
 		public static void Close(UdpClient client)
 		{
-		    var clientInfo = _clientsList.FirstOrDefault(c => c.Client == client);
-            if (clientInfo == null)
-                throw new Exception();
+			var clientInfo = _clientsList.FirstOrDefault(c => c.Client == client);
+			if (clientInfo == null)
+				throw new Exception();
 
 			clientInfo.Links--;
 
@@ -69,8 +69,8 @@ namespace extOSC.Core.Network
 			}
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
 
 #endif

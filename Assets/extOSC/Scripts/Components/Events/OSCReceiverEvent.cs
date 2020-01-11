@@ -6,22 +6,22 @@ using UnityEngine.Events;
 namespace extOSC.Components.Events
 {
 	public abstract class OSCReceiverEvent<T> : OSCReceiverComponent where T : UnityEventBase
-    {
-        #region Public Vars
+	{
+		#region Public Vars
 
 		public T OnReceive
-        {
-            get => onReceive;
+		{
+			get => onReceive;
 			set => onReceive = value;
 		}
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Protected Vars
 
-        [SerializeField]
-        protected T onReceive;
+		[SerializeField]
+		protected T onReceive;
 
-        #endregion
-    }
+		#endregion
+	}
 }

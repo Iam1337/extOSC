@@ -2,8 +2,6 @@
 
 using UnityEngine;
 
-using System.Collections.Generic;
-
 using extOSC.Core.Events;
 
 namespace extOSC.Components.Events

@@ -8,11 +8,11 @@ namespace extOSC.Core.Packers
 
 		public override OSCValueType PackerType => OSCValueType.Midi;
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override OSCMidi BytesToValue(byte[] buffer, ref int index)
+		protected override OSCMidi BytesToValue(byte[] buffer, ref int index)
 		{
 			index += 4;
 

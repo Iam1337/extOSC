@@ -7,7 +7,7 @@ using System;
 namespace extOSC.Core.Events
 {
 	[Obsolete]
-    public interface IOSCEvent
+	public interface IOSCEvent
 	{
 		Type EventType { get; }
 	}
@@ -28,7 +28,7 @@ namespace extOSC.Core.Events
 
 	[Serializable]
 	[Obsolete]
-    public class OSCEvent<T> : UnityEvent<T>, IOSCEvent
+	public class OSCEvent<T> : UnityEvent<T>, IOSCEvent
 	{
 		#region Public Vars
 

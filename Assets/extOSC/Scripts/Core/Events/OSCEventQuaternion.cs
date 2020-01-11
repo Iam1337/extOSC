@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [System.Serializable]
-    public class OSCEventQuaternion : UnityEvent<Quaternion>
-    { }
+	[System.Serializable]
+	public class OSCEventQuaternion : UnityEvent<Quaternion>
+	{ }
 }

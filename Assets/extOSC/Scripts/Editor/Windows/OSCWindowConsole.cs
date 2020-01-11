@@ -129,11 +129,11 @@ namespace extOSC.Editor.Windows
 
 		private OSCPanelPacket _packetPanel;
 
-        #endregion
+		#endregion
 
-        #region Unity Methods
+		#region Unity Methods
 
-        protected override void OnEnable()
+		protected override void OnEnable()
 		{
 			_logPanel = new OSCPanelConsole(this, "oscLogPanel1");
 			_packetPanel = new OSCPanelPacket(this, "oscPacketPanel1");

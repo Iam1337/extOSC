@@ -8,14 +8,11 @@ namespace extOSC.Core.Packers
 
 		public override OSCValueType PackerType => OSCValueType.False;
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override bool BytesToValue(byte[] buffer, ref int index)
-		{
-			return false;
-		}
+		protected override bool BytesToValue(byte[] buffer, ref int index) => false;
 
 		protected override void ValueToBytes(byte[] buffer, ref int index, bool value)
 		{ }

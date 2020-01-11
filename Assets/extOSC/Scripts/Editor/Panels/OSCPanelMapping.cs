@@ -31,7 +31,7 @@ namespace extOSC.Editor.Panels
 
 		private static readonly GUIContent _addMapValueContent = new GUIContent("Add Map Value");
 
-		private static readonly GUIContent _maximusContent = new GUIContent("Maximum:");
+		private static readonly GUIContent _maximumContent = new GUIContent("Maximum:");
 
 		private static readonly GUIContent _minimumContent = new GUIContent("Minimum: ");
 
@@ -104,7 +104,7 @@ namespace extOSC.Editor.Panels
 		{
 			var defaultColor = GUI.color;
 			var createMapButton = false;
-			
+
 			using (new GUILayout.HorizontalScope(EditorStyles.toolbar))
 			{
 				createMapButton = GUILayout.Button(_createContent, EditorStyles.toolbarButton);
@@ -316,7 +316,7 @@ namespace extOSC.Editor.Panels
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-			GUILayout.Label(_maximusContent);
+			GUILayout.Label(_maximumContent);
 			mapValue.InputMax = EditorGUILayout.FloatField(mapValue.InputMax);
 			EditorGUILayout.EndHorizontal();
 
@@ -336,7 +336,7 @@ namespace extOSC.Editor.Panels
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-			GUILayout.Label(_maximusContent);
+			GUILayout.Label(_maximumContent);
 			mapValue.OutputMax = EditorGUILayout.FloatField(mapValue.OutputMax);
 			EditorGUILayout.EndHorizontal();
 
@@ -371,7 +371,7 @@ namespace extOSC.Editor.Panels
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-			GUILayout.Label(_maximusContent);
+			GUILayout.Label(_maximumContent);
 			mapValue.InputMax = EditorGUILayout.IntField((int) mapValue.InputMax);
 			EditorGUILayout.EndHorizontal();
 
@@ -391,7 +391,7 @@ namespace extOSC.Editor.Panels
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-			GUILayout.Label(_maximusContent);
+			GUILayout.Label(_maximumContent);
 			mapValue.OutputMax = EditorGUILayout.IntField((int) mapValue.OutputMax);
 			EditorGUILayout.EndHorizontal();
 

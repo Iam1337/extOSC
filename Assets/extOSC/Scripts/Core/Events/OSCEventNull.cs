@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [System.Serializable]
-    public class OSCEventNull : UnityEvent
-    { }
+	[System.Serializable]
+	public class OSCEventNull : UnityEvent
+	{ }
 }

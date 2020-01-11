@@ -11,11 +11,11 @@ namespace extOSC.Core.Packers
 
 		public override OSCValueType PackerType => OSCValueType.String;
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override string BytesToValue(byte[] buffer, ref int index)
+		protected override string BytesToValue(byte[] buffer, ref int index)
 		{
 			var length = 0;
 			var position = index;

@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [System.Serializable]
-    public class OSCEventVector2 : UnityEvent<Vector2>
-    { }
+	[System.Serializable]
+	public class OSCEventVector2 : UnityEvent<Vector2>
+	{ }
 }

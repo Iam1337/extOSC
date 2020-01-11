@@ -10,11 +10,11 @@ namespace extOSC.Core.Packers
 
 		public override OSCValueType PackerType => OSCValueType.Int;
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private readonly byte[] _data = new byte[sizeof(int)];
+		private readonly byte[] _data = new byte[sizeof(int)];
 
 		#endregion
 

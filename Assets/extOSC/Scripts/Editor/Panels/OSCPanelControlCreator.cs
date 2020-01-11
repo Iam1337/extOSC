@@ -108,9 +108,9 @@ namespace extOSC.Editor.Panels
 
 				InformerAddress = EditorGUILayout.TextField(_oscAddressContent, InformerAddress);
 				InformerTransmitter = OSCEditorInterface.PopupLayout(_oscTransmitterContent,
-																	  InformerTransmitter,
-																	  content,
-																	  objects);
+																	 InformerTransmitter,
+																	 content,
+																	 objects);
 
 				GUI.color = InformOnChanged ? Color.green : Color.red;
 				if (GUILayout.Button(_informOnChangedContent))
@@ -155,10 +155,7 @@ namespace extOSC.Editor.Panels
 
 		#region Private Methods
 
-		private string TransmitterCallback(OSCTransmitter transmitter)
-		{
-			return $"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}";
-		}
+		private string TransmitterCallback(OSCTransmitter transmitter) => $"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}";
 
 		#endregion
 	}

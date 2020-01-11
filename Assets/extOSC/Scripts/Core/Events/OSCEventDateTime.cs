@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [System.Serializable]
-    public class OSCEventDateTime : UnityEvent<System.DateTime>
-    { }
+	[System.Serializable]
+	public class OSCEventDateTime : UnityEvent<System.DateTime>
+	{ }
 }

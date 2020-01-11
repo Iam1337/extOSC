@@ -64,13 +64,13 @@ namespace extOSC.Editor.Windows
 
 		public bool IsValid => _createCallback != null && _menuCommand != null;
 
-        #endregion
+		#endregion
 
 		#region Private Vars
 
 		private MenuCommand _menuCommand;
 
-        private Action<ControlData, MenuCommand> _createCallback;
+		private Action<ControlData, MenuCommand> _createCallback;
 
 		private readonly string _controlColorSettings = OSCEditorSettings.ControlCreator + "controlcolor";
 

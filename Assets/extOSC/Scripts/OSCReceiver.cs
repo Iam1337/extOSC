@@ -306,10 +306,7 @@ namespace extOSC
 
 		private string RequestLocalHost()
 		{
-			if (_localHostMode == OSCLocalHostMode.Any)
-				return "0.0.0.0";
-
-			return _localHost;
+			return _localHostMode == OSCLocalHostMode.Any ? "0.0.0.0" : _localHost;
 		}
 
 		#endregion
