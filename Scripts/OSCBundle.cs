@@ -8,18 +8,18 @@ using extOSC.Core;
 
 namespace extOSC
 {
-    public class OSCBundle : IOSCPacket
-    {
-        #region Constants
+	public class OSCBundle : IOSCPacket
+	{
+		#region Constants
 
 		[Obsolete("Use BundleAddress constant.")]
 		public const string KBundle = "#bundle";
 
-        public const string BundleAddress = "#bundle";
+		public const string BundleAddress = "#bundle";
 
-        #endregion
+		#endregion
 
-        #region Public Vars
+		#region Public Vars
 
 		public string Address => "#bundle";
 
@@ -33,9 +33,10 @@ namespace extOSC
 
 		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
-        public OSCBundle() { }
+		public OSCBundle()
+		{ }
 
 		public OSCBundle(params IOSCPacket[] packets)
 		{
@@ -43,7 +44,7 @@ namespace extOSC
 		}
 
 		public void AddPacket(IOSCPacket packet)
-        {
+		{
 			if (packet == null)
 				throw new NullReferenceException(nameof(packet));
 
@@ -71,7 +72,7 @@ namespace extOSC
 			}
 
 			return new OSCBundle(packets);
-        }
+		}
 
 		public override string ToString()
 		{
@@ -90,6 +91,6 @@ namespace extOSC
 			return $"<{GetType().Name}> : {(string.IsNullOrEmpty(stringValues) ? "null" : stringValues)}";
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

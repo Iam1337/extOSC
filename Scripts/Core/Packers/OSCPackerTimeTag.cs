@@ -17,11 +17,11 @@ namespace extOSC.Core.Packers
 
 		public override OSCValueType PackerType => OSCValueType.TimeTag;
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
-        private readonly byte[] _dataSeconds = new byte[sizeof(uint)];
+		private readonly byte[] _dataSeconds = new byte[sizeof(uint)];
 
 		private readonly byte[] _dataMilliseconds = new byte[sizeof(uint)];
 

@@ -7,6 +7,7 @@ namespace extOSC.Core.Packers
 	internal class OSCPackerBlob : OSCPacker<byte[]>
 	{
 		#region Public Methods
+
 		public override OSCValueType PackerType => OSCValueType.Blob;
 
 		#endregion

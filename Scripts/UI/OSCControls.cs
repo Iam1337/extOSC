@@ -405,7 +405,7 @@ namespace extOSC.UI
 
 			return (GameObject) _createUIElementRootMethod.Invoke(null, new object[] {name, size});
 #endif
-        }
+		}
 
 		private static GameObject CreateUIObject(string name, GameObject parent)
 		{
@@ -435,6 +435,6 @@ namespace extOSC.UI
 			_setDefaultColorTransitionMethod.Invoke(null, new object[] {slider});
 		}
 
-#endregion
+		#endregion
 	}
 }

@@ -10,48 +10,48 @@ using System.Net.Sockets;
 
 namespace extOSC.Core.Network
 {
-    internal class OSCTransmitterStandaloneBackend : OSCTransmitterBackend
-    {
-        #region Public Vars
+	internal class OSCTransmitterStandaloneBackend : OSCTransmitterBackend
+	{
+		#region Public Vars
 
-        public override bool IsAvailable
-        {
-            get { return _client != null; }
-        }
+		public override bool IsAvailable
+		{
+			get { return _client != null; }
+		}
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
 		private IPEndPoint _remoteEndPoint;
 
 		private IPEndPoint _localEndPoint;
 
-        private UdpClient _client;
+		private UdpClient _client;
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
 		public override void Connect(string localHost, int localPort)
-        {
-            if (_client != null)
-                Close();
+		{
+			if (_client != null)
+				Close();
 
 			try
 			{
 				_client = OSCStandaloneManager.Create(localHost, localPort);
-            }
+			}
 			catch (SocketException e)
 			{
 				if (e.ErrorCode == 10048)
 				{
 					Debug.LogError($"[OSCTransmitter] Socket Error: Could not use local port {localPort} because another application is listening on it.");
 				}
-                else if (e.ErrorCode == 10049)
-			    {
-			        Debug.LogError($"[OSCTransmitter] Socket Error: Could not use local host \"{localHost}\". Cannot assign requested address.");
-                }
+				else if (e.ErrorCode == 10049)
+				{
+					Debug.LogError($"[OSCTransmitter] Socket Error: Could not use local host \"{localHost}\". Cannot assign requested address.");
+				}
 				else
 				{
 					Debug.LogError($"[OSCTransmitter] Socket Error: Error Code {e.ErrorCode}.\n{e.Message}");
@@ -71,37 +71,37 @@ namespace extOSC.Core.Network
 
 				Close();
 			}
-        }
+		}
 
 		public override void RefreshRemote(string remoteHost, int remotePort)
-        {
+		{
 			_remoteEndPoint = new IPEndPoint(IPAddress.Parse(remoteHost), remotePort);
-        }
+		}
 
-        public override void Close()
-        {
-            if (_client != null)
-			    OSCStandaloneManager.Close(_client);
+		public override void Close()
+		{
+			if (_client != null)
+				OSCStandaloneManager.Close(_client);
 
-            _client = null;
-        }
+			_client = null;
+		}
 
-        public override void Send(byte[] data, int length)
-        {
-            if (_client == null) return;
+		public override void Send(byte[] data, int length)
+		{
+			if (_client == null) return;
 
-            try
-            {
-                _client.Send(data, length, _remoteEndPoint);
-            }
-            catch (SocketException exception)
-            {
-                Debug.LogWarningFormat("[OSCTransmitter] Error: {0}", exception);
-            }
-        }
+			try
+			{
+				_client.Send(data, length, _remoteEndPoint);
+			}
+			catch (SocketException exception)
+			{
+				Debug.LogWarningFormat("[OSCTransmitter] Error: {0}", exception);
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
 
 #endif

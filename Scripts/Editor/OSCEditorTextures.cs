@@ -15,8 +15,6 @@ namespace extOSC.Editor
 
 		private static Texture2D _iwIconSmall;
 
-		private static Texture2D _unityOSCTexture;
-
 		private static Texture2D _splitterTexture;
 
 		private static Texture2D _receiverTexture;

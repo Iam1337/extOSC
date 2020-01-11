@@ -36,7 +36,7 @@ namespace extOSC.Components
 		[OSCSelector]
 		[SerializeField]
 		[FormerlySerializedAs("transmitter")]
-        private OSCTransmitter _transmitter;
+		private OSCTransmitter _transmitter;
 
 		[SerializeField]
 		[FormerlySerializedAs("address")]

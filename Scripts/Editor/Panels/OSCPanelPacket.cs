@@ -23,14 +23,14 @@ namespace extOSC.Editor.Panels
 
 		public OSCConsolePacket SelectedMessage;
 
-        #endregion
+		#endregion
 
-        #region Private Vars
+		#region Private Vars
 
 		private readonly OSCPacketDrawer _packetDrawer;
 
-        private Vector2 _scrollPosition;
-		
+		private Vector2 _scrollPosition;
+
 		#endregion
 
 		#region Public Methods

@@ -1,5 +1,7 @@
 ﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
 
+using System;
+
 using UnityEngine;
 using UnityEditor;
 
@@ -9,6 +11,7 @@ namespace extOSC.Editor
 	{
 		#region Static Public Vars
 
+		[Obsolete]
 		public static string Settings => _settingRoot;
 
 		public static string Console => _consoleRoot;

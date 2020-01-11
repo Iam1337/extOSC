@@ -34,7 +34,7 @@ namespace extOSC.Components.Misc
 
 		#region Private Vars
 
-        [Range(0, 60)]
+		[Range(0, 60)]
 		[SerializeField]
 		[FormerlySerializedAs("interval")]
 		private float _interval = 1;

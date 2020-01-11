@@ -9,40 +9,40 @@ using extOSC.Core.Events;
 
 namespace extOSC
 {
-    public class OSCBind : IOSCBind
-    {
-        #region Public Vars
+	public class OSCBind : IOSCBind
+	{
+		#region Public Vars
 
-        public string ReceiverAddress => _address;
+		public string ReceiverAddress => _address;
 
 		public OSCEventMessage Callback
-        {
-            get => _callback;
+		{
+			get => _callback;
 			set => _callback = value;
 		}
 
-        #endregion
+		#endregion
 
-        #region Protected Vars
+		#region Protected Vars
 
-        [SerializeField]
+		[SerializeField]
 		[FormerlySerializedAs("address")]
-        private string _address;
+		private string _address;
 
-        [SerializeField]
+		[SerializeField]
 		[FormerlySerializedAs("callback")]
-        private OSCEventMessage _callback = new OSCEventMessage();
+		private OSCEventMessage _callback = new OSCEventMessage();
 
-        #endregion
+		#endregion
 
-        #region Public Methods
+		#region Public Methods
 
 		public OSCBind(string address, UnityAction<OSCMessage> callback)
-        {
-            _address = address;
-            _callback.AddListener(callback);
-        }
+		{
+			_address = address;
+			_callback.AddListener(callback);
+		}
 
-        #endregion
+		#endregion
 	}
 }

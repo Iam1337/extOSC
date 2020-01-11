@@ -8,14 +8,11 @@ namespace extOSC.Core.Packers
 
 		public override OSCValueType PackerType => OSCValueType.Impulse;
 
-        #endregion
+		#endregion
 
-        #region Protected Methods
+		#region Protected Methods
 
-        protected override object BytesToValue(byte[] buffer, ref int index)
-		{
-			return null;
-		}
+		protected override object BytesToValue(byte[] buffer, ref int index) => null;
 
 		protected override void ValueToBytes(byte[] buffer, ref int index, object value)
 		{ }

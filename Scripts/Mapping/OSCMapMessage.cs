@@ -31,11 +31,11 @@ namespace extOSC.Mapping
 
 		[SerializeField]
 		[FormerlySerializedAs("address")]
-        private string _address = "/address";
+		private string _address = "/address";
 
 		[SerializeField]
 		[FormerlySerializedAs("values")]
-        private List<OSCMapValue> _values = new List<OSCMapValue>();
+		private List<OSCMapValue> _values = new List<OSCMapValue>();
 
 		#endregion
 

@@ -68,7 +68,7 @@ namespace extOSC.Components
 		[OSCSelector]
 		[SerializeField]
 		[FormerlySerializedAs("receiver")]
-        private OSCReceiver _receiver;
+		private OSCReceiver _receiver;
 
 		[SerializeField]
 		[FormerlySerializedAs("address")]

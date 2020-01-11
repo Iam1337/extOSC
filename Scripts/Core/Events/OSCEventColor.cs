@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace extOSC.Core.Events
 {
-    [System.Serializable]
-    public class OSCEventColor : UnityEvent<Color>
-    { }
+	[System.Serializable]
+	public class OSCEventColor : UnityEvent<Color>
+	{ }
 }
