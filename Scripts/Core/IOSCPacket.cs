@@ -6,11 +6,11 @@ namespace extOSC.Core
 {
 	public interface IOSCPacket
 	{
-        #region Vars
+		#region Vars
 
 		string Address { get; }
 
-        IPAddress Ip { get; set; }
+		IPAddress Ip { get; set; }
 
 		int Port { get; set; }
 
