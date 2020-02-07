@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2019 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
 #if !NETFX_CORE
 
