@@ -108,11 +108,17 @@ namespace extOSC
 
 		private readonly Queue<IOSCPacket> _packets = new Queue<IOSCPacket>();
 
-		private readonly List<IOSCBind> _bindings = new List<IOSCBind>();
+		private readonly List<IOSCBind> _messageBindings = new List<IOSCBind>();
 
-		private readonly Stack<IOSCBind> _bindStack = new Stack<IOSCBind>();
+		private readonly Stack<IOSCBind> _messageBindStack = new Stack<IOSCBind>();
 
-		private readonly Stack<IOSCBind> _unbindStack = new Stack<IOSCBind>();
+		private readonly Stack<IOSCBind> _messageUnbindStack = new Stack<IOSCBind>();
+
+		private readonly List<IOSCBindBundle> _bundleBindings = new List<IOSCBindBundle>();
+
+		private readonly Stack<IOSCBindBundle> _bundleBindStack = new Stack<IOSCBindBundle>();
+
+		private readonly Stack<IOSCBindBundle> _bundleUnbindStack = new Stack<IOSCBindBundle>();
 
 		private readonly object _lock = new object();
 
@@ -180,25 +186,26 @@ namespace extOSC
 				_receiverBackend.Close();
 		}
 
+		// IOSCBind
 		public void Bind(IOSCBind bind)
 		{
-			if (bind == null) return;
+			if (bind == null) return; // TODO: Exception.
 
 			if (string.IsNullOrEmpty(bind.ReceiverAddress))
 			{
-				Debug.Log("[OSCReceiver] Address can not be empty!");
-				return;
+				Debug.LogError("[OSCReceiver] Address can not be empty!");
+				return; // TODO: Exception.
 			}
 
 			if (_processMessage)
 			{
-				_bindStack.Push(bind);
+				_messageBindStack.Push(bind);
 
 				return;
 			}
 
-			if (!_bindings.Contains(bind))
-				_bindings.Add(bind);
+			if (!_messageBindings.Contains(bind))
+				_messageBindings.Add(bind);
 		}
 
 		public OSCBind Bind(string address, UnityAction<OSCMessage> callback)
@@ -216,18 +223,65 @@ namespace extOSC
 
 			if (_processMessage)
 			{
-				_unbindStack.Push(bind);
+				_messageUnbindStack.Push(bind);
 
 				return;
 			}
 
-			if (_bindings.Contains(bind))
-				_bindings.Remove(bind);
+			if (_messageBindings.Contains(bind))
+				_messageBindings.Remove(bind);
+		}
+
+		// IOSCBindBundle
+		public void Bind(IOSCBindBundle bind)
+		{
+			if (bind == null)
+				throw new ArgumentNullException(nameof(bind));
+
+			if (_processMessage)
+			{
+				_bundleBindStack.Push(bind);
+
+				return;
+			}
+
+			if (_bundleBindings.Contains(bind))
+				throw new Exception("[OSCReceiver] Bind already binded.");
+
+			_bundleBindings.Add(bind);
+		}
+
+		public OSCBindBundle Bind(UnityAction<OSCBundle> callback)
+		{
+			var bind = new OSCBindBundle(callback);
+
+			Bind(bind);
+
+			return bind;
+		}
+
+		public void Unbind(IOSCBindBundle bind)
+		{
+			if (bind == null)
+				throw new ArgumentNullException(nameof(bind));
+
+			if (_processMessage)
+			{
+				_bundleUnbindStack.Push(bind);
+
+				return;
+			}
+
+			if (!_bundleBindings.Contains(bind))
+				throw new Exception("[OSCReceiver] Bind already unbinded.");
+
+			_bundleBindings.Remove(bind);
 		}
 
 		public void ClearBinds()
 		{
-			_bindings.Clear();
+			_messageBindings.Clear();
+			_bundleBindings.Clear();
 		}
 
 		[Obsolete("Use ClearBinds() method.")]
@@ -256,6 +310,12 @@ namespace extOSC
 		{
 			if (bundle == null) return;
 
+			foreach (var bind in _bundleBindings)
+			{
+				if (bind != null && bind.Callback != null)
+					bind.Callback.Invoke(bundle);
+			}
+
 			foreach (var packet in bundle.Packets)
 			{
 				InvokePacket(packet);
@@ -266,12 +326,12 @@ namespace extOSC
 		{
 			if (message == null) return;
 
-			_bindStack.Clear();
-			_bindStack.Clear();
+			_messageBindStack.Clear();
+			_messageBindStack.Clear();
 
 			_processMessage = true;
 
-			foreach (var bind in _bindings)
+			foreach (var bind in _messageBindings)
 			{
 				if (bind == null) continue;
 
@@ -284,14 +344,24 @@ namespace extOSC
 
 			_processMessage = false;
 
-			while (_bindStack.Count > 0)
+			while (_messageBindStack.Count > 0)
 			{
-				Bind(_bindStack.Pop());
+				Bind(_messageBindStack.Pop());
 			}
 
-			while (_unbindStack.Count > 0)
+			while (_messageUnbindStack.Count > 0)
 			{
-				Unbind(_unbindStack.Pop());
+				Unbind(_messageUnbindStack.Pop());
+			}
+
+			while (_bundleBindStack.Count > 0)
+			{
+				Bind(_bundleBindStack.Pop());
+			}
+
+			while (_bundleUnbindStack.Count > 0)
+			{
+				Unbind(_bundleUnbindStack.Pop());
 			}
 		}
 
