@@ -87,7 +87,8 @@ namespace extOSC.Core.Network
 
 		public override void Close()
 		{
-			OSCStandaloneManager.Close(_client);
+			if (_client != null)
+				OSCStandaloneManager.Close(_client);
 
 			_isRunning = false;
 			_client = null;
