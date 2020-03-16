@@ -32,6 +32,8 @@ namespace extOSC.Components.ReceiverReflections
 
 		protected override void OnEnable()
 		{
+			base.OnEnable();
+
 			UpdateCachedReferences();
 		}
 
