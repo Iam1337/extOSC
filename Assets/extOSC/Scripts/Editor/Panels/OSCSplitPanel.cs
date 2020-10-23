@@ -20,7 +20,7 @@ namespace extOSC.Editor.Panels
 			Vertical
 		}
 
-		private class PanelData
+		private class PanelContainer
 		{
 			public OSCPanel Panel;
 
@@ -37,9 +37,9 @@ namespace extOSC.Editor.Panels
 
 			public OSCPanel SecondPanel;
 
-			public PanelData FirstData;
+			public PanelContainer LeftTopContainer;
 
-			public PanelData SecondData;
+			public PanelContainer RightDownContainer;
 
 			public Rect SplitterRect;
 		}
@@ -47,8 +47,6 @@ namespace extOSC.Editor.Panels
 		#endregion
 
 		#region Public Vars
-
-		public bool ShowSplitters = true;
 
 		public float SplitterSize = 1;
 
@@ -64,7 +62,7 @@ namespace extOSC.Editor.Panels
 
 		private readonly List<Splitter> _splitters = new List<Splitter>();
 
-		private readonly List<PanelData> _storedPanelData = new List<PanelData>();
+		private readonly List<PanelContainer> _panelContainers = new List<PanelContainer>();
 
 		private Splitter _selectedSplitter;
 
@@ -72,54 +70,55 @@ namespace extOSC.Editor.Panels
 
 		#region Public Methods
 
-		public OSCSplitPanel(OSCWindow window, string panelId) : base(window, panelId)
+		public OSCSplitPanel(OSCWindow window) : base(window)
 		{ }
 
 		public void AddPanel(OSCPanel panel, float minimalSize, float size = 0.5f)
 		{
-			var data = new PanelData();
+			var data = new PanelContainer();
 			data.Panel = panel;
 			data.MinimumSizePixel = minimalSize;
 			data.Size = size;
 
-			_storedPanelData.Add(data);
+			_panelContainers.Add(data);
 
 			var fullSize = 0f;
 
-			foreach (var storedData in _storedPanelData)
+			foreach (var storedData in _panelContainers)
 			{
 				fullSize += storedData.Size;
 			}
 
 			if (fullSize > 1f)
 			{
-				foreach (var storedData in _storedPanelData)
+				foreach (var panelContainer in _panelContainers)
 				{
-					storedData.Size = 1f / _storedPanelData.Count;
+					panelContainer.Size = 1f / _panelContainers.Count;
 				}
 			}
 
-			if (_storedPanelData.Count < 2) return;
+			if (_panelContainers.Count < 2)
+				return;
 
 			_splitters.Clear();
 			_selectedSplitter = null;
 
 			Splitter previousSplitter = null;
 
-			foreach (var storedData in _storedPanelData)
+			foreach (var panelContainer in _panelContainers)
 			{
 				if (previousSplitter != null)
 				{
-					previousSplitter.SecondPanel = storedData.Panel;
-					previousSplitter.SecondData = storedData;
+					previousSplitter.SecondPanel = panelContainer.Panel;
+					previousSplitter.RightDownContainer = panelContainer;
 
 					_splitters.Add(previousSplitter);
 				}
 
 				previousSplitter = new Splitter()
 				{
-					FirstPanel = storedData.Panel,
-					FirstData = storedData
+					FirstPanel = panelContainer.Panel,
+					LeftTopContainer = panelContainer
 				};
 			}
 
@@ -130,9 +129,9 @@ namespace extOSC.Editor.Panels
 		{
 			var minimumSize = 0f;
 
-			foreach (var storedData in _storedPanelData)
+			foreach (var panelContainer in _panelContainers)
 			{
-				if (storedData.Panel is OSCSplitPanel splitPanel)
+				if (panelContainer.Panel is OSCSplitPanel splitPanel)
 				{
 					if (splitPanel.Orientation == orientation)
 					{
@@ -142,13 +141,15 @@ namespace extOSC.Editor.Panels
 
 				if (orientation == Orientation)
 				{
-					minimumSize += storedData.MinimumSizePixel;
+					minimumSize += panelContainer.MinimumSizePixel;
 				}
 
-				if (ShowSplitters) minimumSize += _splitterMargin * 2f + SplitterSize;
+				if (SplitterSize > 0)
+					minimumSize += _splitterMargin * 2f + SplitterSize;
 			}
 
-			if (ShowSplitters) minimumSize -= _splitterMargin * 2f + SplitterSize;
+			if (SplitterSize > 0)
+				minimumSize -= _splitterMargin * 2f + SplitterSize;
 
 			return minimumSize;
 		}
@@ -159,21 +160,21 @@ namespace extOSC.Editor.Panels
 
 		protected override void DrawContent(ref Rect contentRect)
 		{
-			if (ShowSplitters)
+			if (SplitterSize > 0)
 			{
 				if (Orientation == SplitOrientation.Horizontal)
 				{
-					contentRect.width -= Mathf.Max(_storedPanelData.Count - 1, 0) * (SplitterSize + _splitterMargin * 2);
+					contentRect.width -= Mathf.Max(_panelContainers.Count - 1, 0) * (SplitterSize + _splitterMargin * 2);
 				}
 				else if (Orientation == SplitOrientation.Vertical)
 				{
-					contentRect.height -= Mathf.Max(_storedPanelData.Count - 1, 0) * (SplitterSize + _splitterMargin * 2);
+					contentRect.height -= Mathf.Max(_panelContainers.Count - 1, 0) * (SplitterSize + _splitterMargin * 2);
 				}
 			}
 
 			var step = 0f;
 
-			foreach (var data in _storedPanelData)
+			foreach (var data in _panelContainers)
 			{
 				var panel = data.Panel;
 				var panelRect = new Rect();
@@ -208,7 +209,7 @@ namespace extOSC.Editor.Panels
 				panel.Rect = panelRect;
 				panel.Draw();
 
-				if (ShowSplitters)
+				if (SplitterSize > 0)
 				{
 					var splitter = GetSplitter(panel);
 					if (splitter != null)
@@ -276,7 +277,7 @@ namespace extOSC.Editor.Panels
 						{
 							var pixelSize = 0f;
 							var newPixelSize = 0f;
-							var fullSize = _selectedSplitter.FirstData.Size + _selectedSplitter.SecondData.Size;
+							var fullSize = _selectedSplitter.LeftTopContainer.Size + _selectedSplitter.RightDownContainer.Size;
 
 							if (Orientation == SplitOrientation.Horizontal)
 							{
@@ -293,15 +294,15 @@ namespace extOSC.Editor.Panels
 								newPixelSize = _selectedSplitter.FirstPanel.Rect.height + Event.current.delta.y;
 							}
 
-							var firstSize = Mathf.Clamp(newPixelSize / pixelSize, _selectedSplitter.FirstData.MinimumSize / fullSize, 1);
-							var secondSize = Mathf.Clamp(1f - firstSize, _selectedSplitter.SecondData.MinimumSize / fullSize, 1);
+							var firstSize = Mathf.Clamp(newPixelSize / pixelSize, _selectedSplitter.LeftTopContainer.MinimumSize / fullSize, 1);
+							var secondSize = Mathf.Clamp(1f - firstSize, _selectedSplitter.RightDownContainer.MinimumSize / fullSize, 1);
 							firstSize = 1f - secondSize; // Idk how it work...
 
 							firstSize = fullSize * firstSize;
 							secondSize = fullSize * secondSize;
 
-							_selectedSplitter.FirstData.Size = firstSize;
-							_selectedSplitter.SecondData.Size = secondSize;
+							_selectedSplitter.LeftTopContainer.Size = firstSize;
+							_selectedSplitter.RightDownContainer.Size = secondSize;
 
 							Window.Repaint();
 						}
@@ -328,9 +329,9 @@ namespace extOSC.Editor.Panels
 		{
 			if (Window == null) return;
 
-			foreach (var storedData in _storedPanelData)
+			foreach (var storedData in _panelContainers)
 			{
-				var key = string.Format("osc.editor.splitPanel.{2}.{0}.{1}", PanelId, storedData.Panel.PanelId, Window.GetType());
+				var key = string.Format($"osc.editor.splitPanel:{Window.GetType().FullName}>{storedData.Panel.GetType().FullName}");
 
 				storedData.Size = EditorPrefs.GetFloat(key, storedData.Size);
 			}
@@ -340,9 +341,9 @@ namespace extOSC.Editor.Panels
 		{
 			if (Window == null) return;
 
-			foreach (var storedData in _storedPanelData)
+			foreach (var storedData in _panelContainers)
 			{
-				var key = string.Format("osc.editor.splitPanel.{2}.{0}.{1}", PanelId, storedData.Panel.PanelId, Window.GetType());
+				var key = string.Format($"osc.editor.splitPanel:{Window.GetType().FullName}>{storedData.Panel.GetType().FullName}");
 
 				EditorPrefs.SetFloat(key, storedData.Size);
 			}

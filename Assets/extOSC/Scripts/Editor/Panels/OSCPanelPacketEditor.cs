@@ -39,16 +39,7 @@ namespace extOSC.Editor.Panels
 
 		public string FilePath;
 
-		public string PacketName
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(FilePath))
-					return "unnamed";
-
-				return Path.GetFileNameWithoutExtension(FilePath);
-			}
-		}
+		public string PacketName => string.IsNullOrEmpty(FilePath) ? "unnamed" : Path.GetFileNameWithoutExtension(FilePath);
 
 		#endregion
 
@@ -71,8 +62,7 @@ namespace extOSC.Editor.Panels
 				{
 					if (GUILayout.Button(_createContent, EditorStyles.toolbarDropDown))
 					{
-						var customMenuRect =
-							new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 0, 0);
+						var customMenuRect = new Rect(Event.current.mousePosition.x, Event.current.mousePosition.y, 0, 0);
 						EditorUtility.DisplayCustomMenu(customMenuRect, _createPopupItems, -1, CreatePacket, null);
 					}
 
@@ -88,13 +78,16 @@ namespace extOSC.Editor.Panels
 						SavePacket();
 					}
 
-					if (CurrentPacket != null)
+					if (contentRect.width > 470)
 					{
-						GUILayout.Space(5);
-
-						if (GUILayout.Button(_generateCodeContent, EditorStyles.toolbarButton))
+						if (CurrentPacket != null)
 						{
-							GenerateSharpCode();
+							GUILayout.Space(5);
+
+							if (GUILayout.Button(_generateCodeContent, EditorStyles.toolbarButton))
+							{
+								GenerateSharpCode();
+							}
 						}
 					}
 
@@ -122,7 +115,7 @@ namespace extOSC.Editor.Panels
 
 		#region Public Methods
 
-		public OSCPanelPacketEditor(OSCWindow window, string panelId) : base(window, panelId)
+		public OSCPanelPacketEditor(OSCWindow window) : base(window)
 		{
 			_packetDrawer = new OSCPacketEditableDrawer();
 		}
@@ -133,15 +126,7 @@ namespace extOSC.Editor.Panels
 
 		private void CreatePacket(object userData, string[] options, int selected)
 		{
-			if (selected == 0)
-			{
-				CurrentPacket = new OSCMessage("/address");
-			}
-			else
-			{
-				CurrentPacket = new OSCBundle();
-			}
-
+			CurrentPacket = selected == 0 ? (IOSCPacket) new OSCMessage("/address") : new OSCBundle();
 			FilePath = string.Empty;
 		}
 

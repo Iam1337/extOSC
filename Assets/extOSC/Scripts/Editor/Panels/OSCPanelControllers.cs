@@ -107,7 +107,7 @@ namespace extOSC.Editor.Panels
 
 		#region Public Methods
 
-		public OSCPanelControllers(OSCWindow window, string panelId) : base(window, panelId)
+		public OSCPanelControllers(OSCWindow window) : base(window)
 		{
 			Refresh();
 		}
@@ -148,13 +148,13 @@ namespace extOSC.Editor.Panels
 			var transmitter = osc as OSCTransmitter;
 			if (transmitter != null)
 			{
-				GUILayout.Label(string.Format("Transmitter: {0}:{1}", transmitter.RemoteHost, transmitter.RemotePort));
+				GUILayout.Label($"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}");
 			}
 
 			var receiver = osc as OSCReceiver;
 			if (receiver != null)
 			{
-				GUILayout.Label(string.Format("Receiver: {0}", receiver.LocalPort));
+				GUILayout.Label($"Receiver: {receiver.LocalPort}");
 			}
 		}
 
@@ -171,7 +171,7 @@ namespace extOSC.Editor.Panels
 					var debugPacket = OSCWindowDebug.CurrentPacket;
 					if (debugPacket != null)
 					{
-						transmitter.Send(debugPacket.Copy());
+						transmitter.Send(debugPacket.Copy(), OSCSendOptions.IgnoreBundle);
 					}
 				}
 			}

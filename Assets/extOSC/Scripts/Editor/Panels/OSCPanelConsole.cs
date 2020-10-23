@@ -17,7 +17,7 @@ namespace extOSC.Editor.Panels
 
 		private static readonly GUIContent _transmittedContent = new GUIContent("Transmitted");
 
-		private static readonly GUIContent _recevedContent = new GUIContent("Received");
+		private static readonly GUIContent _receivedContent = new GUIContent("Received");
 
 		private static readonly GUIContent _trackLastContent = new GUIContent("Track Last");
 
@@ -52,7 +52,7 @@ namespace extOSC.Editor.Panels
 
 			EditorGUIUtility.systemCopyBuffer = OSCSharpCode.GeneratePacket(consoleMessage.Packet);
 
-			Debug.LogFormat("[OSCConsole] CSharp code generated and stored in copy buffer!");
+			Debug.LogFormat("[extOSC:OSCConsole] CSharp code generated and stored in copy buffer!");
 		}
 
 		#endregion
@@ -69,8 +69,8 @@ namespace extOSC.Editor.Panels
 
 		public string Filter
 		{
-			get { return _filterDrawer.FilterValue; }
-			set { _filterDrawer.FilterValue = value; }
+			get => _filterDrawer.FilterValue;
+			set => _filterDrawer.FilterValue = value;
 		}
 
 		#endregion
@@ -102,7 +102,7 @@ namespace extOSC.Editor.Panels
 
 		#region Public Methods
 
-		public OSCPanelConsole(OSCWindow window, string panelId) : base(window, panelId)
+		public OSCPanelConsole(OSCWindow window) : base(window)
 		{
 			_filterDrawer = new OSCFilterDrawer();
 		}
@@ -111,6 +111,7 @@ namespace extOSC.Editor.Panels
 		{
 			if (_consoleBuffer.Length <= 0) return;
 
+			TrackLast = true;
 			SelectedMessage = _consoleBuffer[0];
 			ScrollToItem(SelectedMessage);
 		}
@@ -121,6 +122,7 @@ namespace extOSC.Editor.Panels
 
 			var currentIndex = _consoleBuffer.IndexOf(SelectedMessage);
 
+			TrackLast = false;
 			SelectedMessage = _consoleBuffer[Mathf.Clamp(currentIndex + 1, 0, _consoleBuffer.Length - 1)];
 			ScrollToItem(SelectedMessage);
 		}
@@ -130,7 +132,13 @@ namespace extOSC.Editor.Panels
 			if (_consoleBuffer.Length <= 0) return;
 
 			var currentIndex = _consoleBuffer.IndexOf(SelectedMessage);
+			if (currentIndex == 0)
+			{
+				TrackLast = true;
+				return;
+			}
 
+			TrackLast = false;
 			SelectedMessage = _consoleBuffer[Mathf.Clamp(currentIndex - 1, 0, _consoleBuffer.Length - 1)];
 			ScrollToItem(SelectedMessage);
 		}
@@ -139,6 +147,7 @@ namespace extOSC.Editor.Panels
 		{
 			if (_consoleBuffer.Length <= 0) return;
 
+			TrackLast = false;
 			SelectedMessage = _consoleBuffer[_consoleBuffer.Length - 1];
 			ScrollToItem(SelectedMessage);
 		}
@@ -277,6 +286,8 @@ namespace extOSC.Editor.Panels
 
 		private void DrawToolbar(ref Rect contentRect)
 		{
+			var clearButton = false;
+
 #if UNITY_2019_3_OR_NEWER
             var toolbarSize = 22;
 #else
@@ -286,33 +297,32 @@ namespace extOSC.Editor.Panels
 			contentRect.y += toolbarSize;
 			contentRect.height -= toolbarSize;
 
-			GUILayout.BeginArea(new Rect(0, 0, contentRect.width, toolbarSize));
+			using (new GUILayout.AreaScope(new Rect(0, 0, contentRect.width, toolbarSize)))
+			{
+				using (new EditorGUILayout.VerticalScope())
+				{
+					using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
+					{
+						clearButton = GUILayout.Button(_clearContent, EditorStyles.toolbarButton, GUILayout.Height(45f));
 
-			EditorGUILayout.BeginVertical();
-			EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+						GUILayout.Space(5f);
 
-			var clearButton = GUILayout.Button(_clearContent, EditorStyles.toolbarButton, GUILayout.Height(45f));
+						ShowReceived = GUILayout.Toggle(ShowReceived, _receivedContent, EditorStyles.toolbarButton);
+						ShowTransmitted = GUILayout.Toggle(ShowTransmitted, _transmittedContent, EditorStyles.toolbarButton);
 
-			GUILayout.Space(5f);
+						GUILayout.FlexibleSpace();
+						GUILayout.Space(5f);
 
-			ShowReceived = GUILayout.Toggle(ShowReceived, _recevedContent, EditorStyles.toolbarButton);
-			ShowTransmitted = GUILayout.Toggle(ShowTransmitted, _transmittedContent, EditorStyles.toolbarButton);
+						_filterDrawer.Draw();
 
-			GUILayout.FlexibleSpace();
-			GUILayout.Space(5f);
+						GUILayout.Space(5f);
 
-			_filterDrawer.Draw();
+						TrackLast = GUILayout.Toggle(TrackLast, _trackLastContent, EditorStyles.toolbarButton);
 
-			GUILayout.Space(5f);
-
-			TrackLast = GUILayout.Toggle(TrackLast, _trackLastContent, EditorStyles.toolbarButton);
-
-			GUILayout.Space(5f);
-
-			EditorGUILayout.EndHorizontal();
-			EditorGUILayout.EndVertical();
-
-			GUILayout.EndArea();
+						GUILayout.Space(5f);
+					}
+				}
+			}
 
 			if (clearButton)
 			{
@@ -332,13 +342,23 @@ namespace extOSC.Editor.Panels
 
 				if (Event.current.type == EventType.Repaint)
 				{
+					var defaultColor = GUI.color;
+
+					if (TrackLast && selected) 
+						GUI.color = Color.yellow;
+
 					var backStyle = index % 2 != 0 ? OSCEditorStyles.ConsoleItemBackEven : OSCEditorStyles.ConsoleItemBackOdd;
 					backStyle.Draw(localRect, false, false, selected, false);
+
+					GUI.color = defaultColor;
 				}
 
 				DrawIcons(ref localRect, consolePacket);
 
+				var timeRect = localRect;
+				timeRect.width -= 4f;
 				GUI.Label(localRect, consolePacket.ToString(), OSCEditorStyles.ConsoleLabel);
+				GUI.Label(timeRect, consolePacket.TimeStamp, OSCEditorStyles.ConsoleTimeLabel);
 			}
 		}
 

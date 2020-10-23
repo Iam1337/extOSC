@@ -35,7 +35,7 @@ namespace extOSC.Editor.Panels
 
 		#region Public Methods
 
-		public OSCPanelPacket(OSCWindow window, string panelId) : base(window, panelId)
+		public OSCPanelPacket(OSCWindow window) : base(window)
 		{
 			_packetDrawer = new OSCPacketDrawer();
 		}

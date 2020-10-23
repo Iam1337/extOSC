@@ -11,12 +11,6 @@ namespace extOSC.Editor.Windows
 {
 	public abstract class OSCWindow : EditorWindow
 	{
-		#region Public Vars
-
-		public abstract OSCPanel RootPanel { get; }
-
-		#endregion
-
 		#region Unity Methods
 
 		protected virtual void Awake()
@@ -55,8 +49,6 @@ namespace extOSC.Editor.Windows
 		#region Public Vars
 
 		public static TWindow Instance => GetWindow<TWindow>(false, "", false);
-
-		public override OSCPanel RootPanel => rootPanel;
 
 		#endregion
 
@@ -97,10 +89,10 @@ namespace extOSC.Editor.Windows
 			if (_rootPanel != null)
 			{
 				Debug.LogErrorFormat("[{0}] Already has root panel!", GetType());
-				return default(TPanel);
+				return default;
 			}
 
-			var panel = (TPanel) Activator.CreateInstance(typeof(TPanel), this, "root" + name);
+			var panel = (TPanel) Activator.CreateInstance(typeof(TPanel), new object[] {this});
 
 			_rootPanel = panel;
 

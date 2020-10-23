@@ -1,7 +1,5 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
-using System;
-
 using UnityEngine;
 using UnityEditor;
 
@@ -10,9 +8,6 @@ namespace extOSC.Editor
 	public static class OSCEditorSettings
 	{
 		#region Static Public Vars
-
-		[Obsolete]
-		public static string Settings => _settingRoot;
 
 		public static string Console => _consoleRoot;
 

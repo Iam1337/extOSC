@@ -135,8 +135,8 @@ namespace extOSC.Editor.Windows
 
 		protected override void OnEnable()
 		{
-			_logPanel = new OSCPanelConsole(this, "oscLogPanel1");
-			_packetPanel = new OSCPanelPacket(this, "oscPacketPanel1");
+			_logPanel = new OSCPanelConsole(this);
+			_packetPanel = new OSCPanelPacket(this);
 
 			rootPanel.AddPanel(_logPanel, 350, 0.6f);
 			rootPanel.AddPanel(_packetPanel, 300, 0.4f);
