@@ -87,8 +87,7 @@ namespace extOSC.Editor
 
 		protected void OnDisable()
 		{
-			if (_receiver == null)
-				_receiver = target as OSCReceiver;
+			_receiver = target as OSCReceiver;
 
 			EditorApplication.update -= ReceiverEditorUpdate;
 
@@ -122,8 +121,7 @@ namespace extOSC.Editor
 						using (new GUILayout.HorizontalScope())
 						{
 							EditorGUILayout.LabelField(_localHostContent, GUILayout.Width(EditorGUIUtility.labelWidth - 4));
-							EditorGUILayout.SelectableLabel(_localHostCache,
-															GUILayout.Height(EditorGUIUtility.singleLineHeight));
+							EditorGUILayout.SelectableLabel(_localHostCache, GUILayout.Height(EditorGUIUtility.singleLineHeight));
 						}
 					}
 					else
@@ -195,10 +193,11 @@ namespace extOSC.Editor
 			}
 
 			GUI.color = Color.yellow;
-			GUI.enabled = !_receiver.IsStarted;
+			GUI.enabled = _receiver.IsStarted;
 			if (GUILayout.Button("Reconnect"))
 			{
-				if (_receiver.IsStarted) _receiver.Close();
+				if (_receiver.IsStarted)
+					_receiver.Close();
 
 				_receiver.Connect();
 			}
@@ -228,7 +227,7 @@ namespace extOSC.Editor
 			}
 
 			GUI.color = Color.yellow;
-			GUI.enabled = !_workInEditorProperty.boolValue;
+			GUI.enabled = _workInEditorProperty.boolValue;
 			if (GUILayout.Button("Reconnect"))
 			{
 				if (_workInEditorProperty.boolValue)
@@ -253,6 +252,5 @@ namespace extOSC.Editor
 		}
 
 		#endregion
-
 	}
 }

@@ -1,8 +1,9 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
+using System;
+
 namespace extOSC.Core
 {
-	// TODO: Move to Editor.
 	public enum OSCConsolePacketType
 	{
 		Received,
@@ -44,6 +45,12 @@ namespace extOSC.Core
 			}
 		}
 
+		public string TimeStamp
+		{
+			get => _timeStamp;
+			set => _timeStamp = value;
+		}
+
 		#endregion
 
 		#region Private Vars
@@ -55,6 +62,8 @@ namespace extOSC.Core
 		private string _info;
 
 		private string _description;
+
+		private string _timeStamp;
 
 		#endregion
 

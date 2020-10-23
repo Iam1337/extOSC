@@ -33,7 +33,7 @@ namespace extOSC.Editor.Windows
 
 		private readonly string _lastFileSettings = OSCEditorSettings.Mapping + "lastfile";
 
-		private int _frameCounter = 0;
+		private int _frameCounter;
 
 		#endregion
 
@@ -47,9 +47,9 @@ namespace extOSC.Editor.Windows
 
 				if (_frameCounter > 200)
 				{
-					_frameCounter = 0;
-
 					rootPanel.SaveCurrentMapBundle();
+
+					_frameCounter = 0;
 				}
 			}
 		}
@@ -79,14 +79,7 @@ namespace extOSC.Editor.Windows
 		{
 			rootPanel.SaveCurrentMapBundle();
 
-			if (rootPanel.CurrentMapBundle != null)
-			{
-				OSCEditorSettings.SetString(_lastFileSettings, AssetDatabase.GetAssetPath(rootPanel.CurrentMapBundle));
-			}
-			else
-			{
-				OSCEditorSettings.SetString(_lastFileSettings, "");
-			}
+			OSCEditorSettings.SetString(_lastFileSettings, rootPanel.CurrentMapBundle != null ? AssetDatabase.GetAssetPath(rootPanel.CurrentMapBundle) : string.Empty);
 		}
 
 		#endregion

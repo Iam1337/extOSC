@@ -1,5 +1,6 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
+using System;
 using System.Collections.Generic;
 
 namespace extOSC.Core
@@ -21,7 +22,8 @@ namespace extOSC.Core
 			var ip = packet.Ip != null ? $"{packet.Ip}:{packet.Port}" : "Debug";
 
 			var consolePacket = new OSCConsolePacket();
-            consolePacket.Info = $"Receiver: {receiver.LocalPort}. From: {ip}";
+			consolePacket.Info = $"Receiver: {receiver.LocalPort}. From: {ip}";
+			consolePacket.TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
             consolePacket.PacketType = OSCConsolePacketType.Received;
             consolePacket.Packet = packet;
 
@@ -32,6 +34,7 @@ namespace extOSC.Core
         {
             var consolePacket = new OSCConsolePacket();
             consolePacket.Info = $"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}";
+			consolePacket.TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
             consolePacket.PacketType = OSCConsolePacketType.Transmitted;
             consolePacket.Packet = packet;
 

@@ -23,9 +23,13 @@ namespace extOSC.Editor.Drawers
 
 		private static readonly GUIContent _addValueContent = new GUIContent("Add Value");
 
-		private static readonly GUIContent _arrayContent = new GUIContent("Array");
+		private static readonly GUIContent _beginArrayContent = new GUIContent("Begin Array");
+
+		private static readonly GUIContent _endArrayContent = new GUIContent("End Array");
 
 		private static readonly GUIContent _addToArrayContent = new GUIContent("Array:");
+
+		private static readonly GUIContent _closeContent = new GUIContent("x");
 
 		#endregion
 
@@ -68,7 +72,7 @@ namespace extOSC.Editor.Drawers
 						EditorGUILayout.LabelField($"{bundlePacket.GetType().Name}:", EditorStyles.boldLabel);
 
 						GUI.color = Color.red;
-						if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20)))
+						if (GUILayout.Button(_closeContent, GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(EditorGUIUtility.singleLineHeight)))
 						{
 							removePacket = bundlePacket;
 						}
@@ -163,14 +167,13 @@ namespace extOSC.Editor.Drawers
 				{
 					using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
 					{
-						EditorGUILayout.LabelField(_arrayContent, OSCEditorStyles.CenterBoldLabel);
+						EditorGUILayout.LabelField(_beginArrayContent, OSCEditorStyles.CenterBoldLabel);
 					}
 
 					using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 					{
 						GUI.color = Color.red;
-						if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight),
-											 GUILayout.Width(20)))
+						if (GUILayout.Button(_closeContent, GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(EditorGUIUtility.singleLineHeight)))
 						{
 							removeValue = value;
 						}
@@ -192,6 +195,14 @@ namespace extOSC.Editor.Drawers
 					}
 
 					includeArrayValue = CreateValueButton(value);
+				}
+
+				using (new GUILayout.HorizontalScope())
+				{
+					using (new GUILayout.HorizontalScope(OSCEditorStyles.Box))
+					{
+						EditorGUILayout.LabelField(_endArrayContent, OSCEditorStyles.CenterBoldLabel);
+					}
 				}
 			}
 
@@ -292,7 +303,7 @@ namespace extOSC.Editor.Drawers
 				using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
 				{
 					GUI.color = Color.red;
-					if (GUILayout.Button("x", GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(20)))
+					if (GUILayout.Button(_closeContent, GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.Width(EditorGUIUtility.singleLineHeight)))
 					{
 						removeValue = value;
 					}

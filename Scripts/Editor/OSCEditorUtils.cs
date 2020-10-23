@@ -154,6 +154,12 @@ namespace extOSC.Editor
 					var typeAttribute = messageElement.Attributes["type"];
 					consoleMessage.PacketType = (OSCConsolePacketType) Enum.Parse(typeof(OSCConsolePacketType), typeAttribute.InnerText);
 
+					var timestampAttribute = messageElement.Attributes["timestamp"];
+					if (timestampAttribute != null)
+					{
+						consoleMessage.TimeStamp = timestampAttribute.InnerText;
+					}
+
 					var packetElement = messageElement["packet"];
 					consoleMessage.Packet = OSCUtilities.FromBase64String(packetElement.InnerText);
 
@@ -184,8 +190,12 @@ namespace extOSC.Editor
 				var typeAttribute = document.CreateAttribute("type");
 				typeAttribute.InnerText = consoleMessage.PacketType.ToString();
 
+				var timestampAttribute = document.CreateAttribute("timestamp");
+				timestampAttribute.InnerText = consoleMessage.TimeStamp;
+
 				messageElement.Attributes.Append(instanceAttribute);
 				messageElement.Attributes.Append(typeAttribute);
+				messageElement.Attributes.Append(timestampAttribute);
 
 				var packetElement = document.CreateElement("packet");
 				packetElement.InnerText = OSCUtilities.ToBase64String(consoleMessage.Packet);
@@ -207,7 +217,7 @@ namespace extOSC.Editor
 			}
 			catch (Exception e)
 			{
-				Debug.LogFormat("[OSCEditorUtils] Load packet error: {0}", e);
+				Debug.LogFormat("[extOSC:OSCEditorUtils] Load packet exception: {0}", e);
 
 				try
 				{
@@ -218,7 +228,7 @@ namespace extOSC.Editor
 				}
 				catch (Exception e2)
 				{
-					Debug.LogFormat("[OSCEditorUtils] Load old format packet error: {0}", e2);
+					Debug.LogFormat("[extOSC:OSCEditorUtils] Old format unpack exception: {0}", e2);
 				}
 			}
 

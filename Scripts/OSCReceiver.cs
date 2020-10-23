@@ -189,18 +189,15 @@ namespace extOSC
 		// IOSCBind
 		public void Bind(IOSCBind bind)
 		{
-			if (bind == null) return; // TODO: Exception.
+			if (bind == null)
+				throw new NullReferenceException(nameof(bind));
 
 			if (string.IsNullOrEmpty(bind.ReceiverAddress))
-			{
-				Debug.LogError("[OSCReceiver] Address can not be empty!");
-				return; // TODO: Exception.
-			}
-
+				throw new Exception("[OSCReceiver]  Address can not be empty!");
+			
 			if (_processMessage)
 			{
 				_messageBindStack.Push(bind);
-
 				return;
 			}
 

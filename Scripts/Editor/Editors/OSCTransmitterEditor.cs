@@ -275,7 +275,7 @@ namespace extOSC.Editor
 			}
 
 			GUI.color = Color.yellow;
-			GUI.enabled = !_transmitter.IsStarted;
+			GUI.enabled = _transmitter.IsStarted;
 			if (GUILayout.Button("Reconnect"))
 			{
 				if (_transmitter.IsStarted)
@@ -309,12 +309,11 @@ namespace extOSC.Editor
 			}
 
 			GUI.color = Color.yellow;
-			GUI.enabled = !_workInEditorProperty.boolValue;
+			GUI.enabled = _workInEditorProperty.boolValue;
 			if (GUILayout.Button("Reconnect"))
 			{
 				if (_workInEditorProperty.boolValue)
 				{
-
 					if (_transmitter.IsStarted)
 						_transmitter.Close();
 

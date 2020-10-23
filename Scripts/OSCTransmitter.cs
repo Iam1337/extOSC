@@ -1,17 +1,15 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
+using extOSC.Core;
+using extOSC.Core.Network;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-using System;
-using System.Collections.Generic;
-
-using extOSC.Core;
-using extOSC.Core.Network;
-
 namespace extOSC
 {
-	[AddComponentMenu("extOSC/OSC Transmitter")]
+    [AddComponentMenu("extOSC/OSC Transmitter")]
 	public class OSCTransmitter : OSCBase
 	{
 		#region Obsolete
@@ -239,35 +237,32 @@ namespace extOSC
 			return $"<{GetType().Name} (LocalHost: {_localHost} LocalPort: {_localPort} | RemoteHost: {_remoteHost}, RemotePort: {_remotePort})>";
 		}
 
-		public void Send(IOSCPacket packet)
+		public void Send(IOSCPacket packet, OSCSendOptions options = OSCSendOptions.None)
 		{
-			if (_useBundle && packet != null && (packet is OSCMessage))
+			if ((options & OSCSendOptions.IgnoreBundle) == 0)
 			{
-				_bundleBuffer.Add(packet);
+				if (_useBundle && packet is OSCMessage)
+				{
+					_bundleBuffer.Add(packet);
 
-				return;
+					return;
+				}
 			}
 
 			if (!_transmitterBackend.IsAvailable)
 				return;
 
-			if (MapBundle != null)
-				MapBundle.Map(packet);
+			if ((options & OSCSendOptions.IgnoreMap) == 0)
+			{
+				if (MapBundle != null)
+					MapBundle.Map(packet);
+			}
 
 			var length = OSCConverter.Pack(packet, out var buffer);
-
+			
 			_transmitterBackend.Send(buffer, length);
 
 			OSCConsole.Transmitted(this, packet);
-		}
-
-		[Obsolete]
-		public virtual void Send(string address, OSCValue value)
-		{
-			var message = new OSCMessage(address);
-			message.AddValue(value);
-
-			Send(message);
 		}
 
 		#endregion

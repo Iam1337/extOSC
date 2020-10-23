@@ -14,15 +14,12 @@ namespace extOSC.Editor.Panels
 
 		public readonly OSCWindow Window;
 
-		public readonly string PanelId;
-
 		#endregion
 
 		#region Public Methods
 
-		public OSCPanel(OSCWindow window, string panelId)
+		public OSCPanel(OSCWindow window)
 		{
-			PanelId = panelId;
 			Window = window;
 		}
 

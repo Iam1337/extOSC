@@ -21,6 +21,8 @@ namespace extOSC.Editor
 
 		private static GUIStyle _consoleLabel;
 
+		private static GUIStyle _consoleTimeLabel;
+
 		private static GUIStyle _consoleBoldLabel;
 
 		private static GUIStyle _centerLabel;
@@ -30,7 +32,7 @@ namespace extOSC.Editor
 		private static GUIStyle _searchField;
 
 		private static GUIStyle _searchFieldPlaceholder;
-
+		
 		#endregion
 
 		#region Static Public Vars
@@ -118,6 +120,20 @@ namespace extOSC.Editor
 				}
 
 				return _consoleLabel;
+			}
+		}
+
+		public static GUIStyle ConsoleTimeLabel
+		{
+			get
+			{
+				if (_consoleTimeLabel == null)
+				{
+					_consoleTimeLabel = new GUIStyle(ConsoleLabel);
+					_consoleTimeLabel.alignment = TextAnchor.MiddleRight;
+				}
+
+				return _consoleTimeLabel;
 			}
 		}
 

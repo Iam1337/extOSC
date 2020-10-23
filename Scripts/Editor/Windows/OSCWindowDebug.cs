@@ -59,8 +59,8 @@ namespace extOSC.Editor.Windows
 
 		protected override void OnEnable()
 		{
-			_packetEditorPanel = new OSCPanelPacketEditor(this, "debugPacketEditor");
-			_controllersPanel = new OSCPanelControllers(this, "debugOSCControllers");
+			_packetEditorPanel = new OSCPanelPacketEditor(this);
+			_controllersPanel = new OSCPanelControllers(this);
 
 			rootPanel.AddPanel(_packetEditorPanel, 300);
 			rootPanel.AddPanel(_controllersPanel, 250);

@@ -1,5 +1,6 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
@@ -38,71 +39,46 @@ namespace extOSC.Editor
 		{
 			OSCEditorInterface.LogoLayout();
 
-			GUILayout.BeginVertical(OSCEditorStyles.Box);
-
-			var openButton = GUILayout.Button(_openButton, GUILayout.Height(40));
-			if (openButton)
+			using (new EditorGUILayout.VerticalScope(OSCEditorStyles.Box))
 			{
-				OSCWindowMapping.OpenBundle((OSCMapBundle) target);
-			}
-
-			GUILayout.EndVertical();
-
-			GUILayout.BeginVertical();
-
-			if (_bundle.Messages.Count > 0)
-			{
-				foreach (var message in _bundle.Messages)
+				var openButton = GUILayout.Button(_openButton, GUILayout.Height(40));
+				if (openButton)
 				{
-					GUILayout.BeginVertical(OSCEditorStyles.Box);
-
-					GUILayout.BeginVertical(OSCEditorStyles.Box);
-					EditorGUILayout.LabelField("Address: " + message.Address, EditorStyles.boldLabel);
-					GUILayout.EndVertical();
-
-					foreach (var value in message.Values)
-					{
-						DrawValue(value);
-					}
-
-					GUILayout.EndVertical();
+					OSCWindowMapping.OpenBundle(_bundle);
 				}
 			}
-			else
+
+			using (new EditorGUILayout.VerticalScope())
 			{
-				EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-				GUILayout.Label(_emptyBundleContent, OSCEditorStyles.CenterLabel, GUILayout.Height(40));
-				EditorGUILayout.EndHorizontal();
+				if (_bundle.Messages.Count > 0)
+				{
+					var index = 0;
+					foreach (var message in _bundle.Messages)
+					{
+						var types = message.Values.Select(v => v.Type.ToString());
+
+						using (new EditorGUILayout.HorizontalScope(OSCEditorStyles.Box))
+						{
+							using (new EditorGUILayout.VerticalScope(OSCEditorStyles.Box))
+							{
+								EditorGUILayout.LabelField((++index).ToString(), OSCEditorStyles.CenterBoldLabel, GUILayout.Width(40));
+							}
+
+							using (new EditorGUILayout.VerticalScope(OSCEditorStyles.Box))
+							{
+								EditorGUILayout.LabelField($"{message.Address} {string.Join(", ", types)}");
+							}
+						}
+					}
+				}
+				else
+				{
+					using (new EditorGUILayout.HorizontalScope(OSCEditorStyles.Box))
+					{
+						GUILayout.Label(_emptyBundleContent, OSCEditorStyles.CenterLabel, GUILayout.Height(40));
+					}
+				}
 			}
-
-			GUILayout.EndVertical();
-		}
-
-		#endregion
-
-		#region Private Methods
-
-		private void DrawValue(OSCMapValue value)
-		{
-			GUILayout.BeginVertical();
-			GUILayout.BeginVertical(OSCEditorStyles.Box);
-
-			EditorGUILayout.BeginHorizontal();
-
-			GUI.color = Color.yellow;
-			EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-			GUILayout.Label(_typeContents, GUILayout.Width(50));
-			EditorGUILayout.EndHorizontal();
-			GUI.color = Color.white;
-
-			EditorGUILayout.BeginHorizontal(OSCEditorStyles.Box);
-			GUILayout.Label(value.Type.ToString());
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.EndHorizontal();
-
-			GUILayout.EndVertical();
-			GUILayout.EndVertical();
 		}
 
 		#endregion

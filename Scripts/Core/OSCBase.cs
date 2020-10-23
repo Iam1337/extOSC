@@ -1,11 +1,10 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
 using UnityEngine;
-
-using System;
+using UnityEngine.Serialization;
 
 using extOSC.Mapping;
-using UnityEngine.Serialization;
+
 
 namespace extOSC.Core
 {
@@ -50,7 +49,7 @@ namespace extOSC.Core
 
         [SerializeField]
 		[FormerlySerializedAs("closeOnPause")]
-		private bool _closeOnPause = false;
+		private bool _closeOnPause;
 
         [SerializeField]
 		[FormerlySerializedAs("mapBundle")]
@@ -91,7 +90,7 @@ namespace extOSC.Core
 
 		protected void OnApplicationPause(bool pauseStatus)
         {
-            if (!_closeOnPause) return;
+			if (!_closeOnPause) return;
 
             if (pauseStatus)
             {

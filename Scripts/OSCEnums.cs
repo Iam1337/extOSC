@@ -1,5 +1,7 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
+using System;
+
 namespace extOSC
 {
 	public enum OSCValueType
@@ -54,5 +56,13 @@ namespace extOSC
 		FromReceiver,
 		Random,
 		Custom
+	}
+
+	[Flags]
+	public enum OSCSendOptions
+	{
+		None = 0,
+		IgnoreBundle = 1 << 0,
+		IgnoreMap = 1 << 1,
 	}
 }

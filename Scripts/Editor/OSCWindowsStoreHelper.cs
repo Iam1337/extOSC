@@ -28,7 +28,7 @@ namespace extOSC.Editor
 			{
 				PlayerSettings.WSA.SetCapability(PlayerSettings.WSACapability.InternetClientServer, true);
 
-				Debug.Log("[OSCWindowsStoreHelper] WSACapability: InternetClientServer now is true.");
+				Debug.Log("[extOSC] WSACapability: InternetClientServer changed to true.");
 			}
 		}
 

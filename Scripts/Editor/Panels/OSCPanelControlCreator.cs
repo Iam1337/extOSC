@@ -57,7 +57,7 @@ namespace extOSC.Editor.Panels
 
 		#region Public Methods
 
-		public OSCPanelControlCreator(OSCWindow window, string panelId) : base(window, panelId)
+		public OSCPanelControlCreator(OSCWindow window) : base(window)
 		{
 			_controlCreator = window as OSCWindowControlCreator;
 		}
@@ -80,75 +80,72 @@ namespace extOSC.Editor.Panels
 			contentRect.width -= 4;
 			contentRect.height -= 4;
 
-			GUILayout.BeginArea(contentRect);
-
-			OSCEditorInterface.LogoLayout();
-
-			GUILayout.Label(_controlSettingsContent, EditorStyles.boldLabel);
-			EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-
-			ControlColor = EditorGUILayout.ColorField(_controlColorContent, ControlColor);
-
-			EditorGUILayout.EndVertical();
-
-			GUI.color = AddInformer ? Color.green : Color.red;
-			if (GUILayout.Button(_addInformerContent))
+			using (new GUILayout.AreaScope(contentRect))
 			{
-				AddInformer = !AddInformer;
-			}
+				OSCEditorInterface.LogoLayout();
 
-			GUI.color = Color.white;
-
-			if (AddInformer)
-			{
-				GUILayout.Label(_informerSettingsContent, EditorStyles.boldLabel);
-				EditorGUILayout.BeginVertical(OSCEditorStyles.Box);
-
-				OSCEditorUtils.FindObjects(TransmitterCallback, true, out var content, out OSCTransmitter[] objects);
-
-				InformerAddress = EditorGUILayout.TextField(_oscAddressContent, InformerAddress);
-				InformerTransmitter = OSCEditorInterface.PopupLayout(_oscTransmitterContent,
-																	 InformerTransmitter,
-																	 content,
-																	 objects);
-
-				GUI.color = InformOnChanged ? Color.green : Color.red;
-				if (GUILayout.Button(_informOnChangedContent))
+				GUILayout.Label(_controlSettingsContent, EditorStyles.boldLabel);
+				using (new EditorGUILayout.VerticalScope(OSCEditorStyles.Box))
 				{
-					InformOnChanged = !InformOnChanged;
+					ControlColor = EditorGUILayout.ColorField(_controlColorContent, ControlColor);
+				}
+
+				GUI.color = AddInformer ? Color.green : Color.red;
+				if (GUILayout.Button(_addInformerContent))
+				{
+					AddInformer = !AddInformer;
 				}
 
 				GUI.color = Color.white;
 
-				if (!InformOnChanged)
+				if (AddInformer)
 				{
-					InformerInterval = EditorGUILayout.FloatField(_informerIntervalContent, InformerInterval);
+					GUILayout.Label(_informerSettingsContent, EditorStyles.boldLabel);
+					using (new EditorGUILayout.VerticalScope(OSCEditorStyles.Box))
+					{
+						OSCEditorUtils.FindObjects(TransmitterCallback, true, out var content, out OSCTransmitter[] objects);
 
-					if (InformerInterval < 0) InformerInterval = 0;
+						InformerAddress = EditorGUILayout.TextField(_oscAddressContent, InformerAddress);
+						InformerTransmitter = OSCEditorInterface.PopupLayout(_oscTransmitterContent,
+																			 InformerTransmitter,
+																			 content,
+																			 objects);
 
-					EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
+						GUI.color = InformOnChanged ? Color.green : Color.red;
+						if (GUILayout.Button(_informOnChangedContent))
+						{
+							InformOnChanged = !InformOnChanged;
+						}
+
+						GUI.color = Color.white;
+
+						if (!InformOnChanged)
+						{
+							InformerInterval = EditorGUILayout.FloatField(_informerIntervalContent, InformerInterval);
+
+							if (InformerInterval < 0) InformerInterval = 0;
+
+							EditorGUILayout.HelpBox("Set to 0 for send message with each frame.", MessageType.Info);
+						}
+					}
 				}
 
-				EditorGUILayout.EndVertical();
+				GUI.color = Color.green;
+				if (GUILayout.Button(_createContent))
+				{
+					var data = new OSCWindowControlCreator.ControlData();
+					data.ControlColor = ControlColor;
+					data.UseInformer = AddInformer;
+					data.InformAddress = InformerAddress;
+					data.InformInterval = InformerInterval;
+					data.InformOnChanged = InformOnChanged;
+					data.InformerTransmitter = InformerTransmitter;
+
+					OSCWindowControlCreator.CreateControl(data);
+				}
+
+				GUI.color = Color.white;
 			}
-
-			GUI.color = Color.green;
-			if (GUILayout.Button(_createContent))
-			{
-				var data = new OSCWindowControlCreator.ControlData();
-				data.ControlColor = ControlColor;
-				data.UseInformer = AddInformer;
-				data.InformAddress = InformerAddress;
-				data.InformInterval = InformerInterval;
-				data.InformOnChanged = InformOnChanged;
-				data.InformerTransmitter = InformerTransmitter;
-
-				OSCWindowControlCreator.CreateControl(data);
-			}
-
-			GUI.color = Color.white;
-
-			GUILayout.EndArea();
 		}
 
 		#endregion
