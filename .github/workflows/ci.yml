@@ -26,6 +26,8 @@ jobs:
         echo '>>> Start'
         git log -1
 
+        cp READMY.md Asstes/extOSC/READMY.md
+
         echo '>>> Delete local upm branch'
         git branch -d upm &> /dev/null || echo upm branch not found
 
