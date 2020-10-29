@@ -24,6 +24,9 @@ jobs:
     - name: Update upm branch
       run: |
         echo '>>> Versions'
+        echo ${{ steps }}
+        echo ${{ steps.semantic }}
+        echo ${{ steps.semantic.outputs }}
         echo ${{ steps.semantic.outputs.new_release_version }}
         echo ${{ steps.semantic.outputs.new_release_major_version }}
         echo ${{ steps.semantic.outputs.new_release_minor_version }}
