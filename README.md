@@ -12,8 +12,6 @@ extOSC (Open Sound Control Protocol) is a tool dedicated to simplify creation of
 
 Also extOSC  is available on the [Unity Asset Store](http://u3d.as/ADA) for free.
 
-**Support Unity versions**: Unity 2017.1.4. or higher
-
 ### Release Notes:
 
 You can read release notes in [versions.txt](Assets/extOSC/versions.txt) file.
