@@ -48,8 +48,8 @@ jobs:
         cp Temp/CHANGELOG.md CHANGELOG.md
         git add CHANGELOG.md
 
-        cp Temp/LICENSE.md LICENSE.md
-        git add LICENSE.md
+        cp Temp/LICENSE LICENSE
+        git add LICENSE
 
         if [[ -d "Examples" ]]; then
           echo
