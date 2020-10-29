@@ -95,7 +95,7 @@ protected void MessageReceived(OSCMessage message)
 {
 	// Any code...
 	Debug.Log(message);
-}     
+}
 ```
 Or you can use any *extOSC/Receiver* components.<br>
 
