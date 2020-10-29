@@ -12,14 +12,13 @@ jobs:
       with:
         fetch-depth: 0
     - name: Build unitypackage
-      working-directory: Assets
       run: |
-        echo extOSC.meta >> metaList
-        find extOSC -name \*.meta >> metaList
+        echo Assets/extOSC.meta >> metaList
+        find Assets/extOSC -name \*.meta >> metaList
     - uses: pCYSl5EDgo/create-unitypackage@master
       with:
         package-path: extOSC.unitypackage
-        include-files: Assets/metaList
+        include-files: metaList
         project-folder: ./
     - name: Semantic release
       id: semantic
