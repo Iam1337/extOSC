@@ -4,6 +4,8 @@
   "version": "1.19.3",
   "unity": "2018.1",
   "description": "extOSC (Open Sound Control Protocol) is a tool dedicated to simplify creation of applications with OSC protocol usage in Unity.",
+  "license": "MIT",
+  "author": "dr. ext <ext@iron-wall.org> (https://github.com/iam1337)",
   "keywords": [
     "osc",
     "network",
@@ -79,5 +81,12 @@
       "description": "",
       "path": "Examples~/13) Marshalling"
     }
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iam1337/extOSC.git#upm"
+  },
+  "publishConfig": {
+    "registry": "https://package.openupm.com"
+  }
 }
