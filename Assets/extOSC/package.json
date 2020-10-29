@@ -1,7 +1,7 @@
 {
   "name": "com.iam1337.extosc",
   "displayName": "extOSC",
-  "version": "1.19.1",
+  "version": "1.19.3",
   "unity": "2018.1",
   "description": "extOSC (Open Sound Control Protocol) is a tool dedicated to simplify creation of applications with OSC protocol usage in Unity.",
   "keywords": [
@@ -14,70 +14,70 @@
     "com.unity.ugui": "1.0.0"
   },
   "samples": [
-   {
-     "displayName": "Getting Started",
-     "description": "",
-     "path": "Examples~/01) Getting Started"
-   },
-   {
-     "displayName": "Value Types",
-     "description": "",
-     "path": "Examples~/02) Value Types"
-   },
-   {
-     "displayName": "Events",
-     "description": "",
-     "path": "Examples~/03) Events"
-   },
-   {
-     "displayName": "Informers",
-     "description": "",
-     "path": "Examples~/04) Informers"
-   },
-   {
-     "displayName": "Events And Informers",
-     "description": "",
-     "path": "Examples~/05) Events And Informers"
-   },
-   {
-     "displayName": "Mapping",
-     "description": "",
-     "path": "Examples~/06) Mapping"
-   },
-   {
-     "displayName": "Scripting",
-     "description": "",
-     "path": "Examples~/07) Scripting"
-   },
-   {
-     "displayName": "UI",
-     "description": "",
-     "path": "Examples~/08) UI"
-   },
-   {
-     "displayName": "Address Masks",
-     "description": "",
-     "path": "Examples~/09) Address Masks"
-   },
-   {
-     "displayName": "Ping",
-     "description": "",
-     "path": "Examples~/10) Ping"
-   },
-   {
-     "displayName": "Array",
-     "description": "",
-     "path": "Examples~/11) Array"
-   },
-   {
-     "displayName": "Match Pattern",
-     "description": "",
-     "path": "Examples~/12) Match Pattern"
-   },
-   {
-     "displayName": "Marshalling",
-     "description": "",
-     "path": "Examples~/13) Marshalling"
-   }
- ]
+    {
+      "displayName": "Getting Started",
+      "description": "",
+      "path": "Examples~/01) Getting Started"
+    },
+    {
+      "displayName": "Value Types",
+      "description": "",
+      "path": "Examples~/02) Value Types"
+    },
+    {
+      "displayName": "Events",
+      "description": "",
+      "path": "Examples~/03) Events"
+    },
+    {
+      "displayName": "Informers",
+      "description": "",
+      "path": "Examples~/04) Informers"
+    },
+    {
+      "displayName": "Events And Informers",
+      "description": "",
+      "path": "Examples~/05) Events And Informers"
+    },
+    {
+      "displayName": "Mapping",
+      "description": "",
+      "path": "Examples~/06) Mapping"
+    },
+    {
+      "displayName": "Scripting",
+      "description": "",
+      "path": "Examples~/07) Scripting"
+    },
+    {
+      "displayName": "UI",
+      "description": "",
+      "path": "Examples~/08) UI"
+    },
+    {
+      "displayName": "Address Masks",
+      "description": "",
+      "path": "Examples~/09) Address Masks"
+    },
+    {
+      "displayName": "Ping",
+      "description": "",
+      "path": "Examples~/10) Ping"
+    },
+    {
+      "displayName": "Array",
+      "description": "",
+      "path": "Examples~/11) Array"
+    },
+    {
+      "displayName": "Match Pattern",
+      "description": "",
+      "path": "Examples~/12) Match Pattern"
+    },
+    {
+      "displayName": "Marshalling",
+      "description": "",
+      "path": "Examples~/13) Marshalling"
+    }
+  ]
 }
