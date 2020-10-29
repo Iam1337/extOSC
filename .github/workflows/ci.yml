@@ -26,7 +26,7 @@ jobs:
         echo '>>> Start'
         git log -1
 
-        cp README.md Asstes/extOSC/README.md
+        cp README.md Assets/extOSC/README.md
 
         echo '>>> Delete local upm branch'
         git branch -d upm &> /dev/null || echo upm branch not found
