@@ -1,4 +1,4 @@
-name: CI
+name: ⚙ Release
 on:
   push:
     branches:
@@ -17,22 +17,12 @@ jobs:
       with:
         extra_plugins: |
           @semantic-release/changelog
-          @semantic-release/npm
           @semantic-release/git
         branch: master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Update upm branch
       run: |
-        echo '>>> Versions'
-        echo ${{ steps }}
-        echo ${{ steps.semantic }}
-        echo ${{ steps.semantic.outputs }}
-        echo ${{ steps.semantic.outputs.new_release_version }}
-        echo ${{ steps.semantic.outputs.new_release_major_version }}
-        echo ${{ steps.semantic.outputs.new_release_minor_version }}
-        echo ${{ steps.semantic.outputs.new_release_patch_version }}
-
         echo '>>> Start'
         git log -1
 
@@ -43,10 +33,13 @@ jobs:
         echo '>>> Split upm branch'
         git subtree split -P "$PKG_ROOT" -b upm
 
+        echo
         echo '>>> Checkout upm branch'
         git checkout upm
 
         if [[ -d "Examples" ]]; then
+          echo
+          echo '>>> Examples move to Examples~'
           git mv Examples Examples~
           rm -f Examples.meta
           git config --global user.name 'github-bot'
@@ -54,8 +47,8 @@ jobs:
           git commit -am "fix: Examples => Examples~"
         fi
 
-        echo '### force overwrite remote upm branch'
-
+        echo
+        echo '>>> Force overwrite remote upm branch'
         git push -f -u origin upm
       env:
         PKG_ROOT: Assets/extOSC
