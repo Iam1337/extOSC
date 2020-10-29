@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/Iam1337/extOSC/compare/v1.19.0...v1.19.1) (2020-10-29)
+
+
+### Bug Fixes
+
+* dummy ([3a34589](https://github.com/Iam1337/extOSC/commit/3a345892fb6129e58538ab99d4380ad784e48998))
+
 ## [1.0.1](https://github.com/Iam1337/extOSC/compare/v1.0.0...v1.0.1) (2020-10-29)
 
 
