@@ -65,8 +65,8 @@ namespace extOSC.UI
 
 		public RectTransform HandleRect
 		{
-			get { return _handleRect; }
-			set
+			get => _handleRect;
+            set
 			{
 				if (_handleRect == value)
 					return;
@@ -80,8 +80,8 @@ namespace extOSC.UI
 
 		public RectTransform XAxisRect
 		{
-			get { return _xAxisRect; }
-			set
+			get => _xAxisRect;
+            set
 			{
 				if (_xAxisRect == value)
 					return;
@@ -94,8 +94,8 @@ namespace extOSC.UI
 
 		public RectTransform YAxisRect
 		{
-			get { return _yAxisRect; }
-			set
+			get => _yAxisRect;
+            set
 			{
 				if (_yAxisRect == value)
 					return;
@@ -115,13 +115,13 @@ namespace extOSC.UI
 
 				return _value;
 			}
-			set { Set(value); }
-		}
+			set => Set(value);
+        }
 
 		public Vector2 MinValue
 		{
-			get { return _minValue; }
-			set
+			get => _minValue;
+            set
 			{
 				if (_minValue.Equals(value))
 					return;
@@ -135,8 +135,8 @@ namespace extOSC.UI
 
 		public Vector2 MaxValue
 		{
-			get { return _maxValue; }
-			set
+			get => _maxValue;
+            set
 			{
 				if (_maxValue.Equals(value))
 					return;
@@ -150,8 +150,8 @@ namespace extOSC.UI
 
 		public bool WholeNumbers
 		{
-			get { return _wholeNumbers; }
-			set
+			get => _wholeNumbers;
+            set
 			{
 				if (_wholeNumbers.Equals(value))
 					return;
@@ -165,14 +165,14 @@ namespace extOSC.UI
 
 		public OSCEventVector2 OnValueChanged
 		{
-			get { return _onValueChanged; }
-			set { _onValueChanged = value; }
-		}
+			get => _onValueChanged;
+            set => _onValueChanged = value;
+        }
 
 		public PointAlignment HandleAlignment
 		{
-			get { return _handleAlignment; }
-			set
+			get => _handleAlignment;
+            set
 			{
 				if (_handleAlignment == value)
 					return;
@@ -185,20 +185,14 @@ namespace extOSC.UI
 
 		public bool ResetValue
 		{
-			get { return _resetValue; }
-			set
-			{
-				if (_resetValue == value)
-					return;
-
-				_resetValue = value;
-			}
-		}
+			get => _resetValue;
+            set => _resetValue = value;
+        }
 
 		public float ResetValueTime
 		{
-			get { return _resetValueTime; }
-			set
+			get => _resetValueTime;
+            set
 			{
 				if (Math.Abs(_resetValueTime - value) < float.Epsilon)
 					return;
@@ -212,20 +206,14 @@ namespace extOSC.UI
 
 		public bool CallbackOnReset
 		{
-			get { return _callbackOnReset; }
-			set
-			{
-				if (_callbackOnReset == value)
-					return;
-
-				_callbackOnReset = value;
-			}
-		}
+			get => _callbackOnReset;
+            set => _callbackOnReset = value;
+        }
 
 		public Vector2 DefaultValue
 		{
-			get { return _defaultValue; }
-			set
+			get => _defaultValue;
+            set
 			{
 				if (_defaultValue.Equals(value))
 					return;
