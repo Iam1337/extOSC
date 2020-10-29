@@ -26,7 +26,8 @@ jobs:
         echo '>>> Start'
         git log -1
 
-        cp README.md Assets/extOSC/README.md
+        mkdir Temp
+        cp README.md Temp/README.md
 
         echo '>>> Delete local upm branch'
         git branch -d upm &> /dev/null || echo upm branch not found
@@ -38,6 +39,9 @@ jobs:
         echo
         echo '>>> Checkout upm branch'
         git checkout upm
+
+        cp Temp/README.md README.md
+        git add README.md
 
         if [[ -d "Examples" ]]; then
           echo
