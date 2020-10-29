@@ -1,6 +1,8 @@
 # extOSC - Open Sound Control Protocol for Unity
 
-Created by V. Sigalkin (ext)
+Created by V. Sigalkin (dr. ext)
+
+[![openupm](https://img.shields.io/npm/v/com.iam1337.extosc?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.iam1337.extosc/)
 
 ### What Is extOSC?
 extOSC (Open Sound Control Protocol) is a tool dedicated to simplify creation of applications with OSC protocol usage in Unity (Unity3d). Supported platforms are PC, Mac and Linux / iOS / tvOS / Android / Universal Windows Platform (UWP) and other.
