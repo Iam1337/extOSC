@@ -12,5 +12,73 @@
   "category": "Network",
   "dependencies": {
     "com.unity.ugui": "1.0.0"
-  }
+  },
+  "samples": [
+   {
+     "displayName": "Getting Started",
+     "description": "",
+     "path": "Examples~/01) Getting Started"
+   },
+   {
+     "displayName": "Value Types",
+     "description": "",
+     "path": "Samples~/02) Value Types"
+   },
+   {
+     "displayName": "Events",
+     "description": "",
+     "path": "Samples~/03) Events"
+   },
+   {
+     "displayName": "Informers",
+     "description": "",
+     "path": "Samples~/04) Informers"
+   },
+   {
+     "displayName": "Events And Informers",
+     "description": "",
+     "path": "Samples~/05) Events And Informers"
+   },
+   {
+     "displayName": "Mapping",
+     "description": "",
+     "path": "Samples~/06) Mapping"
+   },
+   {
+     "displayName": "Scripting",
+     "description": "",
+     "path": "Samples~/07) Scripting"
+   },
+   {
+     "displayName": "UI",
+     "description": "",
+     "path": "Samples~/08) UI"
+   },
+   {
+     "displayName": "Address Masks",
+     "description": "",
+     "path": "Samples~/09) Address Masks"
+   },
+   {
+     "displayName": "Ping",
+     "description": "",
+     "path": "Samples~/10) Ping"
+   },
+   {
+     "displayName": "Array",
+     "description": "",
+     "path": "Samples~/11) Array"
+   },
+   {
+     "displayName": "Match Pattern",
+     "description": "",
+     "path": "Samples~/12) Match Pattern"
+   },
+   {
+     "displayName": "Marshalling",
+     "description": "",
+     "path": "Samples~/13) Marshalling"
+   }
+
+ ]
 }
