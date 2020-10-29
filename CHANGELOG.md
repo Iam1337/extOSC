@@ -1,3 +1,10 @@
+## [1.19.5](https://github.com/Iam1337/extOSC/compare/v1.19.4...v1.19.5) (2020-10-29)
+
+
+### Bug Fixes
+
+* test ([ce0e8ca](https://github.com/Iam1337/extOSC/commit/ce0e8ca16ca5bdc24c6eae8cbb47e7660a8b6036))
+
 ## [1.19.4](https://github.com/Iam1337/extOSC/compare/v1.19.3...v1.19.4) (2020-10-29)
 
 
