@@ -233,3 +233,4 @@ v1.19
 
 - Added some UI feauters.
 - Removed redundant methods and classes.
+- Moved to UPM package.
