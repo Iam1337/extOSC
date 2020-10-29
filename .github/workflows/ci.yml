@@ -1,16 +1,26 @@
-name: ⚙ Release
+name: ⚙ Build and Release
 on:
   push:
     branches:
     - master
 jobs:
   release:
-    name: release
+    name: ⚙ Release
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+    - name: Build unitypackage
+      working-directory: Assets
+      run: |
+        echo extOSC.meta >> metaList
+        find extOSC -name \*.meta >> metaList
+    - uses: pCYSl5EDgo/create-unitypackage@master
+      with:
+        package-path: extOSC.unitypackage
+        include-files: Assets/metaList
+        project-folder: ./
     - name: Semantic release
       id: semantic
       uses: cycjimmy/semantic-release-action@v2
