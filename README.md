@@ -48,6 +48,42 @@ extOSC will bundle your packages for optimisation purposes.
 
 **And much more**
 
+### Installation:
+**Old school**
+
+Just copy the [Assets/extOSC](Assets/extOSC) folder into your Assets directory within your Unity project, or [download latest extOSC.unitypackage](https://github.com/iam1337/extOSC/releases).
+
+**OpenUPM**
+
+Via [openupm-cli](https://github.com/openupm/openupm-cli):<br>
+```
+openupm add com.iam1337.extosc
+```
+
+Or if you don't have it, add the scoped registry to manifest.json with the desired dependency semantic version:
+```
+"scopedRegistries": [
+	{
+		"name": "package.openupm.com",
+		"url": "https://package.openupm.com",
+		"scopes": [
+			"com.iam1337.extosc",
+		]
+	}
+],
+"dependencies": {
+	"com.iam1337.extOSC": "1.19.5""
+}
+```
+
+**Package Manager**
+
+Project supports Unity Package Manager. To install the project as a Git package do the following:
+
+1. In Unity, open **Window > Package Manager**.
+2. Press the **+** button, choose **"Add package from git URL..."**
+3. Enter "https://github.com/iam1337/extOSC.git#upm" and press Add.
+
 ### Examples:
 **Create OSC Transmitter**<br>
 ```c#
@@ -119,9 +155,6 @@ if (message.ToFloat(out var value))
 ```
 
 **Other examples you can find in [Examples](Assets/extOSC/Examples) folder.**
-
-### Installation:
-Just copy the [Assets/extOSC](Assets/extOSC) folder into your Assets directory within your Unity project.
 
 ### Author Contacts:
 \> [telegram.me/iam1337](http://telegram.me/iam1337) <br>
