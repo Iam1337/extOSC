@@ -1,6 +1,6 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
-#if !NETFX_CORE
+#if !UNITY_WSA || UNITY_EDITOR
 
 using UnityEngine;
 
@@ -14,12 +14,9 @@ namespace extOSC.Core.Network
 	{
 		#region Public Vars
 
-		public override bool IsAvailable
-		{
-			get { return _client != null; }
-		}
+		public override bool IsAvailable => _client != null;
 
-		#endregion
+        #endregion
 
 		#region Private Vars
 

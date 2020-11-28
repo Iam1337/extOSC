@@ -1,6 +1,6 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
-#if NETFX_CORE
+#if UNITY_WSA && !UNITY_EDITOR
 
 using UnityEngine;
 
@@ -17,27 +17,21 @@ namespace extOSC.Core.Network
 {
     internal class OSCReceiverWindowsStoreBackend : OSCReceiverBackend
     {
-#region Public Vars
+        #region Public Vars
 
-        public override OSCReceivedCallback ReceivedCallback 
+        public override OSCReceivedCallback ReceivedCallback
         {
-            get { return _receivedCallback; }
-            set { _receivedCallback = value; }
+            get => _receivedCallback;
+            set => _receivedCallback = value;
         }
 
-        public override bool IsStarted
-        {
-            get { return _datagramSocket != null; }
-        }
+        public override bool IsAvailable => _datagramSocket != null;
 
-        public override bool IsRunning
-        {
-            get { return _isRunning; }
-        }
+        public override bool IsRunning => _isRunning;
 
-#endregion
+        #endregion
 
-#region Private Vars
+        #region Private Vars
 
         private bool _isRunning;
 
@@ -49,9 +43,9 @@ namespace extOSC.Core.Network
 
         private OSCReceivedCallback _receivedCallback;
 
-#endregion
+        #endregion
 
-#region Public Methods
+        #region Public Methods
 
         public override void Connect(string localHost, int localPort)
         {
@@ -70,9 +64,9 @@ namespace extOSC.Core.Network
             _isRunning = false;
         }
 
-#endregion
+        #endregion
 
-#region Private Methods
+        #region Private Methods
 
         private async void ConnectAsync(int localPort)
         {
@@ -80,16 +74,16 @@ namespace extOSC.Core.Network
                 Close();
 
             _localPort = localPort.ToString();
-          
-			try
-			{
+
+            try
+            {
                 _datagramSocket = new DatagramSocket();
-			    _datagramSocket.MessageReceived += Receive;
+                _datagramSocket.MessageReceived += Receive;
                 _datagramSocket.Control.DontFragment = true;
-				await _datagramSocket.BindEndpointAsync(null, _localPort);
+                await _datagramSocket.BindEndpointAsync(null, _localPort);
 
                 InitMessage();
-			}
+            }
             catch (ArgumentOutOfRangeException)
             {
                 Debug.LogErrorFormat("[OSCReceiver] Invalid port: {0}", localPort);
@@ -106,14 +100,15 @@ namespace extOSC.Core.Network
 
         private async void InitMessage()
         {
-            using (var dataWriter = new DataWriter(await _datagramSocket.GetOutputStreamAsync(new HostName("255.255.255.255"), _localPort)))
+            using (var dataWriter =
+                new DataWriter(await _datagramSocket.GetOutputStreamAsync(new HostName("255.255.255.255"), _localPort)))
             {
                 try
                 {
                     var length = 0;
-                    var buffer = OSCConverter.Pack(new OSCMessage("/wsainit"), out length);
+                    var buffer = OSCConverter.Pack(new OSCMessage("/wsainit"));
 
-                    dataWriter.WriteBuffer(buffer.AsBuffer(0, length));
+                    dataWriter.WriteBuffer(buffer.AsBuffer(0, buffer.Length));
                     await dataWriter.StoreAsync();
                 }
                 catch (Exception exception)
@@ -124,7 +119,7 @@ namespace extOSC.Core.Network
         }
 
         private void Receive(DatagramSocket sender, DatagramSocketMessageReceivedEventArgs args)
-		{
+        {
             try
             {
                 using (var dataReader = args.GetDataReader())
@@ -144,9 +139,9 @@ namespace extOSC.Core.Network
             {
                 Debug.LogErrorFormat("[OSCReceiver] Receive error: " + e);
             }
-		}
+        }
 
-#endregion
+        #endregion
     }
 }
 

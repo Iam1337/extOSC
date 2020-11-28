@@ -1,6 +1,6 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
-#if !NETFX_CORE
+#if !UNITY_WSA || UNITY_EDITOR
 
 using System;
 using System.Net;

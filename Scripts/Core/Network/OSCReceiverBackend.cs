@@ -2,43 +2,43 @@
 
 namespace extOSC.Core.Network
 {
-	public abstract class OSCReceiverBackend
-	{
-		#region Extensions
+    public abstract class OSCReceiverBackend
+    {
+        #region Extensions
 
-		public delegate void OSCReceivedCallback(IOSCPacket packet);
+        public delegate void OSCReceivedCallback(IOSCPacket packet);
 
-		#endregion
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public static OSCReceiverBackend Create()
-		{
-#if NETFX_CORE
+        public static OSCReceiverBackend Create()
+        {
+#if UNITY_WSA && !UNITY_EDITOR
             return new OSCReceiverWindowsStoreBackend();
 #else
-			return new OSCReceiverStandaloneBackend();
+            return new OSCReceiverStandaloneBackend();
 #endif
-		}
+        }
 
-		#endregion
+        #endregion
 
-		#region Public Vars
+        #region Public Vars
 
-		public abstract OSCReceivedCallback ReceivedCallback { get; set; }
+        public abstract OSCReceivedCallback ReceivedCallback { get; set; }
 
-		public abstract bool IsAvailable { get; }
+        public abstract bool IsAvailable { get; }
 
-		public abstract bool IsRunning { get; }
+        public abstract bool IsRunning { get; }
 
-		#endregion
+        #endregion
 
-		#region Public Methods
+        #region Public Methods
 
-		public abstract void Connect(string localHost, int localPort);
+        public abstract void Connect(string localHost, int localPort);
 
-		public abstract void Close();
+        public abstract void Close();
 
-		#endregion
-	}
+        #endregion
+    }
 }
