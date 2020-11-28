@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
 using extOSC.Core;
 
-#if NETFX_CORE
+#if UNITY_WSA && !UNITY_EDITOR
 using System.Reflection;
 #endif
 
@@ -33,7 +33,7 @@ namespace extOSC
 
 		public static string GetLocalHost()
 		{
-#if !NETFX_CORE
+#if !UNITY_WSA
 			try
 			{
 				var hostName = Dns.GetHostName();
@@ -488,7 +488,7 @@ namespace extOSC
 
 		public static bool IsSubclassOf(Type targetType, Type sourceType)
 		{
-#if !NETFX_CORE
+#if !UNITY_WSA || UNITY_EDITOR
 			return (targetType.IsSubclassOf(sourceType) || targetType == sourceType);
 #else
             return (targetType.GetTypeInfo().IsSubclassOf(sourceType) || targetType == sourceType);
@@ -520,7 +520,7 @@ namespace extOSC
 
 		private static int StructSizeOf<T>(T structure) where T : struct
 		{
-#if !NETFX_CORE
+#if !UNITY_WSA
 			return Marshal.SizeOf(structure);
 #else
             return Marshal.SizeOf<T>(structure);
@@ -529,7 +529,7 @@ namespace extOSC
 
 		private static int StructSizeOf<T>() where T : struct
 		{
-#if !NETFX_CORE
+#if !UNITY_WSA
 			return Marshal.SizeOf(typeof(T));
 #else
             return Marshal.SizeOf<T>();
@@ -538,7 +538,7 @@ namespace extOSC
 
 		private static T PtrToStructure<T>(IntPtr pointer) where T : struct
 		{
-#if !NETFX_CORE
+#if !UNITY_WSA
 			return (T) Marshal.PtrToStructure(pointer, typeof(T));
 #else
             return Marshal.PtrToStructure<T>(pointer);

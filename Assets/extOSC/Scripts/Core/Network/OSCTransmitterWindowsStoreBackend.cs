@@ -1,6 +1,6 @@
 ﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
 
-#if NETFX_CORE
+#if UNITY_WSA && !UNITY_EDITOR
 
 using UnityEngine;
 
@@ -13,14 +13,11 @@ using Windows.Storage.Streams;
 
 namespace extOSC.Core.Network
 {
-    internal class OSCTransmitterWindowsStoreBackend : OSCTransmitterBackend 
+    internal class OSCTransmitterWindowsStoreBackend : OSCTransmitterBackend
     {
         #region Public Vars
 
-        public override bool IsStarted
-        {
-            get { return _datagramSocket != null; }
-        }
+        public override bool IsAvailable => _datagramSocket != null;
 
         #endregion
 
@@ -36,7 +33,7 @@ namespace extOSC.Core.Network
 
         #region Public Methods
 
-		public override void Connect(string localHost, int localPort)
+        public override void Connect(string localHost, int localPort)
         {
             if (_datagramSocket != null)
                 Close();
@@ -47,7 +44,7 @@ namespace extOSC.Core.Network
             _datagramSocket = new DatagramSocket();
         }
 
-		public override void RefreshRemote(string remoteHost, int remotePort)
+        public override void RefreshRemote(string remoteHost, int remotePort)
         {
             _remoteHost = new HostName(remoteHost);
             _remotePort = remotePort.ToString();
@@ -72,7 +69,8 @@ namespace extOSC.Core.Network
 
         private async void SendAsync(IBuffer buffer)
         {
-            using (var dataWriter = new DataWriter(await _datagramSocket.GetOutputStreamAsync(_remoteHost, _remotePort)))
+            using (var dataWriter =
+                new DataWriter(await _datagramSocket.GetOutputStreamAsync(_remoteHost, _remotePort)))
             {
                 try
                 {
@@ -84,7 +82,7 @@ namespace extOSC.Core.Network
                     Debug.LogWarningFormat("[OSCTranmitter] Error: {0}", exception);
                 }
             }
-        }   
+        }
 
         #endregion
     }
