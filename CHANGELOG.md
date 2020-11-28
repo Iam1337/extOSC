@@ -1,3 +1,10 @@
+## [1.19.6](https://github.com/Iam1337/extOSC/compare/v1.19.5...v1.19.6) (2020-11-28)
+
+
+### Bug Fixes
+
+* WSA/UWP support ([40c9051](https://github.com/Iam1337/extOSC/commit/40c90514785ab324b6a5cde9c22c98e73700702a))
+
 ## [1.19.5](https://github.com/Iam1337/extOSC/compare/v1.19.4...v1.19.5) (2020-10-29)
 
 
