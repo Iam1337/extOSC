@@ -1,3 +1,10 @@
+## [1.19.7](https://github.com/Iam1337/extOSC/compare/v1.19.6...v1.19.7) (2020-12-03)
+
+
+### Bug Fixes
+
+* try to fix meta files in upm ([5319272](https://github.com/Iam1337/extOSC/commit/5319272d18a99af243bc7ce77a908404c9e11a16))
+
 ## [1.19.6](https://github.com/Iam1337/extOSC/compare/v1.19.5...v1.19.6) (2020-11-28)
 
 
