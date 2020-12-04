@@ -53,11 +53,8 @@ namespace extOSC.Editor.Panels
 				GUILayout.EndHorizontal();
 
 				EditorGUILayout.LabelField(_packetNotSelectedContent, OSCEditorStyles.CenterLabel, GUILayout.Height(contentRect.height));
-
-				return;
 			}
-
-			if (SelectedMessage != null)
+			else
 			{
 				GUILayout.BeginHorizontal(EditorStyles.toolbar);
 

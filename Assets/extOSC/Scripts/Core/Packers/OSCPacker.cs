@@ -40,9 +40,9 @@ namespace extOSC.Core.Packers
 
 		public override void Pack(byte[] bytes, ref int index, object value)
 		{
-			var unpackedValue = (T) value;
-			if (unpackedValue == null) return;
-
+			if (typeof(T).IsClass && Equals(value, default(T))) 
+				return;
+			
 			ValueToBytes(bytes, ref index, (T) value);
 		}
 

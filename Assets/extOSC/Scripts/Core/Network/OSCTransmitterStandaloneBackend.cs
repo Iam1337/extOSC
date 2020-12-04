@@ -22,8 +22,6 @@ namespace extOSC.Core.Network
 
 		private IPEndPoint _remoteEndPoint;
 
-		private IPEndPoint _localEndPoint;
-
 		private UdpClient _client;
 
 		#endregion

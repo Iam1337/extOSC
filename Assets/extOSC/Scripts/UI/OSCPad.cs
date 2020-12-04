@@ -54,6 +54,10 @@ namespace extOSC.UI
 					input.y = 1f - input.y;
 					input.x = 1f - input.x;
 					break;
+				case PointAlignment.BottomLeft: 
+					break;
+				default:                        
+					throw new ArgumentOutOfRangeException(nameof(alignment), alignment, null);
 			}
 
 			return input;
