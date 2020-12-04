@@ -77,7 +77,7 @@ namespace extOSC.Components.Misc
 			UpdateCachedReferences();
 
 			if (_cachedProperty != null)
-				_previousValue = (Vector3) _cachedProperty.GetValue();
+				_previousValue = (Vector3) (_cachedProperty.GetValue() ?? Vector3.zero);
 		}
 
 #if UNITY_EDITOR
@@ -129,7 +129,7 @@ namespace extOSC.Components.Misc
 
 		public void Send()
 		{
-			var vector = (Vector3) _cachedProperty.GetValue();
+			var vector = (Vector3) (_cachedProperty.GetValue() ?? Vector3.zero);
 
 			Transmitter.Send(OSCMessage.Create(AddressX, OSCValue.Float(vector.x)));
 			Transmitter.Send(OSCMessage.Create(AddressY, OSCValue.Float(vector.y)));

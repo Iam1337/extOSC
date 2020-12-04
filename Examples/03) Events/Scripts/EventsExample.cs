@@ -36,9 +36,9 @@ namespace extOSC.Examples
 
 		protected virtual void Start()
 		{
-			TextScale.text = Vector3.one.ToString();
-			TextRotate.text = Vector3.zero.ToString();
-			TextPosition.text = Vector3.zero.ToString();
+			TextScale.text = $"{Vector3.one}";
+			TextRotate.text = $"{Vector3.zero}";
+			TextPosition.text = $"{Vector3.zero}";
 		}
 
 		#endregion

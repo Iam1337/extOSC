@@ -77,7 +77,7 @@ namespace extOSC.Editor.Components.UI
 		{
 			OSCEditorInterface.LogoLayout();
 
-			GUILayout.Label(string.Format("Value: {0}", _valueProperty.floatValue), EditorStyles.boldLabel);
+			GUILayout.Label($"Value: {_valueProperty.floatValue}", EditorStyles.boldLabel);
 			GUILayout.BeginVertical(OSCEditorStyles.Box);
 
 			GUILayout.Label(_settingsContent, EditorStyles.boldLabel);
@@ -125,19 +125,20 @@ namespace extOSC.Editor.Components.UI
 				GUILayout.EndVertical();
 
 				bool warning = false;
-				foreach (var obj in serializedObject.targetObjects)
+				foreach (var targetObject in serializedObject.targetObjects)
 				{
-					var slider = obj as Slider;
-					Slider.Direction dir = slider.direction;
-					if (dir == Slider.Direction.LeftToRight || dir == Slider.Direction.RightToLeft)
-						warning = (slider.navigation.mode != Navigation.Mode.Automatic && (slider.FindSelectableOnLeft() != null || slider.FindSelectableOnRight() != null));
-					else
-						warning = (slider.navigation.mode != Navigation.Mode.Automatic && (slider.FindSelectableOnDown() != null || slider.FindSelectableOnUp() != null));
+					if (targetObject is Slider slider)
+					{
+						var direction = slider.direction;
+						if (direction == Slider.Direction.LeftToRight || direction == Slider.Direction.RightToLeft)
+							warning = (slider.navigation.mode != Navigation.Mode.Automatic && (slider.FindSelectableOnLeft() != null || slider.FindSelectableOnRight() != null));
+						else
+							warning = (slider.navigation.mode != Navigation.Mode.Automatic && (slider.FindSelectableOnDown() != null || slider.FindSelectableOnUp() != null));
+					}
 				}
 
 				if (warning)
 					EditorGUILayout.HelpBox("The selected slider direction conflicts with navigation. Not all navigation options may work.", MessageType.Warning);
-
 
 				EditorGUILayout.Space();
 				EditorGUILayout.PropertyField(_onValueChangedProperty);

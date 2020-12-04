@@ -76,12 +76,11 @@ namespace extOSC.Core
 			{
 				var packetDescription = string.Empty;
 
-				if (!_packet.IsBundle())
+				if (_packet is OSCMessage)
 				{
 					packetDescription = $"<color=orange>Message:</color> {_packet.Address}";
 				}
-
-				if (_packet is OSCBundle bundle)
+				else if (_packet is OSCBundle bundle)
 				{
 					packetDescription = $"<color=yellow>Bundle:</color> (Packets: {bundle.Packets.Count})";
 				}

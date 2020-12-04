@@ -47,7 +47,7 @@ namespace extOSC.Editor.Windows
 
 		public static OSCConsolePacket[] GetConsoleBuffer(bool transmitted, bool received, string filter)
 		{
-			if (ConsoleBuffer == null || (ConsoleBuffer != null && ConsoleBuffer.Count == 0))
+			if (ConsoleBuffer == null || ConsoleBuffer.Count == 0)
 				return _emptyBuffer;
 
 			var requireRebuild = false;
@@ -62,7 +62,7 @@ namespace extOSC.Editor.Windows
 
 				requireRebuild = true;
 			}
-			else if (ConsoleBuffer.Count > 0)
+			else
 			{
 				requireRebuild = ConsoleBuffer[0] != _lastMessage;
 			}
@@ -70,7 +70,7 @@ namespace extOSC.Editor.Windows
 			if (!requireRebuild)
 				return _tempBuffer;
 
-			_lastMessage = ConsoleBuffer.Count > 0 ? ConsoleBuffer[0] : null;
+			_lastMessage = ConsoleBuffer[0];
 
 			var consoleList = new List<OSCConsolePacket>();
 

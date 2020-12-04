@@ -135,8 +135,11 @@ namespace extOSC.Core.Network
 				if (bytes != null && bytes.Length > 0)
 				{
 					var packet = OSCConverter.Unpack(bytes);
-					packet.Ip = ip.Address;
-					packet.Port = ip.Port;
+					if (packet != null)
+					{
+						packet.Ip = ip.Address;
+						packet.Port = ip.Port;
+					}
 
 					return packet;
 				}

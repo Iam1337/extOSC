@@ -70,7 +70,7 @@ namespace extOSC.Editor
 		}
 
 		// SETTINGS
-		[MenuItem(_settingsASCII, false, _settingsIndex + 0)]
+		[MenuItem(_settingsASCII, false, _settingsIndex)]
 		public static void SettingsSwitchASCII()
 		{
 			OSCDefinesManager.SetDefine(_encodingDefine, false);
@@ -97,7 +97,7 @@ namespace extOSC.Editor
 		}
 
 		// LINKS
-		[MenuItem(_linksRoot + "GitHub: Repository", false, _linksIndex + 0)]
+		[MenuItem(_linksRoot + "GitHub: Repository", false, _linksIndex)]
 		public static void ShowRepository(MenuCommand menuCommand)
 		{
 			Application.OpenURL("https://github.com/iam1337/extOSC");

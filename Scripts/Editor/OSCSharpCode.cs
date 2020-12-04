@@ -14,7 +14,17 @@ namespace extOSC.Editor
 
 		public static string GeneratePacket(IOSCPacket packet)
 		{
-			return packet.IsBundle() ? GenerateBundle(packet as OSCBundle) : GenerateMessage(packet as OSCMessage);
+			if (packet is OSCBundle bundle)
+			{
+				return GenerateBundle(bundle);
+			}
+
+			if (packet is OSCMessage message)
+			{
+				return GenerateMessage(message);
+			}
+
+			return string.Empty;
 		}
 
 		public static string GenerateBundle(OSCBundle bundle)

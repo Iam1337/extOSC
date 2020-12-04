@@ -500,7 +500,7 @@ namespace extOSC
 			return IsSubclassOf(target.GetType(), targetType);
 		}
 
-		public static int IndexOf<T>(this T[] array, T target)
+		public static int IndexOf<T>(this T[] array, T target) where T : class
 		{
 			for (var i = 0; i < array.Length; ++i)
 			{

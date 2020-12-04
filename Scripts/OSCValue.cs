@@ -120,8 +120,8 @@ namespace extOSC
 					return OSCValueType.Midi;
 				case '[':
 					return OSCValueType.Array;
-				case ']':
-					return OSCValueType.Array;
+				//case ']':
+				//	return OSCValueType.Array;
 				default:
 					return OSCValueType.Unknown;
 			}
