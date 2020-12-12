@@ -42,7 +42,7 @@ extOSC will bundle your packages for optimisation purposes.
 **And also:**
 
 - Every data type support *(include **Array** and **MIDI**)*
-- Compatible with OS X, Windows, iOS & Android, Windows Store
+- Compatible with OS X, Windows, iOS & Android, Windows Store (**Hololens** and **Hololens 2**)
 - Tested with TouchOSC, VVOpenSource, OpenFrameworks and others frameworks and applications
 - Examples
 
