@@ -72,7 +72,7 @@ Or if you don't have it, add the scoped registry to manifest.json with the desir
 	}
 ],
 "dependencies": {
-	"com.iam1337.extOSC": "1.19.5"
+	"com.iam1337.extOSC": "1.19.7"
 }
 ```
 
