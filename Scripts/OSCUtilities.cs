@@ -8,11 +8,12 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
-using extOSC.Core;
 
 #if UNITY_WSA && !UNITY_EDITOR
 using System.Reflection;
 #endif
+
+using extOSC.Core;
 
 namespace extOSC
 {
@@ -64,25 +65,39 @@ namespace extOSC
 			return outputMax < outputMin ? Mathf.Clamp(outputValue, outputMax, outputMin) : Mathf.Clamp(outputValue, outputMin, outputMax);
 		}
 
+		// TODO: More optimize.
 		public static bool CompareAddresses(string bindAddress, string messageAddress)
 		{
 			if (bindAddress == "*")
 				return true;
 
-			if (!bindAddress.Contains("*"))
-				return bindAddress == messageAddress;
-
-			if (!_cachedAddress.ContainsKey(bindAddress))
-				_cachedAddress.Add(bindAddress, new List<string>());
-
-			if (_cachedAddress[bindAddress].Contains(messageAddress))
-				return true;
-
-			var regular = new Regex("^" + bindAddress.Replace("*", "(.+)") + "$");
-			if (regular.IsMatch(messageAddress))
+			if (!_cachedAddress.TryGetValue(bindAddress, out var cachedAddresses))
 			{
-				_cachedAddress[bindAddress].Add(messageAddress);
+				cachedAddresses = new List<string>();
+
+				_cachedAddress.Add(bindAddress, cachedAddresses);
+			}
+			else if (cachedAddresses.Contains(messageAddress))
+			{
 				return true;
+			}
+
+			if (bindAddress == messageAddress)
+			{
+				cachedAddresses.Add(messageAddress);
+
+				return true;
+			}
+
+			if (bindAddress.Contains("*"))
+			{
+				var regular = new Regex("^" + bindAddress.Replace("*", "(.+)") + "$");
+				if (regular.IsMatch(messageAddress))
+				{
+					cachedAddresses.Add(messageAddress);
+
+					return true;
+				}
 			}
 
 			return false;
