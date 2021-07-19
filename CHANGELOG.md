@@ -1,3 +1,10 @@
+## [1.19.8](https://github.com/Iam1337/extOSC/compare/v1.19.7...v1.19.8) (2021-07-19)
+
+
+### Performance Improvements
+
+* **extOSC:** OSCUtilities.CompareAddresses optimize ([54cc544](https://github.com/Iam1337/extOSC/commit/54cc544eb2c37291c0b482663133f36be0d15712))
+
 ## [1.19.7](https://github.com/Iam1337/extOSC/compare/v1.19.6...v1.19.7) (2020-12-03)
 
 
