@@ -67,12 +67,8 @@ namespace extOSC.Components.ReceiverReflections
 
 		public void RemoveMember(OSCReflectionMember member)
 		{
-			if (!_reflectionMembers.Contains(member))
-				return;
-
-			_reflectionMembers.Remove(member);
-
-			UpdateCachedReferences();
+			if (_reflectionMembers.Remove(member))
+				UpdateCachedReferences();
 		}
 
 		public void UpdateMembers()

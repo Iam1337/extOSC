@@ -253,8 +253,7 @@ namespace extOSC.UI
 
 		public void RemoveSlider(OSCSlider slider)
 		{
-			if (_sliders.Contains(slider))
-				_sliders.Remove(slider);
+			_sliders.Remove(slider);
 		}
 
 		#endregion

@@ -193,7 +193,7 @@ namespace extOSC
 				throw new NullReferenceException(nameof(bind));
 
 			if (string.IsNullOrEmpty(bind.ReceiverAddress))
-				throw new Exception("[OSCReceiver]  Address can not be empty!");
+				throw new Exception("[OSCReceiver] Address can not be empty!");
 			
 			if (_processMessage)
 			{
@@ -225,8 +225,7 @@ namespace extOSC
 				return;
 			}
 
-			if (_messageBindings.Contains(bind))
-				_messageBindings.Remove(bind);
+			_messageBindings.Remove(bind);
 		}
 
 		// IOSCBindBundle
