@@ -62,7 +62,7 @@ namespace extOSC
 
 		public string LocalHost
 		{
-			get => RequestLocalHost();
+			get => GetLocalHost();
 			set
 			{
 				if (_localHost == value)
@@ -76,7 +76,7 @@ namespace extOSC
 
 		public int LocalPort
 		{
-			get => RequestLocalPort();
+			get => GetLocalPort();
 			set
 			{
 				if (_localPort == value)
@@ -217,7 +217,7 @@ namespace extOSC
 
 		public override void Connect()
 		{
-			_transmitterBackend.Connect(RequestLocalHost(), RequestLocalPort());
+			_transmitterBackend.Connect(GetLocalHost(), GetLocalPort());
 			_transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
 		}
 
@@ -229,7 +229,7 @@ namespace extOSC
 
 		public override string ToString()
 		{
-			return $"<{GetType().Name} (LocalHost: {_localHost} LocalPort: {_localPort} | RemoteHost: {_remoteHost}, RemotePort: {_remotePort})>";
+			return $"<{nameof(OSCTransmitter)} (LocalHost: {_localHost} LocalPort: {_localPort} | RemoteHost: {_remoteHost}, RemotePort: {_remotePort})>";
 		}
 
 		public void Send(IOSCPacket packet, OSCSendOptions options = OSCSendOptions.None)
@@ -278,7 +278,7 @@ namespace extOSC
 			_transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
 		}
 
-		private string RequestLocalHost()
+		private string GetLocalHost()
 		{
 			if (_localReceiver != null)
 				return _localReceiver.LocalHost;
@@ -289,7 +289,7 @@ namespace extOSC
 			return _localHost;
 		}
 
-		private int RequestLocalPort()
+		private int GetLocalPort()
 		{
 			if (_localReceiver != null)
 				return _localReceiver.LocalPort;
