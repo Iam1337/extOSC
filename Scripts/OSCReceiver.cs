@@ -40,7 +40,7 @@ namespace extOSC
 
 		public string LocalHost
 		{
-			get => RequestLocalHost();
+			get => GetLocalHost();
 			set
 			{
 				if (_localHost == value)
@@ -172,12 +172,12 @@ namespace extOSC
 
 		public override string ToString()
 		{
-			return $"<{GetType().Name} (LocalHost: {_localHost} LocalPort: {_localPort})>";
+			return $"<{nameof(OSCReceiver)} (LocalHost: {_localHost} LocalPort: {_localPort})>";
 		}
 
 		public override void Connect()
 		{
-			_receiverBackend.Connect(RequestLocalHost(), _localPort);
+			_receiverBackend.Connect(GetLocalHost(), _localPort);
 		}
 
 		public override void Close()
@@ -363,8 +363,7 @@ namespace extOSC
 			}
 		}
 
-
-		private string RequestLocalHost()
+		private string GetLocalHost()
 		{
 			return _localHostMode == OSCLocalHostMode.Any ? "0.0.0.0" : _localHost;
 		}
