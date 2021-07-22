@@ -1,24 +1,19 @@
-﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2021 dr. ext (Vladimir Sigalkin) */
+
+using UnityEngine;
+using UnityEngine.Serialization;
+
+using System;
+using System.Collections.Generic;
 
 using extOSC.Core;
 using extOSC.Core.Network;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace extOSC
 {
     [AddComponentMenu("extOSC/OSC Transmitter")]
 	public class OSCTransmitter : OSCBase
 	{
-		#region Obsolete
-
-		[Obsolete("Use IsStarted property.")]
-		public bool IsAvailable => IsStarted;
-
-		#endregion
-
 		#region Public Vars
 
 		public override bool IsStarted => _transmitterBackend.IsAvailable;
