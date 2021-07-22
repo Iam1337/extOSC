@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2021 dr. ext (Vladimir Sigalkin) */
 
 using UnityEngine;
 using UnityEngine.Events;
@@ -278,12 +278,6 @@ namespace extOSC
 		{
 			_messageBindings.Clear();
 			_bundleBindings.Clear();
-		}
-
-		[Obsolete("Use ClearBinds() method.")]
-		public void UnbindAll()
-		{
-			ClearBinds();
 		}
 
 		#endregion

@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2021 dr. ext (Vladimir Sigalkin) */
 
 namespace extOSC.Mapping
 {

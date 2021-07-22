@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2020 ExT (V.Sigalkin) */
+﻿/* Copyright (c) 2021 dr. ext (Vladimir Sigalkin) */
 
 using System;
 using System.Net;
@@ -11,9 +11,6 @@ namespace extOSC
 	public class OSCBundle : IOSCPacket
 	{
 		#region Constants
-
-		[Obsolete("Use BundleAddress constant.")]
-		public const string KBundle = "#bundle";
 
 		public const string BundleAddress = "#bundle";
 
