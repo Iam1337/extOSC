@@ -69,7 +69,7 @@ namespace extOSC.Examples
 
 		public void SendSecond(float value)
 		{
-			var message = new OSCMessage(_firstSlider, OSCValue.Float(value));
+			var message = new OSCMessage(_secondSlider, OSCValue.Float(value));
 
 			Transmitter.Send(message);
 			TransmitterTextSecond.text = value.ToString();
