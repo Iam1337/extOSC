@@ -1,3 +1,10 @@
+## [1.19.9](https://github.com/Iam1337/extOSC/compare/v1.19.8...v1.19.9) (2021-07-26)
+
+
+### Bug Fixes
+
+* **extOSC:** fixed Address Masks example ([f36cbbd](https://github.com/Iam1337/extOSC/commit/f36cbbd843975a044619c4f2f1d4214b96b8e178))
+
 ## [1.19.8](https://github.com/Iam1337/extOSC/compare/v1.19.7...v1.19.8) (2021-07-19)
 
 
