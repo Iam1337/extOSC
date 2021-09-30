@@ -1,6 +1,6 @@
 # extOSC - Open Sound Control Protocol for Unity
 
-Created by V. Sigalkin (dr. ext)
+Created by [iam1337](https://github.com/iam1337)
 
 ![](https://img.shields.io/badge/unity-2018.3%20or%20later-green.svg)
 [![⚙ Build and Release](https://github.com/Iam1337/extOSC/actions/workflows/ci.yml/badge.svg)](https://github.com/Iam1337/extOSC/actions/workflows/ci.yml)
