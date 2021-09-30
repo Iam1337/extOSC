@@ -7,14 +7,16 @@ Created by V. Sigalkin (dr. ext)
 [![openupm](https://img.shields.io/npm/v/com.iam1337.extosc?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.iam1337.extosc/)
 [![](https://img.shields.io/github/license/iam1337/extOSC.svg)](https://github.com/Iam1337/extOSC/blob/master/LICENSE)
 
-### What Is extOSC?
+### Table of Contents
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Examples](#examples)
+- [Author Contacts](#author-contacts)
+
+## Introduction
 extOSC (Open Sound Control Protocol) is a tool dedicated to simplify creation of applications with OSC protocol usage in Unity (Unity3d). Supported platforms are PC, Mac and Linux / iOS / tvOS / Android / Universal Windows Platform (UWP) and other.
 
 Also extOSC  is available on the [Unity Asset Store](http://u3d.as/ADA) for free.
-
-### Release Notes:
-
-You can read release notes in [versions.txt](Assets/extOSC/versions.txt) file.
 
 ### Features:
 
@@ -48,7 +50,7 @@ extOSC will bundle your packages for optimisation purposes.
 
 **And much more**
 
-### Installation:
+## Installation:
 **Old school**
 
 Just copy the [Assets/extOSC](Assets/extOSC) folder into your Assets directory within your Unity project, or [download latest extOSC.unitypackage](https://github.com/iam1337/extOSC/releases).
@@ -84,8 +86,8 @@ Project supports Unity Package Manager. To install the project as a Git package 
 2. Press the **+** button, choose **"Add package from git URL..."**
 3. Enter "https://github.com/iam1337/extOSC.git#upm" and press Add.
 
-### Examples:
-**Create OSC Transmitter**<br>
+## Examples:
+### Create OSC Transmitter
 ```c#
 // Creating a transmitter.
 var transmitter = gameObject.AddComponent<OSCTransmitter>();
@@ -98,7 +100,7 @@ transmitter.RemotePort = 7001;
 ```
 Or you can simple create **OSCTransmitter component** in Unity editor, or use **Create/extOSC/OSC Manager** in Hierarchy window.
 
-**Send OSCMessage**<br>
+### Send OSCMessage
 ```c#
 // Create message
 var message = new OSCMessage("/message/address");
@@ -112,7 +114,7 @@ transmitter.Send(message);
 ```
 Or you can use any *extOSC/Transmitter* components.
 
-**Create OSC Receiver**<br>
+### Create OSC Receiver
 ```c#
 // Creating a receiver.
 var receiver = gameObject.AddComponent<OSCReceiver>(); 
@@ -122,7 +124,7 @@ receiver.LocalPort = 7001;
 ```
 Or you can simple create **OSCReceiver component** in Unity editor, or use **Create/extOSC/OSC Manager** in Hierarchy window.
 
-**Receive OSCMessage**<br>
+### Receive OSCMessage
 Bind method to special address. In address argument you can use masks like: *"/message/\*"*
 ```c#
 // Bind "MessageReceived" method to special address.
@@ -138,7 +140,7 @@ protected void MessageReceived(OSCMessage message)
 ```
 Or you can use any *extOSC/Receiver* components.<br>
 
-**Get value from OSCMessage**<br>
+### Get value from OSCMessage
 You have two ways to get the value from the message.
 ```c#
 var value = message.Values[0].FloatValue;
@@ -156,9 +158,9 @@ if (message.ToFloat(out var value))
 
 **Other examples you can find in [Examples](Assets/extOSC/Examples) folder.**
 
-### Author Contacts:
+## Author Contacts:
 \> [telegram.me/iam1337](http://telegram.me/iam1337) <br>
 \> [ext@iron-wall.org](mailto:ext@iron-wall.org)
 
-### License
+## License
 This project is under the MIT License.
