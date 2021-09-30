@@ -1,3 +1,10 @@
+## [1.19.10](https://github.com/Iam1337/extOSC/compare/v1.19.9...v1.19.10) (2021-09-30)
+
+
+### Bug Fixes
+
+* **extOSC:** meta guid resolve ([0ab9f03](https://github.com/Iam1337/extOSC/commit/0ab9f03bb3675239a67dabcc7156fe86974f66b7))
+
 ## [1.19.9](https://github.com/Iam1337/extOSC/compare/v1.19.8...v1.19.9) (2021-07-26)
 
 
