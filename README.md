@@ -11,6 +11,11 @@ Created by V. Sigalkin (dr. ext)
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Examples](#examples)
+- - [Create OSC Transmitter](#create-osc-transmitter)
+- - [Send OSCMessage](#send-oscmessage)
+- - [Create OSC Receiver](#create-osc-receiver)
+- - [Receive OSCMessage](#receive-oscmessage)
+- - [Get value from OSCMessage](#get-value-from-oscmessage)
 - [Author Contacts](#author-contacts)
 
 ## Introduction
