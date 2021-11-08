@@ -55,7 +55,7 @@ extOSC will bundle your packages for optimisation purposes.
 
 **And much more**
 
-## Installation:
+## Installation
 **Old school**
 
 Just copy the [Assets/extOSC](Assets/extOSC) folder into your Assets directory within your Unity project, or [download latest extOSC.unitypackage](https://github.com/iam1337/extOSC/releases).
@@ -91,7 +91,7 @@ Project supports Unity Package Manager. To install the project as a Git package 
 2. Press the **+** button, choose **"Add package from git URL..."**
 3. Enter "https://github.com/iam1337/extOSC.git#upm" and press Add.
 
-## Examples:
+## Examples
 ### Create OSC Transmitter
 ```c#
 // Creating a transmitter.
@@ -163,7 +163,7 @@ if (message.ToFloat(out var value))
 
 **Other examples you can find in [Examples](Assets/extOSC/Examples) folder.**
 
-## Author Contacts:
+## Author Contacts
 \> [telegram.me/iam1337](http://telegram.me/iam1337) <br>
 \> [ext@iron-wall.org](mailto:ext@iron-wall.org)
 
