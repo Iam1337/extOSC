@@ -2,85 +2,59 @@ name: ⚙ Build and Release
 on:
   push:
     branches:
-    - master
+    - main
+
 jobs:
   release:
     name: ⚙ Release
     runs-on: ubuntu-latest
+    env:
+      PROJECT_NAME: extOSC
+      PROJECT_ASSETS: README.md:CHANGELOG.md:LICENSE
     steps:
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Build unitypackage
-      run: |
-        echo Assets/extOSC.meta >> metaList
-        find Assets/extOSC -name \*.meta >> metaList
-    - uses: pCYSl5EDgo/create-unitypackage@master
-      with:
-        package-path: extOSC.unitypackage
-        include-files: metaList
-        project-folder: ./
-    - name: Semantic release
+    - name: Semantic Release
       id: semantic
       uses: cycjimmy/semantic-release-action@v2
-      with:
-        extra_plugins: |
-          @semantic-release/changelog
-          @semantic-release/git
-        branch: master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Update upm branch
+      with:
+        branch: main
+        extra_plugins: |
+          @semantic-release/changelog 
+          @semantic-release/git
+          @iam1337/create-unitypackage
+    - name: Push UPM update
       run: |
-        echo '>>> Start'
-        git log -1
+        IFS=: read -r -a PROJECT_ASSETS_ARRAY <<< "$PROJECT_ASSETS"
 
         mkdir Temp
-        cp README.md Temp/README.md
-        cp CHANGELOG.md Temp/CHANGELOG.md
-        cp LICENSE Temp/LICENSE
+        for asset in "${PROJECT_ASSETS_ARRAY[@]}"; do
+          cp ${asset} Temp/${asset}
+        done
 
-        echo '>>> Delete local upm branch'
-        git branch -d upm &> /dev/null || echo upm branch not found
-
-        echo
-        echo '>>> Split upm branch'
-        git subtree split -P "$PKG_ROOT" -b upm
-
-        echo
-        echo '>>> Checkout upm branch'
+        git log -1
+        git subtree split -P "Assets/$PROJECT_NAME" -b upm
         git checkout upm
 
-        cp Temp/README.md README.md
-        git add README.md
-
-        cp Temp/CHANGELOG.md CHANGELOG.md
-        git add CHANGELOG.md
-
-        cp Temp/LICENSE LICENSE
-        git add LICENSE
+        for asset in "${PROJECT_ASSETS_ARRAY[@]}"; do
+          cp Temp/${asset} ${asset}
+          git add ${asset}
+        done
 
         if [[ -d "Examples" ]]; then
-          echo
-          echo '>>> Examples move to Examples~'
           git mv Examples Examples~
           rm -f Examples.meta
         fi
 
-        git config --global user.name 'github-bot'
-        git config --global user.email 'github-bot@users.noreply.github.com'
-        git commit -am "$MSG"
-
-        echo
-        echo '>>> Force overwrite remote upm branch'
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git commit -am "chore(release): update upm branch [skip ci]"
         git push -f -u origin upm
-      env:
-        PKG_ROOT: Assets/extOSC
-        MSG: Finalize v${{ steps.semantic.outputs.new_release_version }} commit.
-    - name: Create upm git tag
+    - name: Push UPM tag
       if: steps.semantic.outputs.new_release_published == 'true'
+      env: 
+        UPM_TAG: upm/v${{ steps.semantic.outputs.new_release_version }}
       run: |
-        git tag $TAG upm
+        git tag $UPM_TAG upm
         git push origin --tags
-      env:
-        TAG: upm/v${{ steps.semantic.outputs.new_release_version }} 
