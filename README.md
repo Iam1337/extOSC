@@ -6,6 +6,7 @@ Created by [iam1337](https://github.com/iam1337)
 [![⚙ Build and Release](https://github.com/Iam1337/extOSC/actions/workflows/ci.yml/badge.svg)](https://github.com/Iam1337/extOSC/actions/workflows/ci.yml)
 [![openupm](https://img.shields.io/npm/v/com.iam1337.extosc?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.iam1337.extosc/)
 [![](https://img.shields.io/github/license/iam1337/extOSC.svg)](https://github.com/Iam1337/extOSC/blob/master/LICENSE)
+[![semantic-release: angular](https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release)](https://github.com/semantic-release/semantic-release)
 
 ### Table of Contents
 - [Introduction](#introduction)
