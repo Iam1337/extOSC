@@ -1,3 +1,11 @@
+## [1.19.11](https://github.com/Iam1337/extOSC/compare/v1.19.10...v1.19.11) (2022-01-07)
+
+
+### Bug Fixes
+
+* **ci:** fix branch settings ([daebd4d](https://github.com/Iam1337/extOSC/commit/daebd4d0ea4070159ec283b1f3cbaf19173088c5))
+* **ci:** update semantic-release settings ([3e55c24](https://github.com/Iam1337/extOSC/commit/3e55c240c69f5daed8538377abe2be166722013e))
+
 ## [1.19.10](https://github.com/Iam1337/extOSC/compare/v1.19.9...v1.19.10) (2021-09-30)
 
 
