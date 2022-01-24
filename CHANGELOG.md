@@ -1,3 +1,10 @@
+## [1.19.12](https://github.com/Iam1337/extOSC/compare/v1.19.11...v1.19.12) (2022-01-24)
+
+
+### Bug Fixes
+
+* **ci:** added self-hosted npm mirror ([0005091](https://github.com/Iam1337/extOSC/commit/00050917239cb1a51ea7f698ac80b3182c9dbcb7))
+
 ## [1.19.11](https://github.com/Iam1337/extOSC/compare/v1.19.10...v1.19.11) (2022-01-07)
 
 
