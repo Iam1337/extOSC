@@ -1,3 +1,10 @@
+## [1.19.14](https://github.com/Iam1337/extOSC/compare/v1.19.13...v1.19.14) (2022-01-24)
+
+
+### Bug Fixes
+
+* **ci:** fix ci invoke ([7bd6732](https://github.com/Iam1337/extOSC/commit/7bd6732ae10f3d4afcfe8fa9397abf792e021aff))
+
 ## [1.19.13](https://github.com/Iam1337/extOSC/compare/v1.19.12...v1.19.13) (2022-01-24)
 
 
