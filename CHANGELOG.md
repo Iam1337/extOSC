@@ -1,3 +1,10 @@
+## [1.19.13](https://github.com/Iam1337/extOSC/compare/v1.19.12...v1.19.13) (2022-01-24)
+
+
+### Bug Fixes
+
+* **ci:** fix secret ([b7158c6](https://github.com/Iam1337/extOSC/commit/b7158c6a18abde5595160587553cf40b41525bb7))
+
 ## [1.19.12](https://github.com/Iam1337/extOSC/compare/v1.19.11...v1.19.12) (2022-01-24)
 
 
