@@ -1,3 +1,10 @@
+## [1.19.16](https://github.com/Iam1337/extOSC/compare/v1.19.15...v1.19.16) (2022-01-24)
+
+
+### Bug Fixes
+
+* **ci:** cleanup ([3a4a88c](https://github.com/Iam1337/extOSC/commit/3a4a88c6d9495e44d4e76b40fd5c538afff532a1))
+
 ## [1.19.15](https://github.com/Iam1337/extOSC/compare/v1.19.14...v1.19.15) (2022-01-24)
 
 
