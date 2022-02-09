@@ -17,6 +17,7 @@ Created by [iam1337](https://github.com/iam1337)
 - - [Create OSC Receiver](#create-osc-receiver)
 - - [Receive OSCMessage](#receive-oscmessage)
 - - [Get value from OSCMessage](#get-value-from-oscmessage)
+- [Extensions](#extensions)
 - [Author Contacts](#author-contacts)
 
 ## Introduction
@@ -163,6 +164,12 @@ if (message.ToFloat(out var value))
 ```
 
 **Other examples you can find in [Examples](Assets/extOSC/Examples) folder.**
+
+## Extensions
+
+List of useful repositories to help make extDebug easier to use:
+
+- [extOSC.InEditor](https://github.com/Iam1337/extOSC.InEditor) - Extension to support extOSC behaviour in Unity Editor
 
 ## Author Contacts
 \> [telegram.me/iam1337](http://telegram.me/iam1337) <br>
