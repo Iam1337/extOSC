@@ -32,7 +32,11 @@ namespace extOSC.Editor
 
 		private const string _settingsUTF8 = _settingsEncoding + "UTF8";
 
+		private const string _settingsDrown = _settingsRoot + "Detect Receiver Drown";
+
 		private const string _encodingDefine = "EXTOSC_UTF8";
+
+		private const string _drownDefine = "EXTOSC_DISABLE_DROWN";
 
 		private const int _settingsIndex = _windowsIndex + 100;
 
@@ -93,6 +97,19 @@ namespace extOSC.Editor
 		public static bool SettingsSwitchUTF8Validate()
 		{
 			Menu.SetChecked(_settingsUTF8, OSCDefinesManager.HasDefine(_encodingDefine));
+			return true;
+		}
+
+		[MenuItem(_settingsDrown, false, _settingsIndex + 2)]
+		public static void SettingsDrown()
+		{
+			OSCDefinesManager.SetDefine(_drownDefine, !OSCDefinesManager.HasDefine(_drownDefine));
+		}
+
+		[MenuItem(_settingsDrown, true)]
+		public static bool SettingsDrownValidate()
+		{
+			Menu.SetChecked(_settingsDrown, !OSCDefinesManager.HasDefine(_drownDefine));
 			return true;
 		}
 

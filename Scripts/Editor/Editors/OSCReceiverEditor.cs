@@ -32,7 +32,11 @@ namespace extOSC.Editor
 
 		private static readonly GUIContent _closeOnPauseContent = new GUIContent("Close On Pause");
 
+		private static readonly GUIContent _drownContent = new GUIContent("Receiver is drown!");
+
 		private static string _advancedSettingsText = "\"Advanced settings\" are not available for UWP (WSA).";
+		
+		private static string _drownText = "OSCReceiver is unable to process the current number of packets. Try reducing the number of packetss, or turn off optimizations: \"Tools/extOSC/\".";
 
 		private static MethodInfo _updateMethod;
 
@@ -107,6 +111,18 @@ namespace extOSC.Editor
 
 			// LOGO
 			OSCEditorInterface.LogoLayout();
+
+			// IS DROWN INDICATE
+			if (_receiver.IsDrown)
+			{
+				GUI.color = Color.red;
+				using (new GUILayout.VerticalScope(OSCEditorStyles.Box))
+				{
+					GUILayout.Label(_drownContent, OSCEditorStyles.CenterBoldLabel);
+					GUI.color = _defaultColor;
+					EditorGUILayout.HelpBox(_drownText, MessageType.Error);
+				}
+			}
 
 			// INSPECTOR
 			EditorGUILayout.LabelField("Active: " + _receiver.IsStarted, EditorStyles.boldLabel);
