@@ -3,6 +3,7 @@
 using UnityEditor;
 
 using System;
+using System.Linq;
 
 namespace extOSC.Editor
 {
@@ -29,22 +30,29 @@ namespace extOSC.Editor
 
 		public static void SetDefine(string define, bool active)
 		{
+			// Get all defines groups.
 			var buildTargets = (BuildTargetGroup[]) Enum.GetValues(typeof(BuildTargetGroup));
 			foreach (var targetGroup in buildTargets)
 			{
 				if (!CheckBuildTarget(targetGroup)) continue;
 
-				var scriptingDefines = PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup);
-				if (!scriptingDefines.Contains(define) && active)
+				// Get all defines.
+				var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup);
+				var defines = definesString.Split(';').ToList();
+
+				// Setup defines.
+				if (active)
 				{
-					scriptingDefines += ";" + define;
+					if (!defines.Contains(define))
+						defines.Add(define);
 				}
-				else if (!active)
+				else
 				{
-					scriptingDefines = scriptingDefines.Replace(define, string.Empty);
+					defines.Remove(define);
 				}
 
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, scriptingDefines);
+				// Store new defines.
+				PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, string.Join(';', defines));
 			}
 		}
 
@@ -52,9 +60,12 @@ namespace extOSC.Editor
 		{
 			// Get current define group.
 			var currentBuildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
+			
+			var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(currentBuildTarget);
+			var defines = definesString.Split(';');
 
-			// Check.
-			return PlayerSettings.GetScriptingDefineSymbolsForGroup(currentBuildTarget).Contains(define);
+			// Check contain defines.
+			return defines.Contains(define);
 		}
 
 		#endregion
@@ -63,7 +74,7 @@ namespace extOSC.Editor
 
 		private static bool CheckBuildTarget(BuildTargetGroup buildTarget)
 		{
-			// Not available id Unknown.
+			// Not available in Unknown.
 			if (buildTarget == BuildTargetGroup.Unknown)
 				return false;
 

@@ -6,16 +6,23 @@ using UnityEngine.Serialization;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using extOSC.Core;
 using extOSC.Core.Network;
-
 
 namespace extOSC
 {
 	[AddComponentMenu("extOSC/OSC Receiver")]
 	public class OSCReceiver : OSCBase
 	{
+		#region Static Private Vars
+
+		// Max packets processing time in ms.
+		private const long kMaxProcessingTime = 20;
+
+		#endregion
+		
 		#region Public Vars
 
 		public override bool IsStarted => _receiverBackend.IsAvailable;
@@ -76,6 +83,8 @@ namespace extOSC
 			}
 		}
 
+		public bool IsDrown => _isDrown;
+		
 		#endregion
 
 		#region Private Vars
@@ -120,11 +129,17 @@ namespace extOSC
 
 		private readonly Stack<IOSCBindBundle> _bundleUnbindStack = new Stack<IOSCBindBundle>();
 
+		private readonly Stopwatch _packetsStopwatch = new Stopwatch();
+
 		private readonly object _lock = new object();
 
 		private OSCReceiverBackend __receiverBackend;
 
+		private int _previousPacketsCount;
+
 		private bool _processMessage;
+
+		private bool _isDrown;
 
 		#endregion
 
@@ -136,6 +151,9 @@ namespace extOSC
 
 			lock (_lock)
 			{
+				_packetsStopwatch.Reset();
+				_packetsStopwatch.Start();
+
 				while (_packets.Count > 0)
 				{
 					var packet = _packets.Dequeue();
@@ -146,6 +164,23 @@ namespace extOSC
 					OSCConsole.Received(this, packet);
 
 					InvokePacket(packet);
+
+#if !EXTOSC_DISABLE_DROWN
+					if (_packetsStopwatch.ElapsedMilliseconds > kMaxProcessingTime)
+					{
+						var packetsCount = _packets.Count;
+
+						_isDrown = _previousPacketsCount != 0 && _previousPacketsCount > packetsCount;
+						_previousPacketsCount = packetsCount;
+
+						break;
+					}
+					else
+					{
+						_isDrown = false;
+						_previousPacketsCount = 0;
+					}
+#endif
 				}
 			}
 		}
