@@ -1,3 +1,10 @@
+# [1.20.0](https://github.com/Iam1337/extOSC/compare/v1.19.16...v1.20.0) (2022-06-26)
+
+
+### Features
+
+* **extOSC:** added drown detection in receiver ([5f90563](https://github.com/Iam1337/extOSC/commit/5f90563ddaba72a0c565c342c149f3a8a2c77042))
+
 ## [1.19.16](https://github.com/Iam1337/extOSC/compare/v1.19.15...v1.19.16) (2022-01-24)
 
 
