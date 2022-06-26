@@ -1,4 +1,4 @@
-﻿/* Copyright (c) 2021 dr. ext (Vladimir Sigalkin) */
+﻿/* Copyright (c) 2022 dr. ext (Vladimir Sigalkin) */
 
 namespace extOSC
 {
