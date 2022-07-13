@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/Iam1337/extOSC/compare/v1.20.0...v1.20.1) (2022-07-13)
+
+
+### Bug Fixes
+
+* fixed string.Join error ([8581d2a](https://github.com/Iam1337/extOSC/commit/8581d2af14b9a8a5942cc713d534ca7552cd9618))
+
 # [1.20.0](https://github.com/Iam1337/extOSC/compare/v1.19.16...v1.20.0) (2022-06-26)
 
 
