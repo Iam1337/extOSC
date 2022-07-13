@@ -52,7 +52,7 @@ namespace extOSC.Editor
 				}
 
 				// Store new defines.
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, string.Join(';', defines));
+				PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, string.Join(";", defines));
 			}
 		}
 
