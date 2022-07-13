@@ -1,7 +1,7 @@
 {
   "name": "com.iam1337.extosc",
   "displayName": "extOSC",
-  "version": "1.20.0",
+  "version": "1.20.1",
   "unity": "2018.1",
   "description": "extOSC (Open Sound Control Protocol) is a tool dedicated to simplify creation of applications with OSC protocol usage in Unity.",
   "license": "MIT",
