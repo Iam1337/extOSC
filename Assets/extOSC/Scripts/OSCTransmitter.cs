@@ -28,7 +28,7 @@ namespace extOSC
 
 				_localHostMode = value;
 
-				LocalRefresh();
+				Refresh();
 			}
 		}
 
@@ -42,7 +42,7 @@ namespace extOSC
 
 				_localPortMode = value;
 
-				LocalRefresh();
+				Refresh();
 			}
 		}
 
@@ -56,7 +56,7 @@ namespace extOSC
 
 				_localReceiver = value;
 
-				LocalRefresh();
+				Refresh();
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace extOSC
 
 				_localHost = value;
 
-				LocalRefresh();
+				Refresh();
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace extOSC
 
 				_localPort = value;
 
-				LocalRefresh();
+				Refresh();
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace extOSC
 
 				_remoteHost = value;
 
-				RemoteRefresh();
+				Refresh();
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace extOSC
 
 				_remotePort = value;
 
-				RemoteRefresh();
+				Refresh();
 			}
 		}
 
@@ -165,9 +165,9 @@ namespace extOSC
 
 		private readonly List<IOSCPacket> _bundleBuffer = new List<IOSCPacket>();
 
-		private OSCTransmitterBackend _transmitterBackend => __transmitterBackend ?? (__transmitterBackend = OSCTransmitterBackend.Create());
+		private TransmitterBackend _transmitterBackend => __transmitterBackend ??= new TransmitterBackend();
 
-		private OSCTransmitterBackend __transmitterBackend;
+		private TransmitterBackend __transmitterBackend;
 
 		#endregion
 
@@ -201,8 +201,6 @@ namespace extOSC
 			if (_localPort > 0)
 				_localPort = OSCUtilities.ClampPort(_localPort);
 
-			_transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
-
 			if (IsStarted)
 			{
 				Close();
@@ -217,14 +215,12 @@ namespace extOSC
 
 		public override void Connect()
 		{
-			_transmitterBackend.Connect(GetLocalHost(), GetLocalPort());
-			_transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
+			_transmitterBackend.StartTransmitter(GetLocalHost(), GetLocalPort(), _remoteHost, _remotePort);
 		}
 
 		public override void Close()
 		{
-			if (_transmitterBackend.IsAvailable)
-				_transmitterBackend.Close();
+			_transmitterBackend.StopTransmitter();
 		}
 
 		public override string ToString()
@@ -243,7 +239,7 @@ namespace extOSC
 					return;
 				}
 			}
-
+			
 			if (!_transmitterBackend.IsAvailable)
 				return;
 
@@ -252,10 +248,8 @@ namespace extOSC
 				if (MapBundle != null)
 					MapBundle.Map(packet);
 			}
-
-			var length = OSCConverter.Pack(packet, out var buffer);
 			
-			_transmitterBackend.Send(buffer, length);
+			_transmitterBackend.Transmit(packet);
 
 			OSCConsole.Transmitted(this, packet);
 		}
@@ -264,7 +258,7 @@ namespace extOSC
 
 		#region Private Methods
 
-		private void LocalRefresh()
+		private void Refresh()
 		{
 			if (IsStarted)
 			{
@@ -272,12 +266,7 @@ namespace extOSC
 				Connect();
 			}
 		}
-
-		private void RemoteRefresh()
-		{
-			_transmitterBackend.RefreshRemote(_remoteHost, _remotePort);
-		}
-
+		
 		private string GetLocalHost()
 		{
 			if (_localReceiver != null)

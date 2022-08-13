@@ -37,7 +37,7 @@ namespace extOSC
 
 				_localHostMode = value;
 
-				if (_receiverBackend.IsRunning && IsStarted)
+				if (IsStarted)
 				{
 					Close();
 					Connect();
@@ -55,7 +55,7 @@ namespace extOSC
 
 				_localHost = value;
 
-				if (_receiverBackend.IsRunning && IsStarted)
+				if (IsStarted)
 				{
 					Close();
 					Connect();
@@ -75,7 +75,7 @@ namespace extOSC
 
 				_localPort = value;
 
-				if (_receiverBackend.IsRunning && IsStarted)
+				if (IsStarted)
 				{
 					Close();
 					Connect();
@@ -88,20 +88,6 @@ namespace extOSC
 		#endregion
 
 		#region Private Vars
-
-		private OSCReceiverBackend _receiverBackend
-		{
-			get
-			{
-				if (__receiverBackend == null)
-				{
-					__receiverBackend = OSCReceiverBackend.Create();
-					__receiverBackend.ReceivedCallback = PacketReceived;
-				}
-
-				return __receiverBackend;
-			}
-		}
 
 		[SerializeField]
 		[FormerlySerializedAs("localHostMode")]
@@ -131,9 +117,9 @@ namespace extOSC
 
 		private readonly Stopwatch _packetsStopwatch = new Stopwatch();
 
-		private readonly object _lock = new object();
-
-		private OSCReceiverBackend __receiverBackend;
+		private ReceiverBackend _receiverBackend => __receiverBackend ??= new ReceiverBackend();
+		
+		private ReceiverBackend __receiverBackend;
 
 		private int _previousPacketsCount;
 
@@ -147,41 +133,34 @@ namespace extOSC
 
 		protected virtual void Update()
 		{
-			if (!IsStarted || !_receiverBackend.IsRunning) return;
+			if (!IsStarted) return;
 
-			lock (_lock)
+			_packetsStopwatch.Reset();
+			_packetsStopwatch.Start();
+
+			while (_receiverBackend.IsReceived(out var packet))
 			{
-				_packetsStopwatch.Reset();
-				_packetsStopwatch.Start();
+				if (MapBundle != null)
+					MapBundle.Map(packet);
 
-				while (_packets.Count > 0)
-				{
-					var packet = _packets.Dequeue();
+				OSCConsole.Received(this, packet);
 
-					if (MapBundle != null)
-						MapBundle.Map(packet);
-
-					OSCConsole.Received(this, packet);
-
-					InvokePacket(packet);
+				InvokePacket(packet);
 
 #if !EXTOSC_DISABLE_DROWN
-					if (_packetsStopwatch.ElapsedMilliseconds > kMaxProcessingTime)
-					{
-						var packetsCount = _packets.Count;
+				if (_packetsStopwatch.ElapsedMilliseconds > kMaxProcessingTime)
+				{
+					var packetsCount = _packets.Count;
 
-						_isDrown = _previousPacketsCount != 0 && _previousPacketsCount > packetsCount;
-						_previousPacketsCount = packetsCount;
+					_isDrown = _previousPacketsCount != 0 && _previousPacketsCount > packetsCount;
+					_previousPacketsCount = packetsCount;
 
-						break;
-					}
-					else
-					{
-						_isDrown = false;
-						_previousPacketsCount = 0;
-					}
-#endif
+					break;
 				}
+
+				_isDrown = false;
+				_previousPacketsCount = 0;
+#endif
 			}
 		}
 
@@ -193,7 +172,7 @@ namespace extOSC
 
 			_localPort = OSCUtilities.ClampPort(_localPort);
 
-			if (_receiverBackend.IsRunning && IsStarted)
+			if (IsStarted)
 			{
 				Close();
 				Connect();
@@ -212,13 +191,12 @@ namespace extOSC
 
 		public override void Connect()
 		{
-			_receiverBackend.Connect(GetLocalHost(), _localPort);
+			_receiverBackend.StartReceive(GetLocalHost(), _localPort);
 		}
 
 		public override void Close()
 		{
-			if (_receiverBackend.IsAvailable)
-				_receiverBackend.Close();
+			_receiverBackend.StopReceive();
 		}
 
 		// IOSCBind
@@ -389,15 +367,7 @@ namespace extOSC
 				Unbind(_bundleUnbindStack.Pop());
 			}
 		}
-
-		private void PacketReceived(IOSCPacket packet)
-		{
-			lock (_lock)
-			{
-				_packets.Enqueue(packet);
-			}
-		}
-
+		
 		private string GetLocalHost()
 		{
 			return _localHostMode == OSCLocalHostMode.Any ? "0.0.0.0" : _localHost;
