@@ -1,4 +1,4 @@
-# extOSC .gitignore file 2018
+# extOSC .gitignore file 2023
 
 # -------
 # FOLDERS
@@ -11,6 +11,7 @@
 /[Oo]bj/
 /[Bb]uild/
 /[Bb]uilds/
+/[Ll]ogs/
 /Assets/AssetStoreTools*
 AssetBundles/
 /extOSC
@@ -32,7 +33,7 @@ Assembly-CSharp-firstpass.csproj
 Assembly-CSharp-vs.csproj
 Assembly-CSharp.csproj
 
-# Visual Studio / MonoDevelop
+# Visual Studio
 
 *.sln
 *.svd
