@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Semantic Release
       id: semantic
-      uses: cycjimmy/semantic-release-action@v2
+      uses: cycjimmy/semantic-release-action@v3
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -23,7 +23,6 @@ jobs:
         extra_plugins: |
           @semantic-release/changelog 
           @semantic-release/git
-          @iam1337/create-unitypackage
     - name: Push UPM update
       run: |
         IFS=: read -r -a PROJECT_ASSETS_ARRAY <<< "$PROJECT_ASSETS"
