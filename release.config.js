@@ -24,11 +24,6 @@ module.exports = {
 			"assets": [`Assets/${process.env.PROJECT_NAME}/package.json`, "CHANGELOG.md"],
 			"message": "chore(release): new release ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
 		}],
-		["@iam1337/create-unitypackage", {
-			"packageRoot": `Assets/${process.env.PROJECT_NAME}`,
-			"projectRoot": "./",
-			"output": `${process.env.PROJECT_NAME}.unitypackage`
-		}],
 		["@semantic-release/github", {
 			"assets": [
 				{"path": `${process.env.PROJECT_NAME}.unitypackage`, "label": `${process.env.PROJECT_NAME} v\${nextRelease.version}`}
