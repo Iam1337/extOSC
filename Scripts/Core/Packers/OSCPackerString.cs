@@ -20,7 +20,7 @@ namespace extOSC.Core.Packers
 			var length = 0;
 			var position = index;
 
-			while (buffer[position] != 0 && position < buffer.Length)
+			while (position < buffer.Length && buffer[position] != 0)
 			{
 				position++;
 				length++;
