@@ -138,8 +138,7 @@ namespace extOSC.Editor.Windows
 			_logPanel = new OSCPanelConsole(this);
 			_packetPanel = new OSCPanelPacket(this);
 
-			rootPanel.AddPanel(_logPanel, 350, 0.6f);
-			rootPanel.AddPanel(_packetPanel, 300, 0.4f);
+			rootPanel.Setup(_logPanel, _packetPanel);
 
 			base.OnEnable();
 		}
