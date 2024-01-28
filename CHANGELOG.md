@@ -1,3 +1,10 @@
+## [1.20.4](https://github.com/Iam1337/extOSC/compare/v1.20.3...v1.20.4) (2024-01-28)
+
+
+### Bug Fixes
+
+* **ci:** fixed issue [#31](https://github.com/Iam1337/extOSC/issues/31) ([6658542](https://github.com/Iam1337/extOSC/commit/66585428e9b96f35f8fb49f53c0dbdfc92cc1688))
+
 ## [1.20.3](https://github.com/Iam1337/extOSC/compare/v1.20.2...v1.20.3) (2024-01-28)
 
 
