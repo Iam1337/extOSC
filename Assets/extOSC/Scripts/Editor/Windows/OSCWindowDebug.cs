@@ -62,8 +62,7 @@ namespace extOSC.Editor.Windows
 			_packetEditorPanel = new OSCPanelPacketEditor(this);
 			_controllersPanel = new OSCPanelControllers(this);
 
-			rootPanel.AddPanel(_packetEditorPanel, 300);
-			rootPanel.AddPanel(_controllersPanel, 250);
+			rootPanel.Setup(_packetEditorPanel, _controllersPanel);
 
 			base.OnEnable();
 		}
