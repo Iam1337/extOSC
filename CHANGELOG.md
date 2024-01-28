@@ -1,3 +1,10 @@
+## [1.20.3](https://github.com/Iam1337/extOSC/compare/v1.20.2...v1.20.3) (2024-01-28)
+
+
+### Bug Fixes
+
+* **extOSC:** changed split logic in OSCSplitPanel ([c9622a8](https://github.com/Iam1337/extOSC/commit/c9622a8a97e19dbe86d86551cf589d93c803e9a3))
+
 ## [1.20.2](https://github.com/Iam1337/extOSC/compare/v1.20.1...v1.20.2) (2023-08-25)
 
 
