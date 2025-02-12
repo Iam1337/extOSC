@@ -171,6 +171,10 @@ List of useful repositories to help make extDebug easier to use:
 
 - [extOSC.InEditor](https://github.com/Iam1337/extOSC.InEditor) - Extension to support extOSC behaviour in Unity Editor
 
+## SAST Tools
+
+[PVS-Studio](https://pvs-studio.com/pvs-studio/?utm_source=website&utm_medium=github&utm_campaign=open_source) - static analyzer for C, C++, C#, and Java code.
+
 ## Author Contacts
 \> [telegram.me/iam1337](http://telegram.me/iam1337) <br>
 \> [ext@iron-wall.org](mailto:ext@iron-wall.org)
