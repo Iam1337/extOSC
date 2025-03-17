@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/Iam1337/extOSC/compare/v1.20.4...v1.21.0) (2025-03-17)
+
+
+### Features
+
+* write ip and port in bundles ([3289871](https://github.com/Iam1337/extOSC/commit/3289871d128a351ac0d1964b26b36d7103cbd03a))
+
 ## [1.20.4](https://github.com/Iam1337/extOSC/compare/v1.20.3...v1.20.4) (2024-01-28)
 
 
