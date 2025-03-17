@@ -20,13 +20,40 @@ namespace extOSC
 
 		public string Address => "#bundle";
 
-		public IPAddress Ip { get; set; }
+		public IPAddress Ip
+		{
+			get => _ip;
+			set
+			{
+				_ip = value;
 
-		public int Port { get; set; }
+				for (var i = 0; i < Packets.Count; i++) 
+					Packets[i].Ip = value;
+			}
+		}
+
+		public int Port
+		{
+			get => _port;
+			set
+			{
+				_port = value;
+
+				for (var i = 0; i < Packets.Count; i++) 
+					Packets[i].Port = value;
+			}
+		}
 
 		public List<IOSCPacket> Packets { get; } = new List<IOSCPacket>();
 
 		public long TimeStamp { get; set; }
+
+		#endregion
+
+		#region Private Vars
+
+		private IPAddress _ip;
+		private int _port;
 
 		#endregion
 
