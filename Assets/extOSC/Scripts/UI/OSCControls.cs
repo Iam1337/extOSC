@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 using System;
 using System.Reflection;
+using Object = UnityEngine.Object;
 
 namespace extOSC.UI
 {
@@ -48,14 +49,14 @@ namespace extOSC.UI
 			var remotePort = 7000;
 			var localPort = 7000;
 
-			var transmitters = GameObject.FindObjectsOfType<OSCTransmitter>();
+			var transmitters = Object.FindObjectsByType<OSCTransmitter>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 			foreach (var transmitter in transmitters)
 			{
 				if (remotePort <= transmitter.RemotePort)
 					remotePort = transmitter.RemotePort + 1;
 			}
 
-			var receivers = GameObject.FindObjectsOfType<OSCReceiver>();
+			var receivers = Object.FindObjectsByType<OSCTransmitter>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 			foreach (var receiver in receivers)
 			{
 				if (localPort <= receiver.LocalPort)
@@ -334,6 +335,7 @@ namespace extOSC.UI
 		{
 			Color normalColor;
 			Color backgroundColor;
+            
 			PrepareColors(resources.Color, out normalColor, out backgroundColor);
 
 			var root = CreateUIElementRoot(name, new Vector2(320, 320));
