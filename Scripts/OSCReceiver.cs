@@ -352,7 +352,7 @@ namespace extOSC
 			if (message == null) return;
 
 			_messageBindStack.Clear();
-			_messageBindStack.Clear();
+			_messageUnbindStack.Clear();
 
 			_processMessage = true;
 
