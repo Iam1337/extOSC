@@ -24,9 +24,9 @@ namespace extOSC.Editor
 		private static void DrawHierarchyIcon(int instanceId, Rect selectionRect)
 		{
 			if (OSCEditorTextures.IronWall == null) return;
-
-			var gameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
-			if (gameObject == null) return;
+            
+            var gameObject = EditorUtility.EntityIdToObject(instanceId) as GameObject;
+            if (gameObject == null) return;
 
 			var oscBase = gameObject.GetComponent<OSCBase>();
 			if (oscBase == null) return;

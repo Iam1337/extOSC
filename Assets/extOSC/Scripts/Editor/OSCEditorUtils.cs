@@ -68,41 +68,41 @@ namespace extOSC.Editor
 
 		#region Static Public Methods
 
-		public static void FindObjects<T>(Func<T, string> namingCallback, bool withNone, out GUIContent[] contents, out T[] objects) where T : Object
+        public static void FindObjects<T>(Func<T, string> namingCallback, bool withNone, out GUIContent[] contents, out T[] objects) where T : Object
+        {
+            var sceneObjects = Object.FindObjectsByType<T>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+
+            var offset = 0;
+            var count = sceneObjects.Length;
+
+            if (withNone)
+            {
+                offset++;
+                count++;
+            }
+
+            objects = new T[count];
+            contents = new GUIContent[count];
+
+            if (withNone)
+            {
+                objects[0] = null;
+                contents[0] = new GUIContent("- None -");
+            }
+
+            for (var i = 0; i < sceneObjects.Length; ++i)
+            {
+                var obj = sceneObjects[i];
+                var name = namingCallback != null ? namingCallback.Invoke(sceneObjects[i]) : obj.ToString();
+
+                objects[i + offset] = sceneObjects[i];
+                contents[i + offset] = new GUIContent(name);
+            }
+        }
+
+        public static OSCReceiver FindReceiver(int localPort)
 		{
-			var sceneObjects = Object.FindObjectsOfType<T>();
-			var offset = 0;
-			var count = sceneObjects.Length;
-
-			if (withNone)
-			{
-				offset++;
-				count++;
-			}
-
-			objects = new T[count];
-			contents = new GUIContent[count];
-
-			if (withNone)
-			{
-				objects[0] = null;
-				contents[0] = new GUIContent("- None -");
-			}
-
-			for (var i = 0; i < sceneObjects.Length; ++i)
-			{
-				var obj = sceneObjects[i];
-				var name = namingCallback != null ? namingCallback.Invoke(sceneObjects[i]) : obj.ToString();
-
-				objects[i + offset] = sceneObjects[i];
-				contents[i + offset] = new GUIContent(name);
-			}
-		}
-
-		public static OSCReceiver FindReceiver(int localPort)
-		{
-			var receivers = Object.FindObjectsOfType<OSCReceiver>();
-
+            var receivers = Object.FindObjectsByType<OSCReceiver>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 			foreach (var receiver in receivers)
 			{
 				if (receiver.LocalPort == localPort)
@@ -114,8 +114,7 @@ namespace extOSC.Editor
 
 		public static OSCTransmitter FindTransmitter(string remoteHost, int remotePort)
 		{
-			var transmitters = Object.FindObjectsOfType<OSCTransmitter>();
-
+            var transmitters = Object.FindObjectsByType<OSCTransmitter>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
 			foreach (var transmitter in transmitters)
 			{
 				if (transmitter.RemoteHost == remoteHost &&

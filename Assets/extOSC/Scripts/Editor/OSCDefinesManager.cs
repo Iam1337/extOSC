@@ -4,6 +4,7 @@ using UnityEditor;
 
 using System;
 using System.Linq;
+using UnityEditor.Build;
 
 namespace extOSC.Editor
 {
@@ -32,36 +33,37 @@ namespace extOSC.Editor
 		{
 			// Get all defines groups.
 			var buildTargets = (BuildTargetGroup[]) Enum.GetValues(typeof(BuildTargetGroup));
-			foreach (var targetGroup in buildTargets)
-			{
-				if (!CheckBuildTarget(targetGroup)) continue;
+            foreach (var targetGroup in buildTargets)
+            {
+                if (!CheckBuildTarget(targetGroup)) continue;
 
-				// Get all defines.
-				var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup);
-				var defines = definesString.Split(';').ToList();
+                // Get all defines.
+                var namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(targetGroup);
+                var definesString = PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget);
+                var defines = definesString.Split(';').ToList();
 
-				// Setup defines.
-				if (active)
-				{
-					if (!defines.Contains(define))
-						defines.Add(define);
-				}
-				else
-				{
-					defines.Remove(define);
-				}
+                // Setup defines.
+                if (active)
+                {
+                    if (!defines.Contains(define))
+                        defines.Add(define);
+                }
+                else
+                {
+                    defines.Remove(define);
+                }
 
-				// Store new defines.
-				PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, string.Join(";", defines));
-			}
-		}
+                // Store new defines.
+                PlayerSettings.SetScriptingDefineSymbols(namedBuildTarget, string.Join(";", defines));
+            }
+        }
 
 		public static bool HasDefine(string define)
 		{
 			// Get current define group.
 			var currentBuildTarget = EditorUserBuildSettings.selectedBuildTargetGroup;
-			
-			var definesString = PlayerSettings.GetScriptingDefineSymbolsForGroup(currentBuildTarget);
+            var namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(currentBuildTarget);
+            var definesString = PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget);
 			var defines = definesString.Split(';');
 
 			// Check contain defines.
