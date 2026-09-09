@@ -1,3 +1,11 @@
+## [1.21.1](https://github.com/Iam1337/extOSC/compare/v1.21.0...v1.21.1) (2026-09-09)
+
+
+### Bug Fixes
+
+* editor to unity 6 ([2a90b10](https://github.com/Iam1337/extOSC/commit/2a90b100a94ce4a31ad88be0e1fa2a9c66985644))
+* unbind stack bug ([cf3e446](https://github.com/Iam1337/extOSC/commit/cf3e446d81f4f9880a9611e7de8ed30abc5d5a3e))
+
 # [1.21.0](https://github.com/Iam1337/extOSC/compare/v1.20.4...v1.21.0) (2025-03-17)
 
 
