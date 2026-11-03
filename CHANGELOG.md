@@ -1,3 +1,10 @@
+## [1.21.2](https://github.com/Iam1337/extOSC/compare/v1.21.1...v1.21.2) (2026-11-03)
+
+
+### Bug Fixes
+
+* fix memory leak [#40](https://github.com/Iam1337/extOSC/issues/40) ([0dccae4](https://github.com/Iam1337/extOSC/commit/0dccae403495877e0cfe8c1dececd8b8c2c1450c))
+
 ## [1.21.1](https://github.com/Iam1337/extOSC/compare/v1.21.0...v1.21.1) (2026-09-09)
 
 
