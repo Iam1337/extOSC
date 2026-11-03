@@ -9,21 +9,27 @@ namespace extOSC.Core
     {
         #region Public Vars
 
-        public static List<OSCConsolePacket> ConsoleBuffer { get; set; } = new List<OSCConsolePacket>();
+        public static List<OSCConsolePacket> ConsoleBuffer { get; set; } = new List<OSCConsolePacket>(_maxBufferCapacity);
 
-		public static bool LogConsole { get; set; } = false;
+        public static bool LogConsole { get; set; } = false;
 
-		#endregion
+        #endregion
+
+        #region Private Vars
+
+        private static int _maxBufferCapacity = 1024;
+
+        #endregion
 
         #region Public Methods
 
         public static void Received(OSCReceiver receiver, IOSCPacket packet)
         {
-			var ip = packet.Ip != null ? $"{packet.Ip}:{packet.Port}" : "Debug";
+            var ip = packet.Ip != null ? $"{packet.Ip}:{packet.Port}" : "Debug";
 
-			var consolePacket = new OSCConsolePacket();
-			consolePacket.Info = $"Receiver: {receiver.LocalPort}. From: {ip}";
-			consolePacket.TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
+            var consolePacket = new OSCConsolePacket();
+            consolePacket.Info = $"Receiver: {receiver.LocalPort}. From: {ip}";
+            consolePacket.TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
             consolePacket.PacketType = OSCConsolePacketType.Received;
             consolePacket.Packet = packet;
 
@@ -34,7 +40,7 @@ namespace extOSC.Core
         {
             var consolePacket = new OSCConsolePacket();
             consolePacket.Info = $"Transmitter: {transmitter.RemoteHost}:{transmitter.RemotePort}";
-			consolePacket.TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
+            consolePacket.TimeStamp = DateTime.Now.ToString("[HH:mm:ss]");
             consolePacket.PacketType = OSCConsolePacketType.Transmitted;
             consolePacket.Packet = packet;
 
@@ -49,9 +55,12 @@ namespace extOSC.Core
         {
 #if UNITY_EDITOR
             // COPY PACKET
-	        consolePacket.Packet = consolePacket.Packet.Copy();
-            
+            consolePacket.Packet = consolePacket.Packet.Copy();
+
             ConsoleBuffer.Add(consolePacket);
+            
+            if (ConsoleBuffer.Count >= _maxBufferCapacity)
+                ConsoleBuffer.RemoveAt(ConsoleBuffer.Count - 1);
 #else
             if (LogConsole)
             {
