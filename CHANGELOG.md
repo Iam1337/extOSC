@@ -1,3 +1,10 @@
+## [1.21.3](https://github.com/Iam1337/extOSC/compare/v1.21.2...v1.21.3) (2026-11-13)
+
+
+### Bug Fixes
+
+* Added 6000.5 support ([a966174](https://github.com/Iam1337/extOSC/commit/a9661748ccfab6ea9c239f78814fd3bdc6b06a6b))
+
 ## [1.21.2](https://github.com/Iam1337/extOSC/compare/v1.21.1...v1.21.2) (2026-11-03)
 
 
